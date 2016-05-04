@@ -8,8 +8,12 @@ import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -25,23 +29,36 @@ import com.google.gson.JsonParser;
 
 public class SolarAnalyticsAPI implements SiteDataDao{
 
+	enum GRAN
+	{
+		minute,
+		hour,
+		day,
+		month,
+		year
+	}
+	
 	String webPage = "https://portal.solaranalytics.com.au/api/v2";
 	String name = "demo@solaranalytics.com.au";
 	String password = "demo123";
+	int site_id = 140;
 	String token;
 	long tokenTimeStamp;
+	long lastUpdate;
 	
 	ArrayList<SiteData> siteData;
+	
+	HashMap<String,ArrayList<SiteData>> sData = new HashMap();
 	
 	public SolarAnalyticsAPI(){
 		
 		//token = requestSecureToken();
-		requestData();
+		//requestData("day");
 		//siteData = new ArrayList<SiteData>();
 		
 	}
 		
-	private JsonObject requestData(){
+	public JsonObject requestData(String gran){
 		
 		Date date = new Date();
 		long currentTimeStamp = date.getTime();getClass();
@@ -57,7 +74,8 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		URL url;
 		try {
 			
-			url = new URL(webPage+"/site_data/140?tstart=20160501&tend=20160503&gran=day&raw=false&trunc=false");
+			//url = new URL(webPage+"/site_data/140?tstart=20160504&tend=20160504&gran="+gran+"&raw=false&trunc=false");
+			url = new URL(webPage+gran);
 			URLConnection urlConnection = url.openConnection();
 			urlConnection.setRequestProperty("Authorization", "Basic " + authStringEnc);
 			InputStream is = urlConnection.getInputStream();
@@ -82,26 +100,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 			for(String s : list){
 				System.out.println(s);
 			}
-			
-			JsonArray getArray = jsonObject.getAsJsonArray("data");
-			
-			Gson gson = new Gson();
-			//ArrayList<SiteData> siteDataEntries = new ArrayList<SiteData>();
-			//ArrayList<SiteData> siteDataEntries = new ArrayList<SiteData>();
-			siteData = new ArrayList<SiteData>();
-
-			for(int i = 0; i < getArray.size(); i++)
-			{
-				//siteDataEntries.add(gson.fromJson(getArray.get(i), SiteData.class));
-				siteData.add(gson.fromJson(getArray.get(i), SiteData.class));
-			}
-			
-			System.out.println("SiteDataEntry Size: "+siteData.size());
-			
-			for(SiteData e:siteData){
-				System.out.println(e.toString());
-			}
-			
+						
 			return jsonObject;
 			
 		} catch (MalformedURLException e) {
@@ -178,7 +177,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		    classFields.add(field.getName());
 		  }
 		  
-		  System.out.println(classFields);
+		  //System.out.println(classFields);
 		  //System.out.println(element.entrySet());
 
 		  // Verify recursively that the class contains every
@@ -210,5 +209,207 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	public SiteData getSiteData(int entryNo) {
 		// TODO Auto-generated method stub
 		return siteData.get(entryNo);
+	}
+
+	@Override
+	public SiteData getYear() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<SiteData> getYear(int gran) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SiteData getMonth() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<SiteData> getMonth(int gran) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<SiteData> getMonth(int month, int year) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<SiteData> getMonth(int month, int year, int gran) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SiteData getDay() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<SiteData> getDay(GRAN value) {		
+		
+		Date date = new Date();
+		long timeStamp = date.getTime();
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		String dateString = dateFormat.format(date);
+		//System.out.println(dateFormat.format(date)); //2014/08/06 15:59:48
+		
+		
+
+		String hash = dateString+value;
+	    ArrayList<SiteData> siteDataList = (ArrayList<SiteData>)sData.get(hash);
+	    
+	    long before = System.nanoTime();
+	    //System.out.println("BEFORE: "+System.nanoTime());
+	    
+	    //System.out.println(timeStamp-(timeStamp%60000));
+	    
+	    if(siteDataList == null) {
+	    	
+	    	lastUpdate = timeStamp;
+	    	siteDataList = new ArrayList<SiteData>();
+	        JsonObject jsonObject = requestData("/site_data/"+Integer.toString(site_id)+"?tstart="+dateString+"&tend="+dateString+"&gran="+value);
+			
+			System.out.println("/site_data/"+Integer.toString(site_id)+"?tstart="+dateString+"&tend="+dateString+"&gran="+value);
+			
+			JsonArray getArray = jsonObject.getAsJsonArray("data");
+			Gson gson = new Gson();
+			siteData = new ArrayList<SiteData>();
+	        
+			for(int i=0; i<getArray.size(); i++){
+				siteData.add(gson.fromJson(getArray.get(i), SiteData.class));
+			}
+	        sData.put(hash, siteData);
+	        //System.out.println("Creating circle of color : " + hash);
+	        
+	    }else if(lastUpdate < timeStamp-(timeStamp%305000)) {
+	    	
+	    	System.out.println("NewUpdate: "+timeStamp+" "+lastUpdate);
+	    	
+	    	lastUpdate = timeStamp;
+	    	sData.remove(hash);
+	    	siteDataList = new ArrayList<SiteData>();
+	        JsonObject jsonObject = requestData("/site_data/"+Integer.toString(site_id)+"?tstart="+dateString+"&tend="+dateString+"&gran="+value);
+			
+			//System.out.println("/site_data/"+Integer.toString(site_id)+"?tstart="+tStart+"&tend="+tEnd+"&gran="+value);
+			
+			JsonArray getArray = jsonObject.getAsJsonArray("data");
+			Gson gson = new Gson();
+			siteData = new ArrayList<SiteData>();
+	        
+			for(int i=0; i<getArray.size(); i++){
+				siteData.add(gson.fromJson(getArray.get(i), SiteData.class));
+			}
+	        sData.put(hash, siteData);
+	        //System.out.println("Creating circle of color : " + hash);
+	    	
+	    }
+	    
+	    //System.out.println("AFTER:  "+(System.nanoTime()-before));
+	    
+	    //System.out.println(sData.get(hash).toString());
+
+		//for(int i = 0; i < getArray.size(); i++)
+		//{
+			//siteDataEntries.add(gson.fromJson(getArray.get(i), SiteData.class));
+		//}
+		
+		//System.out.println("SiteDataEntry Size: "+siteData.size());
+		
+		//for(SiteData e:siteData){
+		//	System.out.println(e.toString());
+		//}
+
+		return null;
+	}
+
+	@Override
+	public SiteData getDay(int day, int month, int year) {
+		// TODO Auto-generated method stub
+		String tStart = Integer.toString(year)+Integer.toString(month)+Integer.toString(day);
+		return null;
+	}
+
+	@Override
+	public List<SiteData> getDay(int day, int month, int year, GRAN value) {
+
+		String dayS;
+		if(day<10){
+			dayS = "0"+Integer.toString(day);
+		}else{
+			dayS = Integer.toString(day);	
+		}
+		String monthS;
+		if(month<10){
+			monthS = "0"+Integer.toString(month);
+		}else{
+			monthS = Integer.toString(month);	
+		}
+		String yearS = Integer.toString(year);
+		String tStart = yearS+monthS+dayS;
+		String tEnd = yearS+monthS+dayS;
+
+		String hash = dayS+monthS+yearS+value;
+	    ArrayList<SiteData> siteDataList = (ArrayList<SiteData>)sData.get(hash);
+	    
+	    long before = System.nanoTime();
+	    //System.out.println("BEFORE: "+System.nanoTime());
+	    
+	    if(siteDataList == null) {
+	    	siteDataList = new ArrayList<SiteData>();
+	        
+	        JsonObject jsonObject = requestData("/site_data/"+Integer.toString(site_id)+"?tstart="+tStart+"&tend="+tEnd+"&gran="+value);
+			
+			//System.out.println("/site_data/"+Integer.toString(site_id)+"?tstart="+tStart+"&tend="+tEnd+"&gran="+value);
+			
+			JsonArray getArray = jsonObject.getAsJsonArray("data");
+			
+			Gson gson = new Gson();
+			siteData = new ArrayList<SiteData>();
+	        
+			for(int i=0; i<getArray.size(); i++){
+				siteData.add(gson.fromJson(getArray.get(i), SiteData.class));
+			}
+	        sData.put(hash, siteData);
+	        System.out.println("Creating circle of color : " + hash);
+	    }
+	    
+	    System.out.println("AFTER:  "+(System.nanoTime()-before));
+	    
+	    System.out.println(sData.get(hash).toString());
+
+		//for(int i = 0; i < getArray.size(); i++)
+		//{
+			//siteDataEntries.add(gson.fromJson(getArray.get(i), SiteData.class));
+		//}
+		
+		//System.out.println("SiteDataEntry Size: "+siteData.size());
+		
+		//for(SiteData e:siteData){
+		//	System.out.println(e.toString());
+		//}
+
+		return null;
+	}
+
+	@Override
+	public List<SiteData> getIntervall(Date tStart, Date tEnd) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<SiteData> getIntervall(Date tStart, Date tEnd, int gran) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

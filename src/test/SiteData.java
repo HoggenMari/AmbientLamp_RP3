@@ -6,6 +6,10 @@ public class SiteData {
 	public float energy_consumed;
 	public float energy_expected;
 	public String t_stamp;
+	
+	public SiteData(){
+		
+	}
 
 	public SiteData(float energy_generated, float energy_consumed, float energy_expected, String t_stamp) {
 		this.energy_generated = energy_generated;
