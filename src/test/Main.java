@@ -1,6 +1,7 @@
 package test;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import test.SolarAnalyticsAPI.GRAN;
@@ -50,21 +51,38 @@ public class Main {
     	System.out.println(api.getIntervall(3, 10, 2015, 3, 10, 2015, GRAN.minute));
     	System.out.println(api.getIntervall(3, 10, 2015, 3, 10, 2015));
     	
-    	System.out.println(api.getIntervall(new GregorianCalendar(2015,10,4), new GregorianCalendar(2015,11,4)));
+    	/*System.out.println(api.getIntervall(new GregorianCalendar(2015,10,4), new GregorianCalendar(2015,11,4)));
     	System.out.println(api.getIntervall(new GregorianCalendar(2015,10,4), new GregorianCalendar(2015,11,4), GRAN.day));
     	
     	System.out.println(api.getDay(new GregorianCalendar(2015,10,4)));
-    	System.out.println(api.getDay(new GregorianCalendar(2015,10,4), GRAN.day));
+    	System.out.println(api.getDay(new GregorianCalendar(2015,10,4), GRAN.day));*/
     	
     	System.out.println(api.getDay(4, 10, 2015));
     	System.out.println(api.getDay(4, 10, 2015, GRAN.day));
     	
-    	System.out.println(api.getDay());
-    	System.out.println(api.getDay(GRAN.minute));
+    	/*System.out.println(api.getDay());
+    	System.out.println(api.getDay(GRAN.minute));*/
     	
     	
     	
     	
+    	//System.out.println(api.getMonth(new GregorianCalendar(2015,Calendar.JUNE,4), GRAN.day));
+    	//System.out.println(api.getMonth(new GregorianCalendar(2015,8,4)));
+
+    	//System.out.println(api.getMonth(GRAN.day));
+
+    	
+    	//System.out.println(api.getDay(new GregorianCalendar(2015,10,4)));
+    	//System.out.println(api.getDay(new GregorianCalendar(2015,10,4), GRAN.day));
+    	
+    	System.out.println(api.getMonth(10,2015));
+    	System.out.println(api.getMonth(10,2015, GRAN.hour));
+
+    	//System.out.println(api.getDay(GRAN.minute));
+    	
+    	//System.out.println(api.getMonth());
+    	//System.out.println(api.getMonth(9,2015,GRAN.day));
+
     	
     	
     	

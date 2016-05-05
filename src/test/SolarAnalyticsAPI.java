@@ -228,26 +228,24 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 
 	@Override
 	public SiteData getMonth() {
-		// TODO Auto-generated method stub
-		return null;
+		return getMonth(GRAN.month).get(0);
 	}
 
 	@Override
 	public List<SiteData> getMonth(GRAN value) {
-		// TODO Auto-generated method stub
-		return null;
+		GregorianCalendar today = (GregorianCalendar) GregorianCalendar.getInstance();
+		return getIntervall(new GregorianCalendar(today.get(Calendar.YEAR),today.get(Calendar.MONTH),1), new GregorianCalendar(today.get(Calendar.YEAR),today.get(Calendar.MONTH),today.get(Calendar.DAY_OF_MONTH)),value);
 	}
 
 	@Override
 	public List<SiteData> getMonth(int month, int year) {
-		// TODO Auto-generated method stub
-		return null;
+		return getMonth(month, year, GRAN.month);
 	}
 
 	@Override
 	public List<SiteData> getMonth(int month, int year, GRAN value) {
-		// TODO Auto-generated method stub
-		return null;
+		GregorianCalendar startCalendar = new GregorianCalendar(year, month-1, 1);
+		return getMonth(startCalendar, value);
 	}
 
 	@Override
@@ -258,8 +256,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	@Override
 	public List<SiteData> getDay(GRAN value) {		
 		GregorianCalendar today = (GregorianCalendar) GregorianCalendar.getInstance();
-		//System.out.println("TODAY:"+dateFormat.format(today.getTime()));
-		return getIntervall(today,today,value );
+		return getIntervall(today,today,value);
 	}
 
 	@Override
@@ -279,9 +276,10 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		GregorianCalendar copyS = (GregorianCalendar) startCalendar.clone();
 		GregorianCalendar copyE = (GregorianCalendar) endCalendar.clone();
 		
+		System.out.println(copyE.get(Calendar.DAY_OF_MONTH));
 		
-		copyS.set(Calendar.MONTH, startCalendar.get(Calendar.MONTH)-1);
-		copyE.set(Calendar.MONTH, endCalendar.get(Calendar.MONTH)-1);
+		copyS.set(Calendar.MONTH, startCalendar.get(Calendar.MONTH));
+		copyE.set(Calendar.MONTH, endCalendar.get(Calendar.MONTH));
 		
 		String tStartS = dateFormat.format(copyS.getTime());
 		String tEndS = dateFormat.format(copyE.getTime());
@@ -297,7 +295,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	        
 	        JsonObject jsonObject = requestData("/site_data/"+Integer.toString(site_id)+"?tstart="+tStartS+"&tend="+tEndS+"&gran="+value);
 			
-			//System.out.println("/site_data/"+Integer.toString(site_id)+"?tstart="+tStartS+"&tend="+tEndS+"&gran="+value);
+			System.out.println("/site_data/"+Integer.toString(site_id)+"?tstart="+tStartS+"&tend="+tEndS+"&gran="+value);
 			
 			JsonArray getArray = jsonObject.getAsJsonArray("data");
 			
@@ -336,8 +334,8 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	@Override
 	public List<SiteData> getIntervall(int startDay, int startMonth, int startYear, int endDay, int endMonth,
 			int endYear, GRAN value) {
-		GregorianCalendar startCalendar = new GregorianCalendar(startYear, startMonth, startDay);
-		GregorianCalendar endCalendar = new GregorianCalendar(endYear, endMonth, endDay);
+		GregorianCalendar startCalendar = new GregorianCalendar(startYear, startMonth-1, startDay);
+		GregorianCalendar endCalendar = new GregorianCalendar(endYear, endMonth-1, endDay);
 		return getIntervall(startCalendar, endCalendar, value);
 	}
 
@@ -349,5 +347,33 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	@Override
 	public List<SiteData> getDay(GregorianCalendar day, GRAN value) {
 		return getIntervall(day, day, value);
+	}
+
+	@Override
+	public List<SiteData> getMonth(GregorianCalendar date) {
+		// TODO Auto-generated method stub
+		return getMonth(date, GRAN.day);
+	}
+
+	@Override
+	public List<SiteData> getMonth(GregorianCalendar date, GRAN value) {
+		GregorianCalendar copyMonthStart = (GregorianCalendar) date.clone();
+		GregorianCalendar copyMonthEnd = (GregorianCalendar) date.clone();
+		
+		copyMonthStart.set(Calendar.DAY_OF_MONTH, 1);
+		int month = date.get(Calendar.MONTH);
+		System.out.println(month);
+		if(month==0 || month==2 || month==4 || month==6 || month==7 || month==9 || month==11 ) {
+			copyMonthEnd.set(Calendar.DAY_OF_MONTH, 31);
+		}else if(month==1){
+			if(date.isLeapYear(date.get(Calendar.YEAR))){
+				copyMonthEnd.set(Calendar.DAY_OF_MONTH, 29);
+			}else{
+				copyMonthEnd.set(Calendar.DAY_OF_MONTH, 28);
+			}
+		}else{
+			copyMonthEnd.set(Calendar.DAY_OF_MONTH, 30);			
+		}
+		return getIntervall(copyMonthStart, copyMonthEnd, value);
 	}
 }

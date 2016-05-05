@@ -1,5 +1,6 @@
 package test;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -13,6 +14,8 @@ public interface SiteDataDao {
 	public List<SiteData> getYear(GRAN value);
 	public SiteData getMonth();
 	public List<SiteData> getMonth(GRAN value);
+	public List<SiteData> getMonth(GregorianCalendar date);
+	public List<SiteData> getMonth(GregorianCalendar date, GRAN value);
 	public List<SiteData> getMonth(int month, int year);
 	public List<SiteData> getMonth(int month, int year, GRAN value);
 	public SiteData getDay();
