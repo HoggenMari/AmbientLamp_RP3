@@ -21,9 +21,9 @@ public class Main {
     	api.getDay(4,5,2016,GRAN.minute);
     	api.getDay(4,5,2016,GRAN.minute);*/
     	
-    	//while(1==1){
-    		//api.getDay(GRAN.day);
-    	//}
+    	while(1==1){
+    		System.out.println(api.getDay(GRAN.day));
+    	}
     		
     	
     	
@@ -48,8 +48,8 @@ public class Main {
     	
     	
     	
-    	System.out.println(api.getIntervall(3, 10, 2015, 3, 10, 2015, GRAN.minute));
-    	System.out.println(api.getIntervall(3, 10, 2015, 3, 10, 2015));
+    	//System.out.println(api.getIntervall(3, 10, 2015, 3, 10, 2015, GRAN.minute));
+    	//System.out.println(api.getIntervall(3, 10, 2015, 3, 10, 2015));
     	
     	/*System.out.println(api.getIntervall(new GregorianCalendar(2015,10,4), new GregorianCalendar(2015,11,4)));
     	System.out.println(api.getIntervall(new GregorianCalendar(2015,10,4), new GregorianCalendar(2015,11,4), GRAN.day));
@@ -57,13 +57,26 @@ public class Main {
     	System.out.println(api.getDay(new GregorianCalendar(2015,10,4)));
     	System.out.println(api.getDay(new GregorianCalendar(2015,10,4), GRAN.day));*/
     	
-    	System.out.println(api.getDay(4, 10, 2015));
-    	System.out.println(api.getDay(4, 10, 2015, GRAN.day));
+    	//System.out.println(api.getDay(4, 10, 2015));
+    	//System.out.println(api.getDay(4, 10, 2015, GRAN.day));
     	
-    	/*System.out.println(api.getDay());
-    	System.out.println(api.getDay(GRAN.minute));*/
+    	//System.out.println(api.getDay());
+    	//System.out.println(api.getDay(GRAN.minute));
     	
     	
+    	
+    	//System.out.println(api.getYear());
+    	//System.out.println(api.getYear(GRAN.day).get(2));
+    	//System.out.println(api.getYear(new GregorianCalendar(2015,01,01)));
+    	//System.out.println(api.getYear(new GregorianCalendar(2015,01,01), GRAN.day));
+    	//System.out.println(api.getYear(2015));
+    	//System.out.println(api.getYear(2015,GRAN.day));
+    	
+    	
+    	//System.out.println(api.getDay(GRAN.minute));
+    	//System.out.println(api.getDay(05, 05, 2016, GRAN.minute));
+
+    	//System.out.println(api.getMonth(11, 2015, GRAN.month));
     	
     	
     	//System.out.println(api.getMonth(new GregorianCalendar(2015,Calendar.JUNE,4), GRAN.day));
@@ -75,8 +88,8 @@ public class Main {
     	//System.out.println(api.getDay(new GregorianCalendar(2015,10,4)));
     	//System.out.println(api.getDay(new GregorianCalendar(2015,10,4), GRAN.day));
     	
-    	System.out.println(api.getMonth(10,2015));
-    	System.out.println(api.getMonth(10,2015, GRAN.hour));
+    	//System.out.println(api.getMonth(10,2015));
+    	//System.out.println(api.getMonth(10,2015, GRAN.hour));
 
     	//System.out.println(api.getDay(GRAN.minute));
     	

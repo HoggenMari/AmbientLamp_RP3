@@ -216,14 +216,13 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 
 	@Override
 	public SiteData getYear() {
-		// TODO Auto-generated method stub
-		return null;
+		return getYear(GRAN.year).get(0);
 	}
 
 	@Override
 	public List<SiteData> getYear(GRAN value) {
-		// TODO Auto-generated method stub
-		return null;
+		GregorianCalendar today = (GregorianCalendar) GregorianCalendar.getInstance();
+		return getIntervall(new GregorianCalendar(today.get(Calendar.YEAR),0,1), today, value);
 	}
 
 	@Override
@@ -276,7 +275,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		GregorianCalendar copyS = (GregorianCalendar) startCalendar.clone();
 		GregorianCalendar copyE = (GregorianCalendar) endCalendar.clone();
 		
-		System.out.println(copyE.get(Calendar.DAY_OF_MONTH));
+		//System.out.println(copyE.get(Calendar.DAY_OF_MONTH));
 		
 		copyS.set(Calendar.MONTH, startCalendar.get(Calendar.MONTH));
 		copyE.set(Calendar.MONTH, endCalendar.get(Calendar.MONTH));
@@ -351,7 +350,6 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 
 	@Override
 	public List<SiteData> getMonth(GregorianCalendar date) {
-		// TODO Auto-generated method stub
 		return getMonth(date, GRAN.day);
 	}
 
@@ -374,6 +372,38 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		}else{
 			copyMonthEnd.set(Calendar.DAY_OF_MONTH, 30);			
 		}
-		return getIntervall(copyMonthStart, copyMonthEnd, value);
+		if(date.get(Calendar.YEAR)==GregorianCalendar.getInstance().get(Calendar.YEAR) & date.get(Calendar.MONTH)==GregorianCalendar.getInstance().get(Calendar.MONTH)){
+			System.out.println("go");
+			return getMonth(value);
+		}else{
+			return getIntervall(copyMonthStart, copyMonthEnd, value);
+		}
+	}
+
+	@Override
+	public SiteData getYear(int year) {
+		return getYear(year, GRAN.year).get(0);
+	}
+
+	@Override
+	public List<SiteData> getYear(int year, GRAN value) {
+		GregorianCalendar startCalendar = new GregorianCalendar(year, 0, 1);
+		return getYear(startCalendar, value);
+	}
+
+	@Override
+	public SiteData getYear(GregorianCalendar date) {
+		return getYear(date, GRAN.year).get(0);
+	}
+
+	@Override
+	public List<SiteData> getYear(GregorianCalendar date, GRAN value) {
+		GregorianCalendar copyDate = (GregorianCalendar) date.clone();
+		
+		if(date.get(Calendar.YEAR)==GregorianCalendar.getInstance().get(Calendar.YEAR)){
+			return getYear(value);
+		}else{
+			return getIntervall(new GregorianCalendar(copyDate.get(Calendar.YEAR), 0, 1),new GregorianCalendar(copyDate.get(Calendar.YEAR), 11, 31), value);
+		}
 	}
 }
