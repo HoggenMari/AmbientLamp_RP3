@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -46,6 +47,8 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	long tokenTimeStamp;
 	long lastUpdate;
 	
+	DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+
 	ArrayList<SiteData> siteData;
 	
 	HashMap<String,ArrayList<SiteData>> sData = new HashMap();
@@ -98,7 +101,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 			List<String> list = verifyElement(jsonObject, SiteDataRaw.class);
 
 			for(String s : list){
-				System.out.println(s);
+				//System.out.println(s);
 			}
 						
 			return jsonObject;
@@ -184,7 +187,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		  for (Map.Entry<String, JsonElement> entry : element.entrySet()) {
 			//System.out.println(entry.toString());
 		    if (!classFields.contains(entry.getKey())) {
-		      System.out.println("unknown Field");
+		      //System.out.println("unknown Field");
 		      unknownFields.add(klass.getCanonicalName() + "::" + entry.getKey() + "\n");
 		    } else {
 		      Field field = klass.getField(entry.getKey());
@@ -218,7 +221,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	}
 
 	@Override
-	public List<SiteData> getYear(int gran) {
+	public List<SiteData> getYear(GRAN value) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -230,7 +233,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	}
 
 	@Override
-	public List<SiteData> getMonth(int gran) {
+	public List<SiteData> getMonth(GRAN value) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -242,123 +245,48 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	}
 
 	@Override
-	public List<SiteData> getMonth(int month, int year, int gran) {
+	public List<SiteData> getMonth(int month, int year, GRAN value) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public SiteData getDay() {
-		// TODO Auto-generated method stub
-		return null;
+		return getDay(GRAN.day).get(0);
 	}
 
 	@Override
 	public List<SiteData> getDay(GRAN value) {		
-		
-		Date date = new Date();
-		long timeStamp = date.getTime();
-		
-		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-		String dateString = dateFormat.format(date);
-		//System.out.println(dateFormat.format(date)); //2014/08/06 15:59:48
-		
-		
-
-		String hash = dateString+value;
-	    ArrayList<SiteData> siteDataList = (ArrayList<SiteData>)sData.get(hash);
-	    
-	    long before = System.nanoTime();
-	    //System.out.println("BEFORE: "+System.nanoTime());
-	    
-	    //System.out.println(timeStamp-(timeStamp%60000));
-	    
-	    if(siteDataList == null) {
-	    	
-	    	lastUpdate = timeStamp;
-	    	siteDataList = new ArrayList<SiteData>();
-	        JsonObject jsonObject = requestData("/site_data/"+Integer.toString(site_id)+"?tstart="+dateString+"&tend="+dateString+"&gran="+value);
-			
-			System.out.println("/site_data/"+Integer.toString(site_id)+"?tstart="+dateString+"&tend="+dateString+"&gran="+value);
-			
-			JsonArray getArray = jsonObject.getAsJsonArray("data");
-			Gson gson = new Gson();
-			siteData = new ArrayList<SiteData>();
-	        
-			for(int i=0; i<getArray.size(); i++){
-				siteData.add(gson.fromJson(getArray.get(i), SiteData.class));
-			}
-	        sData.put(hash, siteData);
-	        //System.out.println("Creating circle of color : " + hash);
-	        
-	    }else if(lastUpdate < timeStamp-(timeStamp%305000)) {
-	    	
-	    	System.out.println("NewUpdate: "+timeStamp+" "+lastUpdate);
-	    	
-	    	lastUpdate = timeStamp;
-	    	sData.remove(hash);
-	    	siteDataList = new ArrayList<SiteData>();
-	        JsonObject jsonObject = requestData("/site_data/"+Integer.toString(site_id)+"?tstart="+dateString+"&tend="+dateString+"&gran="+value);
-			
-			//System.out.println("/site_data/"+Integer.toString(site_id)+"?tstart="+tStart+"&tend="+tEnd+"&gran="+value);
-			
-			JsonArray getArray = jsonObject.getAsJsonArray("data");
-			Gson gson = new Gson();
-			siteData = new ArrayList<SiteData>();
-	        
-			for(int i=0; i<getArray.size(); i++){
-				siteData.add(gson.fromJson(getArray.get(i), SiteData.class));
-			}
-	        sData.put(hash, siteData);
-	        //System.out.println("Creating circle of color : " + hash);
-	    	
-	    }
-	    
-	    //System.out.println("AFTER:  "+(System.nanoTime()-before));
-	    
-	    //System.out.println(sData.get(hash).toString());
-
-		//for(int i = 0; i < getArray.size(); i++)
-		//{
-			//siteDataEntries.add(gson.fromJson(getArray.get(i), SiteData.class));
-		//}
-		
-		//System.out.println("SiteDataEntry Size: "+siteData.size());
-		
-		//for(SiteData e:siteData){
-		//	System.out.println(e.toString());
-		//}
-
-		return null;
+		GregorianCalendar today = (GregorianCalendar) GregorianCalendar.getInstance();
+		//System.out.println("TODAY:"+dateFormat.format(today.getTime()));
+		return getIntervall(today,today,value );
 	}
 
 	@Override
 	public SiteData getDay(int day, int month, int year) {
-		// TODO Auto-generated method stub
-		String tStart = Integer.toString(year)+Integer.toString(month)+Integer.toString(day);
-		return null;
+		return getDay(day, month, year, GRAN.day).get(0);
 	}
 
 	@Override
 	public List<SiteData> getDay(int day, int month, int year, GRAN value) {
+		return getIntervall(day, month, year, day, month, year, value);
+	}
 
-		String dayS;
-		if(day<10){
-			dayS = "0"+Integer.toString(day);
-		}else{
-			dayS = Integer.toString(day);	
-		}
-		String monthS;
-		if(month<10){
-			monthS = "0"+Integer.toString(month);
-		}else{
-			monthS = Integer.toString(month);	
-		}
-		String yearS = Integer.toString(year);
-		String tStart = yearS+monthS+dayS;
-		String tEnd = yearS+monthS+dayS;
-
-		String hash = dayS+monthS+yearS+value;
+	@Override
+	public List<SiteData> getIntervall(GregorianCalendar startCalendar, GregorianCalendar endCalendar, GRAN value) {
+		// TODO Auto-generated method stub
+	
+		GregorianCalendar copyS = (GregorianCalendar) startCalendar.clone();
+		GregorianCalendar copyE = (GregorianCalendar) endCalendar.clone();
+		
+		
+		copyS.set(Calendar.MONTH, startCalendar.get(Calendar.MONTH)-1);
+		copyE.set(Calendar.MONTH, endCalendar.get(Calendar.MONTH)-1);
+		
+		String tStartS = dateFormat.format(copyS.getTime());
+		String tEndS = dateFormat.format(copyE.getTime());
+		
+		String hash = tStartS+tEndS+value;
 	    ArrayList<SiteData> siteDataList = (ArrayList<SiteData>)sData.get(hash);
 	    
 	    long before = System.nanoTime();
@@ -367,9 +295,9 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	    if(siteDataList == null) {
 	    	siteDataList = new ArrayList<SiteData>();
 	        
-	        JsonObject jsonObject = requestData("/site_data/"+Integer.toString(site_id)+"?tstart="+tStart+"&tend="+tEnd+"&gran="+value);
+	        JsonObject jsonObject = requestData("/site_data/"+Integer.toString(site_id)+"?tstart="+tStartS+"&tend="+tEndS+"&gran="+value);
 			
-			//System.out.println("/site_data/"+Integer.toString(site_id)+"?tstart="+tStart+"&tend="+tEnd+"&gran="+value);
+			//System.out.println("/site_data/"+Integer.toString(site_id)+"?tstart="+tStartS+"&tend="+tEndS+"&gran="+value);
 			
 			JsonArray getArray = jsonObject.getAsJsonArray("data");
 			
@@ -380,36 +308,46 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 				siteData.add(gson.fromJson(getArray.get(i), SiteData.class));
 			}
 	        sData.put(hash, siteData);
-	        System.out.println("Creating circle of color : " + hash);
+	        
+		    System.out.println("AFTER:  "+(System.nanoTime()-before));
+
+	        return sData.get(hash);
+	        //System.out.println("Creating circle of color : " + hash);
 	    }
 	    
 	    System.out.println("AFTER:  "+(System.nanoTime()-before));
 	    
-	    System.out.println(sData.get(hash).toString());
+	    //System.out.println(sData.get(hash).toString());
 
-		//for(int i = 0; i < getArray.size(); i++)
-		//{
-			//siteDataEntries.add(gson.fromJson(getArray.get(i), SiteData.class));
-		//}
-		
-		//System.out.println("SiteDataEntry Size: "+siteData.size());
-		
-		//for(SiteData e:siteData){
-		//	System.out.println(e.toString());
-		//}
-
-		return null;
+		return siteDataList;
 	}
 
 	@Override
-	public List<SiteData> getIntervall(Date tStart, Date tEnd) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<SiteData> getIntervall(GregorianCalendar tStart, GregorianCalendar tEnd) {
+		return getIntervall(tStart, tEnd, GRAN.day);
 	}
 
 	@Override
-	public List<SiteData> getIntervall(Date tStart, Date tEnd, int gran) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<SiteData> getIntervall(int startDay, int startMonth, int startYear, int endDay, int endMonth,
+			int endYear) {
+		return getIntervall(startDay, startMonth, startYear, endDay, endMonth, endYear, GRAN.day);
+	}
+
+	@Override
+	public List<SiteData> getIntervall(int startDay, int startMonth, int startYear, int endDay, int endMonth,
+			int endYear, GRAN value) {
+		GregorianCalendar startCalendar = new GregorianCalendar(startYear, startMonth, startDay);
+		GregorianCalendar endCalendar = new GregorianCalendar(endYear, endMonth, endDay);
+		return getIntervall(startCalendar, endCalendar, value);
+	}
+
+	@Override
+	public SiteData getDay(GregorianCalendar day) {
+		return getIntervall(day, day, GRAN.day).get(0);
+	}
+
+	@Override
+	public List<SiteData> getDay(GregorianCalendar day, GRAN value) {
+		return getIntervall(day, day, value);
 	}
 }
