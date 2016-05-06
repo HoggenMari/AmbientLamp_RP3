@@ -30,7 +30,7 @@ import com.google.gson.JsonParser;
 
 public class SolarAnalyticsAPI implements SiteDataDao{
 
-	enum GRAN
+	public enum GRAN
 	{
 		minute,
 		hour,
