@@ -1,4 +1,4 @@
-package test;
+package SolarAPI;
 
 public class SiteDataRawIntervall {
 	
