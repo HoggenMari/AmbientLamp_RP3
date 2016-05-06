@@ -51,7 +51,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 
 	ArrayList<SiteData> siteData;
 	
-	HashMap<String,ArrayList<SiteData>> sData = new HashMap();
+	HashMap<String,ArrayList<SiteData>> sData = new HashMap<String, ArrayList<SiteData>>();
 	
 	public SolarAnalyticsAPI(){
 		
@@ -272,6 +272,9 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	public List<SiteData> getIntervall(GregorianCalendar startCalendar, GregorianCalendar endCalendar, GRAN value) {
 		// TODO Auto-generated method stub
 	
+		Date date = new Date();
+		long timeStamp = date.getTime();
+		
 		GregorianCalendar copyS = (GregorianCalendar) startCalendar.clone();
 		GregorianCalendar copyE = (GregorianCalendar) endCalendar.clone();
 		
@@ -290,6 +293,9 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	    //System.out.println("BEFORE: "+System.nanoTime());
 	    
 	    if(siteDataList == null) {
+	    	
+	    	lastUpdate = timeStamp;
+	    	
 	    	siteDataList = new ArrayList<SiteData>();
 	        
 	        JsonObject jsonObject = requestData("/site_data/"+Integer.toString(site_id)+"?tstart="+tStartS+"&tend="+tEndS+"&gran="+value);
@@ -310,9 +316,28 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 
 	        return sData.get(hash);
 	        //System.out.println("Creating circle of color : " + hash);
+	    }else if(lastUpdate < timeStamp-(timeStamp%305000) && endCalendar.get(Calendar.YEAR)==GregorianCalendar.getInstance().get(Calendar.YEAR) && endCalendar.get(Calendar.MONTH)==GregorianCalendar.getInstance().get(Calendar.MONTH) && endCalendar.get(Calendar.DAY_OF_MONTH)==GregorianCalendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
+	    	
+	    	lastUpdate = timeStamp;
+	    	sData.remove(hash);
+	    	siteDataList = new ArrayList<SiteData>();
+	        JsonObject jsonObject = requestData("/site_data/"+Integer.toString(site_id)+"?tstart="+tStartS+"&tend="+tEndS+"&gran="+value);
+			JsonArray getArray = jsonObject.getAsJsonArray("data");
+
+			Gson gson = new Gson();
+			siteData = new ArrayList<SiteData>();
+	        
+			for(int i=0; i<getArray.size(); i++){
+				siteData.add(gson.fromJson(getArray.get(i), SiteData.class));
+			}
+	        sData.put(hash, siteData);
+	        
+		    System.out.println("AFTER M:  "+(System.nanoTime()-before));
+
+	        return sData.get(hash);
 	    }
 	    
-	    System.out.println("AFTER:  "+(System.nanoTime()-before));
+	    //System.out.println("AFTER:  "+(System.nanoTime()-before));
 	    
 	    //System.out.println(sData.get(hash).toString());
 
@@ -360,7 +385,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		
 		copyMonthStart.set(Calendar.DAY_OF_MONTH, 1);
 		int month = date.get(Calendar.MONTH);
-		System.out.println(month);
+		//System.out.println(month);
 		if(month==0 || month==2 || month==4 || month==6 || month==7 || month==9 || month==11 ) {
 			copyMonthEnd.set(Calendar.DAY_OF_MONTH, 31);
 		}else if(month==1){
@@ -373,7 +398,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 			copyMonthEnd.set(Calendar.DAY_OF_MONTH, 30);			
 		}
 		if(date.get(Calendar.YEAR)==GregorianCalendar.getInstance().get(Calendar.YEAR) & date.get(Calendar.MONTH)==GregorianCalendar.getInstance().get(Calendar.MONTH)){
-			System.out.println("go");
+			//System.out.println("go");
 			return getMonth(value);
 		}else{
 			return getIntervall(copyMonthStart, copyMonthEnd, value);

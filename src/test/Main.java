@@ -22,7 +22,7 @@ public class Main {
     	api.getDay(4,5,2016,GRAN.minute);*/
     	
     	while(1==1){
-    		System.out.println(api.getDay(GRAN.day));
+    		System.out.println(api.getDay());
     	}
     		
     	
