@@ -314,9 +314,11 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	        
 		    System.out.println("AFTER:  "+(System.nanoTime()-before));
 
+		    System.out.println(sData.get(hash).toString());
+
 	        return sData.get(hash);
 	        //System.out.println("Creating circle of color : " + hash);
-	    }else if(lastUpdate < timeStamp-(timeStamp%305000) && endCalendar.get(Calendar.YEAR)==GregorianCalendar.getInstance().get(Calendar.YEAR) && endCalendar.get(Calendar.MONTH)==GregorianCalendar.getInstance().get(Calendar.MONTH) && endCalendar.get(Calendar.DAY_OF_MONTH)==GregorianCalendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
+	    }else if(lastUpdate < timeStamp-(timeStamp%300000) && endCalendar.get(Calendar.YEAR)==GregorianCalendar.getInstance().get(Calendar.YEAR) && endCalendar.get(Calendar.MONTH)==GregorianCalendar.getInstance().get(Calendar.MONTH) && endCalendar.get(Calendar.DAY_OF_MONTH)==GregorianCalendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
 	    	
 	    	lastUpdate = timeStamp;
 	    	sData.remove(hash);
@@ -334,6 +336,8 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	        
 		    System.out.println("AFTER M:  "+(System.nanoTime()-before));
 
+		    System.out.println(sData.get(hash).toString());
+		    
 	        return sData.get(hash);
 	    }
 	    
