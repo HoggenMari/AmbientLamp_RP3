@@ -42,7 +42,7 @@ public class Main extends PApplet {
 		background(255,0,0);
 		
 		pSend.beginDraw();
-		pSend.background(frameCount%255,220,220);
+		pSend.background(255,50+frameCount%255,frameCount%255);
 		pSend.endDraw();
 		
 		screen.addLayer(pSend);
