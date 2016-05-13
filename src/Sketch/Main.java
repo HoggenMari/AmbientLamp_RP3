@@ -39,7 +39,7 @@ public class Main extends PApplet {
 	
 	public void draw() {
 		
-		background(255,0,0);
+		//background(255,0,0);
 		
 		pSend.beginDraw();
 		pSend.background(255,50+frameCount%255,frameCount%255);
@@ -47,8 +47,8 @@ public class Main extends PApplet {
 		
 		screen.addLayer(pSend);
 		if (frameCount % 1 == 0) {
-			// System.out.println(frameRate);
-			screen.drawOnGui();
+			System.out.println(frameRate);
+			//screen.drawOnGui();
 		}
 		screen.send(9, 8, 8, 8, 8);
 		
