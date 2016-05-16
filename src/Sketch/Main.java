@@ -56,7 +56,9 @@ public class Main extends PApplet implements SensorListener {
 		pSend.beginDraw();
 		pSend.colorMode(RGB,100,100,100);
 		pSend.noStroke();
-		pSend.fill(20,50,90,(int)(brightness*100.0));
+		pSend.fill(20,50,90);
+		pSend.rect(0, 0, pSend.width, pSend.height);
+		pSend.fill(0,(int)(brightness*100.0));
 		pSend.rect(0, 0, pSend.width, pSend.height);
 		pSend.endDraw();
 		
