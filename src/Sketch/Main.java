@@ -70,7 +70,7 @@ public class Main extends PApplet implements SensorListener {
 		
 		screen.addLayer(pSend);
 		if (frameCount % 1 == 0) {
-			System.out.println(frameRate);
+			//System.out.println(frameRate);
 			screen.drawOnGui();
 		}
 		screen.send(9, 8, 8, 8, 8);

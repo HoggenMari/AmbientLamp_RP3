@@ -27,14 +27,16 @@ public class DDPClient {
 		
 	}
 
-	public void connect() {
+	public boolean connect() {
 		
 		System.out.println("Test");
 
+		DdpClient ddp = null;
+		
 		try {
 			
 			// create DDP client instance
-			DdpClient ddp = new DdpClient(meteorIp, meteorPort);
+			ddp = new DdpClient(meteorIp, meteorPort);
 			
 			// create DDP client observer
 			Observer obs = new DdpClientObserver();
@@ -42,9 +44,14 @@ public class DDPClient {
 			// add observer
 			ddp.addObserver(obs);
 						
+		}catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 			// make connection to Meteor server
-			ddp.connect();
-			
+		
+		do {
+		ddp.connect();
+		} while(ddp.getReadyState()==3);
 			
 		    /*while(true) {
 				try {
@@ -61,10 +68,9 @@ public class DDPClient {
 					e.printStackTrace();
 				}
 			}*/
-					
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}			
+		 
+		
+		return true;
 	}
 
 	
