@@ -53,7 +53,7 @@ public class Main extends PApplet implements SensorListener {
 		
 		//background(255,0,0);
 		
-		System.out.println(currentBrightness+" "+brightness);
+		//System.out.println(currentBrightness+" "+brightness);
 		pSend.beginDraw();
 		pSend.noStroke();
 		pSend.fill(100,50,255);
@@ -70,7 +70,7 @@ public class Main extends PApplet implements SensorListener {
 		
 		screen.addLayer(pSend);
 		if (frameCount % 1 == 0) {
-			//System.out.println(frameRate);
+			System.out.println(frameRate);
 			screen.drawOnGui();
 		}
 		screen.send(9, 8, 8, 8, 8);
