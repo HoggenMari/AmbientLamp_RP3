@@ -22,7 +22,8 @@ public class Main extends PApplet implements SensorListener {
 	Screen screen;
 	PGraphics pSend;
 	DDPClient client;
-	float brightness;
+	int brightness;
+	int currentBrightness;
 	
 	public static void main(final String... args){
     	
@@ -52,14 +53,20 @@ public class Main extends PApplet implements SensorListener {
 		
 		//background(255,0,0);
 		
-		System.out.println(brightness);
+		System.out.println(currentBrightness+" "+brightness);
 		pSend.beginDraw();
 		pSend.noStroke();
 		pSend.fill(100,50,255);
 		pSend.rect(0, 0, pSend.width, pSend.height);
-		pSend.fill(0,(int)(255.0-brightness*255.0));
+		pSend.fill(0,currentBrightness);
 		pSend.rect(0, 0, pSend.width, pSend.height);
 		pSend.endDraw();
+		
+		if(currentBrightness<brightness){
+			currentBrightness++;
+		}else if(currentBrightness>brightness){
+			currentBrightness--;
+		}
 		
 		screen.addLayer(pSend);
 		if (frameCount % 1 == 0) {
@@ -73,7 +80,7 @@ public class Main extends PApplet implements SensorListener {
 	@Override
 	public void brightnessChanged(SensorEvent e) {
 		//System.out.println("Brightness Changed");
-		brightness = e.getBrightness();
+		brightness = (int)(255.0-e.getBrightness()*255);
 	}
 
 	@Override
