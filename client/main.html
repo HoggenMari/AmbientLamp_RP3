@@ -8,7 +8,7 @@
   <div class="outer">
     <div class="logo"></div>
     <h1 class="title">Ambient Light Display</h1>
-    <div class="subtitle">Select a scientist to give them points</div>
+    <!-- <div class="subtitle">Select a scientist to give them points</div> -->
     {{> settingsList}}    
   </div>
   <div id="colorPicker">
@@ -43,20 +43,11 @@
 </template>
 
 <template name="settingsList">
-  <ol class="leaderboard">
+  <ol class="settings">
     {{#each settings}}
       {{> setting}}
     {{/each}}
   </ol>
-
-  {{#if selectedSetting}}
-    <div class="details">
-      <div class="name">{{selectedSetting}}</div>
-      <button class="inc">+</button>
-    </div>
-  {{else}}
-    <div class="message">Click a player to select</div>
-  {{/if}}
 </template>
 
 <template name="player">
