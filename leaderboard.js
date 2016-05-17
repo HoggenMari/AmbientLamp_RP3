@@ -139,7 +139,7 @@ if (Meteor.isServer) {
       _.each(names, function (name) {
         Players.insert({
           name: name,
-          score: Math.floor(Random.fraction() * 10) * 5
+          score: 0
         });
       });
     }
@@ -148,7 +148,7 @@ if (Meteor.isServer) {
       _.each(names, function (name) {
         Settings.insert({
           name: name,
-          score: Math.floor(Random.fraction() * 10) * 5
+          score: 0
         });
       });	
     }
