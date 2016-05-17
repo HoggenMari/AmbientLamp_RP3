@@ -5,12 +5,15 @@
   Template.settingsList.rendered = function(){
     console.log("test");
       
-      $('body').append("<script type='text/javascript' src='jquery.tinycolorpicker.js'>");
+      $('body').append("<script type='text/javascript' src='tinycolorpicker.js'>");
       
       
-      $('body').append("<script type='text/javascript'> $(document).ready(function(){ var $box = $('#colorPicker');$box.tinycolorpicker();});</script>");
+      $('body').append("<script type='text/javascript'>window.onload = function(){var $picker = document.getElementById('colorPicker'),picker  = tinycolorpicker($picker);}</script>");
+      
+      
+      
   };
-    
+
   Template.leaderboard.helpers({
     players: function () {
       return Players.find({}, { sort: { score: -1, name: 1 } });
