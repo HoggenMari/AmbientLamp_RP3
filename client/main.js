@@ -1,15 +1,16 @@
-// Set up a collection to contain player information. On the server,
-// it is backed by a MongoDB collection named "players".
+import { Players } from '../imports/api/lists/settings.js';
 
-Players = new Mongo.Collection("players");
-Settings = new Mongo.Collection("settings");
-
-if (Meteor.isClient) {
+import { Settings } from '../imports/api/lists/settings.js';
 
   var timeout;
   var clicker = 'mousedown';
   clicker = ('ontouchstart' in document.documentElement) ? 'touchstart' : 'mousedown';
-
+ 
+  Template.settingsList.rendered = function(){
+    console.log("test");
+      //$('body').append('<script type="text/javascript" src="tinycolorpicker.js">');
+  };
+    
   Template.leaderboard.helpers({
     players: function () {
       return Players.find({}, { sort: { score: -1, name: 1 } });
@@ -128,30 +129,3 @@ if (Meteor.isClient) {
       decrease(setting);
     }
   });
-}
-
-// On server startup, create some players if the database is empty.
-if (Meteor.isServer) {
-  Meteor.startup(function () {
-    if (Players.find().count() === 0) {
-      var names = ["Ada Lovelace", "Grace Hopper", "Marie Curie",
-                   "Carl Friedrich Gauss", "Nikola Tesla", "Claude Shannon"];
-      _.each(names, function (name) {
-        Players.insert({
-          name: name,
-          score: 0
-        });
-      });
-    }
-    if (Settings.find().count() === 0) {
-      var names = ["Brightness", "Saturation"];
-      _.each(names, function (name) {
-        Settings.insert({
-          name: name,
-          score: 0
-        });
-      });	
-    }
-
-  });
-}
