@@ -1,0 +1,65 @@
+<head>
+  <title>Ambient Light Display</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+  <div class="outer">
+    <div class="logo"></div>
+    <h1 class="title">Ambient Light Display</h1>
+    <div class="subtitle">Select a scientist to give them points</div>
+    {{> settingsList}}    
+  </div>
+</body>
+
+<template name="leaderboard">
+  <ol class="leaderboard">
+    {{#each players}}
+      {{> player}}
+    {{/each}}
+  </ol>
+
+  {{#if selectedName}}
+    <div class="details">
+      <div class="name">{{selectedName}}</div>
+      <button class="inc">Add 5 points</button>
+    </div>
+  {{else}}
+    <div class="message">Click a player to select</div>
+  {{/if}}
+</template>
+
+<template name="settingsList">
+  <ol class="leaderboard">
+    {{#each settings}}
+      {{> setting}}
+    {{/each}}
+  </ol>
+
+  {{#if selectedSetting}}
+    <div class="details">
+      <div class="name">{{selectedSetting}}</div>
+      <button class="inc">+</button>
+    </div>
+  {{else}}
+    <div class="message">Click a player to select</div>
+  {{/if}}
+</template>
+
+<template name="player">
+  <li class="player {{selected}}">
+    <span class="name">{{name}}</span>
+    <span class="score">{{score}}</span>
+  </li>
+</template>
+
+<template name="setting">
+  <li class="player {{selected}}">
+    <img class="icon" src="/{{name}}.png">
+    <span class="name">{{name}}: </span>
+    <span class="name">{{score}}</span>
+    <span><button class="dec">-</button></span>
+    <button class="inc">+</button>
+  </li>
+</template>
