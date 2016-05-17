@@ -8,7 +8,7 @@
       $('body').append("<script type='text/javascript' src='tinycolorpicker.js'>");
       
       
-      $('body').append("<script type='text/javascript'>window.onload = function(){var $picker = document.getElementById('colorPicker'),picker  = tinycolorpicker($picker);}</script>");
+      $('body').append("<script type='text/javascript'>window.onload = function(){var $picker = document.getElementById('colorPicker'),picker  = tinycolorpicker($picker);var $picker = document.getElementById('colorPicker2'),picker  = tinycolorpicker($picker);}</script>");
       
       
       
