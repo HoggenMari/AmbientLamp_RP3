@@ -4,7 +4,8 @@
  
   Template.settingsList.rendered = function(){
     console.log("test");
-      //$('body').append("<script type='text/javascript' src='jquery.tinycolorpicker.js'>");
+      
+      $('body').append("<script type='text/javascript' src='jquery.tinycolorpicker.js'>");
       
       
       $('body').append("<script type='text/javascript'> $(document).ready(function(){ var $box = $('#colorPicker');$box.tinycolorpicker();});</script>");
