@@ -1,7 +1,3 @@
-import { Players } from '../imports/api/lists/settings.js';
-
-import { Settings } from '../imports/api/lists/settings.js';
-
   var timeout;
   var clicker = 'mousedown';
   clicker = ('ontouchstart' in document.documentElement) ? 'touchstart' : 'mousedown';

@@ -1,5 +1,3 @@
-import { Settings } from '../imports/api/lists/settings.js';
-
   Meteor.startup(function () {
     /*if (Players.find().count() === 0) {
       var names = ["Ada Lovelace", "Grace Hopper", "Marie Curie",
