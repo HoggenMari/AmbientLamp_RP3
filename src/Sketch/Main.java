@@ -12,8 +12,10 @@ import FenoDMX.Screen;
 import SolarAPI.SolarAnalyticsAPI;
 import SolarAPI.SolarAnalyticsAPI.GRAN;
 import SolarAPI.SolarAnalyticsAPI.MONITORS;
+import Visualisations.Voltage;
 import processing.core.PApplet;
 import processing.core.PGraphics;
+import processing.core.PImage;
 
 public class Main extends PApplet implements SensorListener {
 
@@ -28,6 +30,9 @@ public class Main extends PApplet implements SensorListener {
 	int currentBrightness;
 	SolarAnalyticsAPI api;
 	
+	private Voltage voltage;
+	private SensorData sensorData;
+	
 	public static void main(final String... args){
     	
 		PApplet.main(new String[] { "--present", "Sketch.Main" });
@@ -38,7 +43,10 @@ public class Main extends PApplet implements SensorListener {
     }
 	
 	public void setup() {
-    	
+		
+		sensorData = SensorData.getInstance();
+		voltage = new Voltage(this, sensorData, createGraphics(170, 120, P2D));
+		
 		client = new DDPClient("193.168.0.100", 3000);
     	client.connect();
     	
@@ -58,12 +66,20 @@ public class Main extends PApplet implements SensorListener {
 		//background(255,0,0);
 		
 		//System.out.println(currentBrightness+" "+brightness);
+		
+		PGraphics pg = voltage.draw();
+		PGraphics pg_small = downscale(pg,5);
+		
+		sensorData.setCar(100);
+		
+		
 		pSend.beginDraw();
 		pSend.noStroke();
-		pSend.fill(100,50,255);
+		pSend.fill(200,200,200);
 		pSend.rect(0, 0, pSend.width, pSend.height);
 		pSend.fill(0,currentBrightness);
 		pSend.rect(0, 0, pSend.width, pSend.height);
+		pSend.image(pg_small,0,0);
 		pSend.endDraw();
 		
 		if(currentBrightness<brightness){
@@ -79,6 +95,8 @@ public class Main extends PApplet implements SensorListener {
 		}
 		screen.send(9, 8, 8, 8, 8);
 		
+		image(pg,0,0);
+		
 		//System.out.println(api.getDay().energy_generated);
 		
 		//api.getIntervall(new GregorianCalendar(), new GregorianCalendar(), GRAN.day, true);
@@ -89,13 +107,25 @@ public class Main extends PApplet implements SensorListener {
 
 		//api.getLastEntry(new GregorianCalendar(2016, 6, 30, 19, 5, 0), true);
 		
-		System.out.println("AC: "+api.getLastEntry(MONITORS.ac_load_net).power);
-		System.out.println("HOT_WATER: "+api.getLastEntry(MONITORS.load_hot_water).power);
-		System.out.println("PV: "+api.getLastEntry(MONITORS.pv_site_net).power);
-		
+		if(frameCount%1000==0){
+			System.out.println("SiteData: "+api.getDay());
+			System.out.println("AC: "+api.getLastEntry(MONITORS.ac_load_net).power);
+			System.out.println("HOT_WATER: "+api.getLastEntry(MONITORS.load_hot_water).power);
+			System.out.println("PV: "+api.getLastEntry(MONITORS.pv_site_net).power);
+		}
 		
 	}
 
+	PGraphics downscale(PGraphics pg, int intensity) {
+		PImage in = pg.get();
+		in.filter(BLUR, intensity);
+		in.resize(17, 12);
+		PGraphics out = createGraphics(17, 12, P2D);
+		out.image(in, 0, 0);
+		return out;
+	}
+
+	
 	@Override
 	public void brightnessChanged(SensorEvent e) {
 		//System.out.println("Brightness Changed");

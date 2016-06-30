@@ -576,7 +576,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 			
 			//System.out.println("/live_data?device="+watt_device_id+"&tstamp="+tStartS+"&all="+all);
 			
-			System.out.println("/live_data?device="+watt_device_id+"&all="+all);
+			//System.out.println("/live_data?device="+watt_device_id+"&all="+all);
 
 			JsonArray getArray = jsonObject.getAsJsonArray("data");
 			
@@ -588,9 +588,9 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 			}
 	        sLiveData.put(hash, liveData);
 	        
-		    System.out.println("AFTER:  "+(System.nanoTime()-before));
+		    //System.out.println("AFTER:  "+(System.nanoTime()-before));
 
-		    System.out.println(sLiveData.get(hash));
+		    //System.out.println(sLiveData.get(hash));
 
 	        return sLiveData.get(hash);
 	        //System.out.println("Creating circle of color : " + hash);
@@ -613,9 +613,9 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 			}
 	        sLiveData.put(hash, liveData);
 	        
-		    System.out.println("AFTER M:  "+(System.nanoTime()-before));
+		    //System.out.println("AFTER M:  "+(System.nanoTime()-before));
 
-		    System.out.println(sLiveData.get(hash));
+		    //System.out.println(sLiveData.get(hash));
 		    
 	        return sLiveData.get(hash);
 	    }
@@ -637,7 +637,9 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		for(LiveData entry : liveData){
 			//System.out.println(entry.monitors);
 			if(entry.monitors.contains(monitor.toString())){
+				if(entry.live_data.size()>0){
 				return entry.live_data.get(entry.live_data.size()-1);
+				};
 			};
 		}
 		

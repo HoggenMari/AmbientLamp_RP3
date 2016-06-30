@@ -229,7 +229,7 @@ public class SensorData {
 	public void setSolar(int solarValue) {
 		this.solarValue = solarValue;
 
-		System.out.println(solarValue);
+		//System.out.println(solarValue);
 
 		Object[] listeners = listenerList.getListenerList();
 
@@ -245,7 +245,7 @@ public class SensorData {
 	public void setCar(int carValue) {
 		this.carValue = carValue;
 
-		System.out.println(carValue);
+		//System.out.println(carValue);
 
 		Object[] listeners = listenerList.getListenerList();
 
