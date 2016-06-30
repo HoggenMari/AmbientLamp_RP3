@@ -18,7 +18,6 @@ public class SiteDataRaw {
 		this.watt_device_id = watt_device_id;
 		this.data = data;
 		
-		
 	}
 	
 	public String toString(){

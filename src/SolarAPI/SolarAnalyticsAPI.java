@@ -28,6 +28,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import SolarAPI.SolarAnalyticsAPI.GRAN;
+
 public class SolarAnalyticsAPI implements SiteDataDao{
 
 	public enum GRAN
@@ -39,20 +41,40 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		year
 	}
 	
+	public enum MONITORS
+	{
+		load_hot_water,
+		ac_load_net,
+		pv_site_net,
+	}
+	
 	String webPage = "https://portal.solaranalytics.com.au/api/v2";
 	String name = "demo@solaranalytics.com.au";
 	String password = "demo123";
 	int site_id = 8072;
 	String token;
 	long tokenTimeStamp;
-	long lastUpdate;
 	
 	DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+	DateFormat dateFormatLive = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+
+	//SiteData with raw=false
 	ArrayList<SiteData> siteData;
-	
 	HashMap<String,ArrayList<SiteData>> sData = new HashMap<String, ArrayList<SiteData>>();
+	long lastUpdateSiteData;
 	
+	//SiteData with raw=true
+	ArrayList<SiteDataRaw> siteDataRaw;
+	HashMap<String,ArrayList<SiteDataRaw>> sDataRaw = new HashMap<String, ArrayList<SiteDataRaw>>();
+	long lastUpdateSiteDataRaw;
+
+	//LiveData
+	ArrayList<LiveData> liveData;
+	HashMap<String,ArrayList<LiveData>> sLiveData = new HashMap<String, ArrayList<LiveData>>();
+	long lastUpdateSiteLiveData;
+	
+		
 	public SolarAnalyticsAPI(){
 		
 		token = requestSecureToken();
@@ -99,10 +121,11 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 			JsonElement el = jejpl.parse(result);
 			jsonObject = el.getAsJsonObject();
 			
-			List<String> list = verifyElement(jsonObject, SiteData.class);
+			//Verify Json with Class
+			List<String> list = verifyElement(jsonObject, LiveData.class);
 
 			for(String s : list){
-				System.out.println(s);
+			//	System.out.println(s);
 			}
 						
 			return jsonObject;
@@ -186,9 +209,9 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 
 		  // Verify recursively that the class contains every
 		  for (Map.Entry<String, JsonElement> entry : element.entrySet()) {
-			System.out.println(entry.toString());
+			//System.out.println(entry.toString());
 		    if (!classFields.contains(entry.getKey())) {
-		      System.out.println("unknown Field");
+		      //System.out.println("unknown Field");
 		      unknownFields.add(klass.getCanonicalName() + "::" + entry.getKey() + "\n");
 		    } else {
 		      Field field = klass.getField(entry.getKey());
@@ -295,7 +318,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	    
 	    if(siteDataList == null) {
 	    	
-	    	lastUpdate = timeStamp;
+	    	lastUpdateSiteData = timeStamp;
 	    	
 	    	siteDataList = new ArrayList<SiteData>();
 	        
@@ -319,9 +342,9 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 
 	        return sData.get(hash);
 	        //System.out.println("Creating circle of color : " + hash);
-	    }else if(lastUpdate < timeStamp-(timeStamp%300000) && endCalendar.get(Calendar.YEAR)==GregorianCalendar.getInstance().get(Calendar.YEAR) && endCalendar.get(Calendar.MONTH)==GregorianCalendar.getInstance().get(Calendar.MONTH) && endCalendar.get(Calendar.DAY_OF_MONTH)==GregorianCalendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
+	    }else if(lastUpdateSiteData < timeStamp-(timeStamp%300000) && endCalendar.get(Calendar.YEAR)==GregorianCalendar.getInstance().get(Calendar.YEAR) && endCalendar.get(Calendar.MONTH)==GregorianCalendar.getInstance().get(Calendar.MONTH) && endCalendar.get(Calendar.DAY_OF_MONTH)==GregorianCalendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
 	    	
-	    	lastUpdate = timeStamp;
+	    	lastUpdateSiteData = timeStamp;
 	    	sData.remove(hash);
 	    	siteDataList = new ArrayList<SiteData>();
 	        JsonObject jsonObject = requestData("/site_data/"+Integer.toString(site_id)+"?tstart="+tStartS+"&tend="+tEndS+"&gran="+value);
@@ -435,5 +458,189 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		}else{
 			return getIntervall(new GregorianCalendar(copyDate.get(Calendar.YEAR), 0, 1),new GregorianCalendar(copyDate.get(Calendar.YEAR), 11, 31), value);
 		}
+	}
+
+	@Override
+	public List<SiteDataRaw> getIntervall(GregorianCalendar startCalendar, GregorianCalendar endCalendar, GRAN value, boolean raw) {
+		// TODO Auto-generated method stub
+
+		Date date = new Date();
+		long timeStamp = date.getTime();
+		
+		GregorianCalendar copyS = (GregorianCalendar) startCalendar.clone();
+		GregorianCalendar copyE = (GregorianCalendar) endCalendar.clone();
+		
+		//System.out.println(copyE.get(Calendar.DAY_OF_MONTH));
+		
+		copyS.set(Calendar.MONTH, startCalendar.get(Calendar.MONTH));
+		copyE.set(Calendar.MONTH, endCalendar.get(Calendar.MONTH));
+		
+		String tStartS = dateFormat.format(copyS.getTime());
+		String tEndS = dateFormat.format(copyE.getTime());
+		
+		String hash = tStartS+tEndS+value+raw;
+	    ArrayList<SiteDataRaw> siteDataList = (ArrayList<SiteDataRaw>)sDataRaw.get(hash);
+	    
+	    long before = System.nanoTime();
+	    //System.out.println("BEFORE: "+System.nanoTime());
+	    
+	    if(siteDataList == null) {
+	    	
+	    	lastUpdateSiteDataRaw = timeStamp;
+	    	
+	    	siteDataList = new ArrayList<SiteDataRaw>();
+	        
+	        JsonObject jsonObject = requestData("/site_data/"+Integer.toString(site_id)+"?tstart="+tStartS+"&tend="+tEndS+"&gran="+value+"&raw=true");
+			
+			System.out.println("/site_data/"+Integer.toString(site_id)+"?tstart="+tStartS+"&tend="+tEndS+"&gran="+value+"&raw=true");
+			
+			JsonArray getArray = jsonObject.getAsJsonArray("data");
+			
+			Gson gson = new Gson();
+			siteDataRaw = new ArrayList<SiteDataRaw>();
+	        
+			for(int i=0; i<getArray.size(); i++){
+				siteDataRaw.add(gson.fromJson(getArray.get(i), SiteDataRaw.class));
+			}
+	        sDataRaw.put(hash, siteDataRaw);
+	        
+		    //System.out.println("AFTER:  "+(System.nanoTime()-before));
+
+		    //System.out.println(sDataRaw.get(hash).toString());
+
+	        return sDataRaw.get(hash);
+	        //System.out.println("Creating circle of color : " + hash);
+	    }else if(lastUpdateSiteDataRaw < timeStamp-(timeStamp%300000) && endCalendar.get(Calendar.YEAR)==GregorianCalendar.getInstance().get(Calendar.YEAR) && endCalendar.get(Calendar.MONTH)==GregorianCalendar.getInstance().get(Calendar.MONTH) && endCalendar.get(Calendar.DAY_OF_MONTH)==GregorianCalendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
+	    	
+	    	lastUpdateSiteDataRaw = timeStamp;
+	    	sDataRaw.remove(hash);
+	    	siteDataList = new ArrayList<SiteDataRaw>();
+	        JsonObject jsonObject = requestData("/site_data/"+Integer.toString(site_id)+"?tstart="+tStartS+"&tend="+tEndS+"&gran="+value+"&raw=true");
+			JsonArray getArray = jsonObject.getAsJsonArray("data");
+
+			Gson gson = new Gson();
+			siteDataRaw= new ArrayList<SiteDataRaw>();
+	        
+			for(int i=0; i<getArray.size(); i++){
+				siteDataRaw.add(gson.fromJson(getArray.get(i), SiteDataRaw.class));
+			}
+	        sDataRaw.put(hash, siteDataRaw);
+	        
+		    //System.out.println("AFTER M:  "+(System.nanoTime()-before));
+
+		    //System.out.println(sDataRaw.get(hash).toString());
+		    
+	        return sDataRaw.get(hash);
+	    }
+	    
+	    //System.out.println("AFTER:  "+(System.nanoTime()-before));
+	    
+	    //System.out.println(sData.get(hash).toString());
+
+		return siteDataList;
+	}
+
+	@Override
+	public List<LiveData> getIntervallLive(GregorianCalendar startCalendar, boolean all) {
+		// TODO Auto-generated method stub
+		
+		String watt_device_id = getIntervall(new GregorianCalendar(), new GregorianCalendar(), GRAN.month, true).get(0).watt_device_id;
+		
+		
+		Date date = new Date();
+		long timeStamp = date.getTime();
+		
+		GregorianCalendar copyS = (GregorianCalendar) startCalendar.clone();
+		
+		//System.out.println(copyE.get(Calendar.DAY_OF_MONTH));
+		
+		copyS.set(Calendar.MONTH, startCalendar.get(Calendar.MONTH));
+		
+		String tStartS = dateFormatLive.format(copyS.getTime());
+		
+		String hash = tStartS+all;
+	    ArrayList<LiveData> liveDataList = (ArrayList<LiveData>)sLiveData.get(hash);
+	    
+	    long before = System.nanoTime();
+	    //System.out.println("BEFORE: "+System.nanoTime());
+	    
+	    if(liveDataList == null) {
+	    	
+	    	lastUpdateSiteLiveData = timeStamp;
+	    	
+	    	liveDataList = new ArrayList<LiveData>();
+	        
+	        //JsonObject jsonObject = requestData("/live_data?device="+watt_device_id+"&tstamp="+tStartS+"&all="+all);
+			
+	    	JsonObject jsonObject = requestData("/live_data?device="+watt_device_id+"&all="+all);
+			
+			//System.out.println("/live_data?device="+watt_device_id+"&tstamp="+tStartS+"&all="+all);
+			
+			System.out.println("/live_data?device="+watt_device_id+"&all="+all);
+
+			JsonArray getArray = jsonObject.getAsJsonArray("data");
+			
+			Gson gson = new Gson();
+			liveData = new ArrayList<LiveData>();
+	        
+			for(int i=0; i<getArray.size(); i++){
+				liveData.add(gson.fromJson(getArray.get(i), LiveData.class));
+			}
+	        sLiveData.put(hash, liveData);
+	        
+		    System.out.println("AFTER:  "+(System.nanoTime()-before));
+
+		    System.out.println(sLiveData.get(hash));
+
+	        return sLiveData.get(hash);
+	        //System.out.println("Creating circle of color : " + hash);
+	    }else if(lastUpdateSiteLiveData < timeStamp-(timeStamp%30000)) {
+	    	
+	    	lastUpdateSiteLiveData = timeStamp;
+	    	sData.remove(hash);
+	    	liveDataList = new ArrayList<LiveData>();
+	        //JsonObject jsonObject = requestData("/live_data?device="+watt_device_id+"&tstamp="+tStartS+"&all="+all);
+	        JsonObject jsonObject = requestData("/live_data?device="+watt_device_id+"&all="+all);
+			
+	        JsonArray getArray = jsonObject.getAsJsonArray("data");
+
+			
+			Gson gson = new Gson();
+			liveData = new ArrayList<LiveData>();
+	        
+			for(int i=0; i<getArray.size(); i++){
+				liveData.add(gson.fromJson(getArray.get(i), LiveData.class));
+			}
+	        sLiveData.put(hash, liveData);
+	        
+		    System.out.println("AFTER M:  "+(System.nanoTime()-before));
+
+		    System.out.println(sLiveData.get(hash));
+		    
+	        return sLiveData.get(hash);
+	    }
+	    
+	    //System.out.println("AFTER:  "+(System.nanoTime()-before));
+	    
+	    //System.out.println(sData.get(hash).toString());
+
+		return liveDataList;
+		
+	}
+
+	@Override
+	public LiveDataEntry getLastEntry(MONITORS monitor) {
+		// TODO Auto-generated method stub
+		
+		List<LiveData> liveData = getIntervallLive(new GregorianCalendar(), true);
+		
+		for(LiveData entry : liveData){
+			//System.out.println(entry.monitors);
+			if(entry.monitors.contains(monitor.toString())){
+				return entry.live_data.get(entry.live_data.size()-1);
+			};
+		}
+		
+		return null;
 	}
 }

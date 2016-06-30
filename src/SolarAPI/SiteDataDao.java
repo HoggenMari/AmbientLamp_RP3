@@ -5,6 +5,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import SolarAPI.SolarAnalyticsAPI.GRAN;
+import SolarAPI.SolarAnalyticsAPI.MONITORS;
 
 public interface SiteDataDao {
 	
@@ -37,5 +38,9 @@ public interface SiteDataDao {
 	public List<SiteData> getIntervall(GregorianCalendar tStart, GregorianCalendar tEnd, GRAN value);
 	public List<SiteData> getIntervall(int startDay, int startMonth, int startYear, int endDay, int endMonth, int endYear, GRAN value);
 	
-
+	public List<SiteDataRaw> getIntervall(GregorianCalendar tStart, GregorianCalendar tEnd, GRAN value, boolean raw);
+	
+	public List<LiveData> getIntervallLive(GregorianCalendar tStart, boolean all);
+	public LiveDataEntry getLastEntry(MONITORS monitor);
+	
 }

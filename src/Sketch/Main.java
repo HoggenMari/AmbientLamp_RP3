@@ -10,6 +10,8 @@ import Event.SensorEvent;
 import Event.SensorListener;
 import FenoDMX.Screen;
 import SolarAPI.SolarAnalyticsAPI;
+import SolarAPI.SolarAnalyticsAPI.GRAN;
+import SolarAPI.SolarAnalyticsAPI.MONITORS;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 
@@ -77,7 +79,19 @@ public class Main extends PApplet implements SensorListener {
 		}
 		screen.send(9, 8, 8, 8, 8);
 		
-		System.out.println(api.getDay());
+		//System.out.println(api.getDay().energy_generated);
+		
+		//api.getIntervall(new GregorianCalendar(), new GregorianCalendar(), GRAN.day, true);
+		
+		//System.out.println(api.getIntervall(new GregorianCalendar(), new GregorianCalendar(), GRAN.month, true).get(0).monitors);
+		//System.out.println(api.getIntervall(new GregorianCalendar(), new GregorianCalendar(), GRAN.month, true).get(1).monitors);
+		//System.out.println(api.getIntervall(new GregorianCalendar(), new GregorianCalendar(), GRAN.month, true).get(2).monitors);
+
+		//api.getLastEntry(new GregorianCalendar(2016, 6, 30, 19, 5, 0), true);
+		
+		System.out.println("AC: "+api.getLastEntry(MONITORS.ac_load_net).power);
+		System.out.println("HOT_WATER: "+api.getLastEntry(MONITORS.load_hot_water).power);
+		System.out.println("PV: "+api.getLastEntry(MONITORS.pv_site_net).power);
 		
 		
 	}
