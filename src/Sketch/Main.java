@@ -24,13 +24,12 @@ public class Main extends PApplet implements SensorListener {
 	DDPClient client;
 	int brightness;
 	int currentBrightness;
+	SolarAnalyticsAPI api;
 	
 	public static void main(final String... args){
     	
 		PApplet.main(new String[] { "--present", "Sketch.Main" });
-    	
-    	SolarAnalyticsAPI api = new SolarAnalyticsAPI();
-    	
+    	    	
     	/*while(1==1){
     		api.getDay();
     	}*/
@@ -47,6 +46,9 @@ public class Main extends PApplet implements SensorListener {
 		screen = new Screen(this, 17, 12);
 		pSend = createGraphics(17,12,P2D);
 		
+    	api = new SolarAnalyticsAPI();
+
+    	delay(2000);
 	}
 	
 	public void draw() {
@@ -74,6 +76,9 @@ public class Main extends PApplet implements SensorListener {
 			screen.drawOnGui();
 		}
 		screen.send(9, 8, 8, 8, 8);
+		
+		System.out.println(api.getDay());
+		
 		
 	}
 

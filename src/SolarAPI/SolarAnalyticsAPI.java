@@ -42,7 +42,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	String webPage = "https://portal.solaranalytics.com.au/api/v2";
 	String name = "demo@solaranalytics.com.au";
 	String password = "demo123";
-	int site_id = 140;
+	int site_id = 8072;
 	String token;
 	long tokenTimeStamp;
 	long lastUpdate;
@@ -55,9 +55,10 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	
 	public SolarAnalyticsAPI(){
 		
-		//token = requestSecureToken();
+		token = requestSecureToken();
+		System.out.println(token);
 		//requestData("day");
-		//siteData = new ArrayList<SiteData>();
+		siteData = new ArrayList<SiteData>();
 		
 	}
 		
@@ -98,10 +99,10 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 			JsonElement el = jejpl.parse(result);
 			jsonObject = el.getAsJsonObject();
 			
-			List<String> list = verifyElement(jsonObject, SiteDataRaw.class);
+			List<String> list = verifyElement(jsonObject, SiteData.class);
 
 			for(String s : list){
-				//System.out.println(s);
+				System.out.println(s);
 			}
 						
 			return jsonObject;
@@ -185,9 +186,9 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 
 		  // Verify recursively that the class contains every
 		  for (Map.Entry<String, JsonElement> entry : element.entrySet()) {
-			//System.out.println(entry.toString());
+			System.out.println(entry.toString());
 		    if (!classFields.contains(entry.getKey())) {
-		      //System.out.println("unknown Field");
+		      System.out.println("unknown Field");
 		      unknownFields.add(klass.getCanonicalName() + "::" + entry.getKey() + "\n");
 		    } else {
 		      Field field = klass.getField(entry.getKey());
