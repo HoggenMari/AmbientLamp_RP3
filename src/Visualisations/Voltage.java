@@ -76,20 +76,60 @@ public class Voltage implements CarListener {
 		}
 
 		canvas.noStroke();
+		//smoothCircle3(charge);
+		smoothCircle2(charge);
 		smoothCircle(charge);
+
 		canvas.endDraw();
 		return canvas;
 	}
 
 	void smoothCircle(float r) {
-		int x = canvas.width / 2;
-		int y = canvas.height / 2;
+		int x = canvas.width;
+		int y = canvas.height;
 		float rad = applet.map(r, 0f, 100f, 10f, 200f);
 		rad = ((applet.sin(step) + 1f) / 2f) * rad * 0.25f + rad * 0.75f;
 		canvas.fill(calcColor(r, applet.color(244, 57, 67, 88),
 				applet.color(227, 229, 229, 88),
 				applet.color(100, 194, 255, 88)));
-		canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(255, 250, 127, 88)));
+		canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(255, 250, 127, 150)));
+		//canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(200, 31, 255, 150)));
+
+		for (int n = 0; n < 5; n++) {
+			canvas.ellipse(x, y, rad * applet.pow(0.66f, n),
+					rad * applet.pow(0.66f, n));
+		}
+	}
+	
+	void smoothCircle2(float r) {
+		int x = 0;
+		int y = 0;
+		float rad = applet.map(r, 0f, 100f, 10f, 200f);
+		rad = ((applet.sin(step) + 1f) / 2f) * rad * 0.25f + rad * 0.75f;
+		canvas.fill(calcColor(r, applet.color(244, 57, 67, 88),
+				applet.color(227, 229, 229, 88),
+				applet.color(100, 194, 255, 88)));
+		//canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(255, 250, 127, 88)));
+		canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(200, 31, 255, 150)));
+		
+		canvas.fill(calcColor(r, applet.color(255, 255, 255, 88), applet.color(255, 255, 255, 88), applet.color(255, 255, 255, 150)));
+
+
+		for (int n = 0; n < 5; n++) {
+			canvas.ellipse(x, y, rad * applet.pow(0.66f, n),
+					rad * applet.pow(0.66f, n));
+		}
+	}
+	
+	void smoothCircle3(float r) {
+		int x = canvas.width/2;
+		int y = -canvas.height/4;
+		float rad = applet.map(r, 0f, 100f, 10f, 200f);
+		rad = ((applet.sin(step) + 1f) / 2f) * rad * 0.25f + rad * 0.75f;
+		canvas.fill(calcColor(r, applet.color(244, 57, 67, 88),
+				applet.color(227, 229, 229, 88),
+				applet.color(100, 194, 255, 88)));
+		//canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(255, 250, 127, 88)));
 		canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(200, 31, 255, 150)));
 
 		for (int n = 0; n < 5; n++) {

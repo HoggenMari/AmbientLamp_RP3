@@ -81,7 +81,9 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		System.out.println(token);
 		//requestData("day");
 		siteData = new ArrayList<SiteData>();
-		
+		siteDataRaw = new ArrayList<SiteDataRaw>();
+		liveData = new ArrayList<LiveData>();
+
 	}
 		
 	public JsonObject requestData(String gran){
@@ -558,7 +560,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		
 		String tStartS = dateFormatLive.format(copyS.getTime());
 		
-		String hash = tStartS+all;
+		String hash = lastUpdateSiteLiveData+" "+all;
 	    ArrayList<LiveData> liveDataList = (ArrayList<LiveData>)sLiveData.get(hash);
 	    
 	    long before = System.nanoTime();
@@ -567,6 +569,8 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	    if(liveDataList == null) {
 	    	
 	    	lastUpdateSiteLiveData = timeStamp;
+	    	
+	    	hash = lastUpdateSiteLiveData+" "+all;
 	    	
 	    	liveDataList = new ArrayList<LiveData>();
 	        
@@ -588,6 +592,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 			}
 	        sLiveData.put(hash, liveData);
 	        
+	        System.out.println("null");
 		    //System.out.println("AFTER:  "+(System.nanoTime()-before));
 
 		    //System.out.println(sLiveData.get(hash));
@@ -596,6 +601,8 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	        //System.out.println("Creating circle of color : " + hash);
 	    }else if(lastUpdateSiteLiveData < timeStamp-(timeStamp%30000)) {
 	    	
+	        System.out.println("changed");
+
 	    	lastUpdateSiteLiveData = timeStamp;
 	    	sData.remove(hash);
 	    	liveDataList = new ArrayList<LiveData>();
@@ -640,6 +647,21 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 				if(entry.live_data.size()>0){
 				return entry.live_data.get(entry.live_data.size()-1);
 				};
+			};
+		}
+		
+		return null;
+	}
+
+	@Override
+	public List<LiveDataEntry> getLiveDataEntry(MONITORS monitor) {
+		// TODO Auto-generated method stub
+		List<LiveData> liveData = getIntervallLive(new GregorianCalendar(), true);
+
+		for(LiveData entry : liveData){
+			//System.out.println(entry.monitors);
+			if(entry.monitors.contains(monitor.toString())){
+				return entry.live_data;
 			};
 		}
 		

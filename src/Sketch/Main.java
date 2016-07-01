@@ -12,6 +12,7 @@ import FenoDMX.Screen;
 import SolarAPI.SolarAnalyticsAPI;
 import SolarAPI.SolarAnalyticsAPI.GRAN;
 import SolarAPI.SolarAnalyticsAPI.MONITORS;
+import Visualisations.BarGraph;
 import Visualisations.Voltage;
 import processing.core.PApplet;
 import processing.core.PGraphics;
@@ -32,6 +33,7 @@ public class Main extends PApplet implements SensorListener {
 	
 	private Voltage voltage;
 	private SensorData sensorData;
+	private BarGraph bargraph;
 	
 	public static void main(final String... args){
     	
@@ -57,18 +59,23 @@ public class Main extends PApplet implements SensorListener {
 		pSend = createGraphics(17,12,P2D);
 		
     	api = new SolarAnalyticsAPI();
+		bargraph = new BarGraph(this, sensorData, api, createGraphics(170, 120, P2D));
 
     	delay(2000);
 	}
 	
 	public void draw() {
 		
+		frameRate(1);
 		//background(255,0,0);
 		
 		//System.out.println(currentBrightness+" "+brightness);
 		
-		PGraphics pg = voltage.draw();
-		PGraphics pg_small = downscale(pg,5);
+		//PGraphics pg = voltage.draw();
+		//PGraphics pg_small = downscale(pg,3);
+		
+		PGraphics pg = bargraph.draw();
+		PGraphics pg_small = downscale(pg,3);
 		
 		sensorData.setCar(100);
 		
@@ -97,6 +104,8 @@ public class Main extends PApplet implements SensorListener {
 		
 		image(pg,0,0);
 		
+		//System.out.println(frameRate);
+		
 		//System.out.println(api.getDay().energy_generated);
 		
 		//api.getIntervall(new GregorianCalendar(), new GregorianCalendar(), GRAN.day, true);
@@ -107,11 +116,11 @@ public class Main extends PApplet implements SensorListener {
 
 		//api.getLastEntry(new GregorianCalendar(2016, 6, 30, 19, 5, 0), true);
 		
-		if(frameCount%1000==0){
-			System.out.println("SiteData: "+api.getDay());
-			System.out.println("AC: "+api.getLastEntry(MONITORS.ac_load_net).power);
-			System.out.println("HOT_WATER: "+api.getLastEntry(MONITORS.load_hot_water).power);
-			System.out.println("PV: "+api.getLastEntry(MONITORS.pv_site_net).power);
+		if(frameCount%1==0){
+			//System.out.println("LiveData: "+api.getLiveDataEntry(MONITORS.ac_load_net));
+			//System.out.println("AC: "+api.getLastEntry(MONITORS.ac_load_net).power);
+			//System.out.println("HOT_WATER: "+api.getLastEntry(MONITORS.load_hot_water).power);
+			//System.out.println("PV: "+api.getLastEntry(MONITORS.pv_site_net).power);
 		}
 		
 	}

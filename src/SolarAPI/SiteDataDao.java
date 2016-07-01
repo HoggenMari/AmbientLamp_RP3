@@ -41,6 +41,7 @@ public interface SiteDataDao {
 	public List<SiteDataRaw> getIntervall(GregorianCalendar tStart, GregorianCalendar tEnd, GRAN value, boolean raw);
 	
 	public List<LiveData> getIntervallLive(GregorianCalendar tStart, boolean all);
+	public List<LiveDataEntry> getLiveDataEntry(MONITORS monitor);
 	public LiveDataEntry getLastEntry(MONITORS monitor);
 	
 }
