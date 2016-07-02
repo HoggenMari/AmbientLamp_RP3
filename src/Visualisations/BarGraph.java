@@ -50,23 +50,10 @@ public class BarGraph {
 				    applet.color(45, 47, 48),
 				    applet.color(25, 36, 42)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 				    };
 
 		
-		/*List<LiveDataEntry> data = api.getLiveDataEntry(MONITORS.ac_load_net);
+		List<LiveDataEntry> data = api.getLiveDataEntry(MONITORS.ac_load_net);
 		
 		float highestValue = 0;
 		for(LiveDataEntry entry : data){
@@ -75,8 +62,8 @@ public class BarGraph {
 			}
 		}
 		
-		System.out.println(highestValue);
-		System.out.println(data.size());*/
+		//System.out.println(highestValue);
+		//System.out.println(data.size());
 
 		
 		canvas.beginDraw();
@@ -86,16 +73,16 @@ public class BarGraph {
 		canvas.rect(0, 0, canvas.width, canvas.height);
 		canvas.fill(120,50,20);
 		int start = 0;
-		/*if(data.size()>17){
+		if(data.size()>17){
 			start = data.size()-17;
 		}
 		for(int i=start; i<data.size(); i++){
 			float power = data.get(i).power;
 			float val = applet.map(power, 0, highestValue, 0, 120);
-			System.out.println(17-(data.size()-i)+" "+val);
+			//System.out.println(17-(data.size()-i)+" "+val);
 			//canvas.rect((17-(data.size()-i))*10,0,(17-(data.size()-i+1))*10,val);
-			//canvas.rect((17-(data.size()-i))*10, 120-val, 10, 120);
-		}*/
+			canvas.rect((17-(data.size()-i))*10, 120-val, 10, 120);
+		}
 		canvas.endDraw();
 		
 		return canvas;	

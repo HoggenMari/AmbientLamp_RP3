@@ -47,7 +47,6 @@ public class Main extends PApplet implements SensorListener {
 	public void setup() {
 		
 		sensorData = SensorData.getInstance();
-		voltage = new Voltage(this, sensorData, createGraphics(170, 120, P2D));
 		
 		client = new DDPClient("193.168.0.100", 3000);
     	client.connect();
@@ -59,6 +58,7 @@ public class Main extends PApplet implements SensorListener {
 		pSend = createGraphics(17,12,P2D);
 		
     	api = new SolarAnalyticsAPI();
+		voltage = new Voltage(this, sensorData, api, createGraphics(170, 120, P2D));
 		bargraph = new BarGraph(this, sensorData, api, createGraphics(170, 120, P2D));
 
     	delay(2000);
@@ -66,7 +66,7 @@ public class Main extends PApplet implements SensorListener {
 	
 	public void draw() {
 		
-		frameRate(1);
+		//frameRate(1);
 		//background(255,0,0);
 		
 		//System.out.println(currentBrightness+" "+brightness);
@@ -104,7 +104,9 @@ public class Main extends PApplet implements SensorListener {
 		
 		image(pg,0,0);
 		
-		//System.out.println(frameRate);
+		if(frameCount%1000==0){
+			System.out.println(frameRate);
+		}
 		
 		//System.out.println(api.getDay().energy_generated);
 		
@@ -116,7 +118,21 @@ public class Main extends PApplet implements SensorListener {
 
 		//api.getLastEntry(new GregorianCalendar(2016, 6, 30, 19, 5, 0), true);
 		
-		if(frameCount%1==0){
+		if(frameCount%1000==0){
+			
+			System.out.println("CHANGE: "+api.getCurrentChangeConsumption());
+			System.out.println("MAX: "+api.getMaxConsumedLive());
+			System.out.println("MEAN: "+api.getMeanProducedWeekly(GRAN.day));
+			System.out.println("MAX PRODUCED: "+api.getMaxProducedWeekly(GRAN.minute));
+			System.out.println("MAX CONSUMED: "+api.getMaxConsumedWeekly(GRAN.minute));
+			
+
+			//System.out.println(api.getLastSiteDataEntry());
+			//System.out.println(api.getMaxConsumedWeekly(GRAN.minute));
+			//System.out.println(api.getMaxProducedWeekly(GRAN.minute));
+
+			//System.out.println(api.getMaxProducedWeekly(GRAN.minute));
+			
 			//System.out.println("LiveData: "+api.getLiveDataEntry(MONITORS.ac_load_net));
 			//System.out.println("AC: "+api.getLastEntry(MONITORS.ac_load_net).power);
 			//System.out.println("HOT_WATER: "+api.getLastEntry(MONITORS.load_hot_water).power);

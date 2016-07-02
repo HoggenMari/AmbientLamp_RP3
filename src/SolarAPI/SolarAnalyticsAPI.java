@@ -71,9 +71,10 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 
 	//LiveData
 	ArrayList<LiveData> liveData;
+	ArrayList<LiveDataEntry> consumptionArray = new ArrayList<LiveDataEntry>();
 	HashMap<String,ArrayList<LiveData>> sLiveData = new HashMap<String, ArrayList<LiveData>>();
 	long lastUpdateSiteLiveData;
-	
+	int MAX_LIVE_DATA_SIZE = 200;
 		
 	public SolarAnalyticsAPI(){
 		
@@ -83,6 +84,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		siteData = new ArrayList<SiteData>();
 		siteDataRaw = new ArrayList<SiteDataRaw>();
 		liveData = new ArrayList<LiveData>();
+		
 
 	}
 		
@@ -338,9 +340,9 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 			}
 	        sData.put(hash, siteData);
 	        
-		    System.out.println("AFTER:  "+(System.nanoTime()-before));
+		    //System.out.println("AFTER:  "+(System.nanoTime()-before));
 
-		    System.out.println(sData.get(hash).toString());
+		    //System.out.println(sData.get(hash).toString());
 
 	        return sData.get(hash);
 	        //System.out.println("Creating circle of color : " + hash);
@@ -360,9 +362,9 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 			}
 	        sData.put(hash, siteData);
 	        
-		    System.out.println("AFTER M:  "+(System.nanoTime()-before));
+		    //System.out.println("AFTER M:  "+(System.nanoTime()-before));
 
-		    System.out.println(sData.get(hash).toString());
+		    //System.out.println(sData.get(hash).toString());
 		    
 	        return sData.get(hash);
 	    }
@@ -544,6 +546,34 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 
 	@Override
 	public List<LiveData> getIntervallLive(GregorianCalendar startCalendar, boolean all) {
+		
+		String watt_device_id = getIntervall(new GregorianCalendar(), new GregorianCalendar(), GRAN.month, true).get(0).watt_device_id;
+		
+		Date date = new Date();
+		long timeStamp = date.getTime();
+		
+		if(liveData == null || lastUpdateSiteLiveData < timeStamp-(timeStamp%30000)){
+			
+			liveData = new ArrayList<LiveData>();
+			JsonObject jsonObject = requestData("/live_data?device="+watt_device_id+"&all="+all);
+			JsonArray getArray = jsonObject.getAsJsonArray("data");
+			
+			Gson gson = new Gson();
+			liveData = new ArrayList<LiveData>();
+	        
+			for(int i=0; i<getArray.size(); i++){
+				liveData.add(gson.fromJson(getArray.get(i), LiveData.class));
+			}
+			
+			lastUpdateSiteLiveData = timeStamp;
+			
+		}
+		
+		return liveData;
+		
+	}
+	
+	/*public List<LiveData> getIntervallLive(GregorianCalendar startCalendar, boolean all) {
 		// TODO Auto-generated method stub
 		
 		String watt_device_id = getIntervall(new GregorianCalendar(), new GregorianCalendar(), GRAN.month, true).get(0).watt_device_id;
@@ -633,7 +663,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 
 		return liveDataList;
 		
-	}
+	}*/
 
 	@Override
 	public LiveDataEntry getLastEntry(MONITORS monitor) {
@@ -666,5 +696,158 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		}
 		
 		return null;
+	}
+
+	@Override
+	public SiteData getLastSiteDataEntry() {
+		// TODO Auto-generated method stub
+		List<SiteData> liveData = getDay(GRAN.minute);
+		
+		GregorianCalendar today = (GregorianCalendar) GregorianCalendar.getInstance();
+		int hours = today.get(Calendar.HOUR_OF_DAY);
+		int minutes = today.get(Calendar.MINUTE);
+	
+		int counter = 12*hours+minutes/5;
+		//System.out.println(counter);
+		
+		return liveData.get(counter);
+	}
+	
+	public float getMaxProducedWeekly(GRAN gran){
+		
+		GregorianCalendar lastWeek = (GregorianCalendar) GregorianCalendar.getInstance();
+		lastWeek.add(GregorianCalendar.DAY_OF_MONTH, -7);
+
+		List<SiteData> data = getIntervall(lastWeek, new GregorianCalendar(), gran);
+		
+		float max_produced = 0;
+		for(SiteData entry : data){
+			if(entry.energy_generated > max_produced){
+				max_produced = entry.energy_generated;
+			}
+		}
+		
+		//System.out.println(max_produced);
+		
+		//System.out.println(data.size());
+		
+		return max_produced;
+	}
+	
+	public float getMeanProducedWeekly(GRAN gran){
+		
+		GregorianCalendar lastWeek = (GregorianCalendar) GregorianCalendar.getInstance();
+		lastWeek.add(GregorianCalendar.DAY_OF_MONTH, -7);
+
+		List<SiteData> data = getIntervall(lastWeek, new GregorianCalendar(), gran);
+		
+		float max_produced = 0;
+		for(SiteData entry : data){
+			max_produced += entry.energy_consumed;
+		}
+		
+		//System.out.println(max_produced/data.size());
+		
+		return max_produced/data.size();
+		
+	}
+	
+	public float getMaxConsumedWeekly(GRAN gran){
+		
+		GregorianCalendar lastWeek = (GregorianCalendar) GregorianCalendar.getInstance();
+		lastWeek.add(GregorianCalendar.DAY_OF_MONTH, -7);
+
+		List<SiteData> data = getIntervall(lastWeek, new GregorianCalendar(), gran);
+		
+		float max_produced = 0;
+		for(SiteData entry : data){
+			if(entry.energy_consumed > max_produced){
+				max_produced = entry.energy_consumed;
+			}
+		}
+		
+		//System.out.println(data);
+		
+		return max_produced;
+	}
+	
+	public ArrayList<LiveDataEntry> getLiveConsumptionBuffer() {
+		List<LiveData> liveData = getIntervallLive(new GregorianCalendar(), true);
+
+		if(consumptionArray.isEmpty()){
+			//System.out.println("Empty");
+			for(LiveDataEntry entry : liveData.get(0).live_data){
+				consumptionArray.add(entry);
+			}
+		}else{
+			
+			int buf1 = liveData.get(0).live_data.size();
+			int buf2 = consumptionArray.size();
+			
+			//System.out.println(buf1+" "+buf2);
+			
+			int num = 0;
+			
+			for(int i=0; i<buf1; i++){
+				boolean comp = false;
+				for(int j=0; j<buf2; j++){
+					if(liveData.get(0).live_data.get(i).time.compareTo(consumptionArray.get(j).time)==0){
+						comp = true;
+					};
+				}
+				if(comp==true){
+					num = i;
+				}
+			}
+			
+			if(num!=buf1-1){
+				for(int i=num+1; i<buf1; i++){
+					consumptionArray.add(liveData.get(0).live_data.get(i));
+				}
+			}
+			
+			//System.out.println(num);
+			
+			if(consumptionArray.size()>MAX_LIVE_DATA_SIZE){
+				consumptionArray.remove(0);
+			}
+			
+			//System.out.println("Counter: "+consumptionArray.size()+" "+liveData.get(0).live_data.size());
+			
+			
+		}
+		
+	
+		//System.out.println(consumptionArray);
+		
+		return consumptionArray;
+		
+	}
+	
+
+	public float getCurrentChangeConsumption() {
+		
+		ArrayList<LiveDataEntry> data = getLiveConsumptionBuffer();
+		
+		if(data.size()>=2){
+		return data.get(data.size()-1).power - data.get(data.size()-2).power;
+		}
+		return 0;
+		
+	}
+	
+	public float getMaxConsumedLive() {
+		
+		ArrayList<LiveDataEntry> data = getLiveConsumptionBuffer();
+		
+		float max_consumed = 0;
+		for(LiveDataEntry entry : data){
+			if(entry.power > max_consumed){
+				max_consumed = entry.power;
+			}
+		}
+		
+		return max_consumed;
+		
 	}
 }

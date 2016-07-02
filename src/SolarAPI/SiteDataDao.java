@@ -33,6 +33,8 @@ public interface SiteDataDao {
 	public List<SiteData> getDay(int day, int month, int year, GRAN value);
 	public List<SiteData> getDay(GregorianCalendar day, GRAN value);
 	
+	public SiteData getLastSiteDataEntry();
+	
 	public List<SiteData> getIntervall(GregorianCalendar tStart, GregorianCalendar tEnd);
 	public List<SiteData> getIntervall(int startDay, int startMonth, int startYear, int endDay, int endMonth, int endYear);
 	public List<SiteData> getIntervall(GregorianCalendar tStart, GregorianCalendar tEnd, GRAN value);

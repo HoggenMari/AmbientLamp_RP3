@@ -7,6 +7,10 @@ import processing.core.PGraphics;
 import Event.CarEvent;
 import Event.CarListener;
 import Event.SensorData;
+import SolarAPI.SiteData;
+import SolarAPI.SolarAnalyticsAPI;
+import SolarAPI.SolarAnalyticsAPI.GRAN;
+import SolarAPI.SolarAnalyticsAPI.MONITORS;
 
 public class Voltage implements CarListener {
 	PGraphics canvas;
@@ -18,10 +22,12 @@ public class Voltage implements CarListener {
 	private SensorData sensorData;
 	int timer;
 	boolean electronEmitted;
+	private SolarAnalyticsAPI api;
 
-	public Voltage(PApplet a, SensorData sensorData, PGraphics c) {
+	public Voltage(PApplet a, SensorData sensorData, SolarAnalyticsAPI api, PGraphics c) {
 		applet = a;
 		this.sensorData = sensorData;
+		this.api = api;
 		canvas = c;
 		electrons = new ArrayList<Electron>();
 		fields = new ArrayList<Powerfield>();
@@ -46,12 +52,18 @@ public class Voltage implements CarListener {
 			electronEmitted = false;
 		}
 
+		float change = api.getCurrentChangeConsumption();
+		float max = api.getMaxConsumedLive();
+		float mean = api.getMeanProducedWeekly(GRAN.minute);
+		
+		if(change>0.05*max){
 		if (timer % 30 == 0)
 			fields.add(new Powerfield(applet, canvas));
-
+		}
+		
 		canvas.beginDraw();
-		int bc = applet.color(22 + 22 * applet.sin(step),
-				22 * applet.sin(step), 55);
+		int bc = applet.color(22 + 22 * applet.sin(0),
+				22 * applet.sin(0), 55);
 		canvas.background(bc);
 		canvas.fill(255);
 
@@ -62,7 +74,7 @@ public class Voltage implements CarListener {
 		}
 
 		for (int e = 0; e < electrons.size(); e++) {
-			electrons.get(e).display();
+			//electrons.get(e).display();
 		}
 
 		for (int f = 0; f < fields.size(); f++) {
@@ -77,23 +89,51 @@ public class Voltage implements CarListener {
 
 		canvas.noStroke();
 		//smoothCircle3(charge);
-		smoothCircle2(charge);
-		smoothCircle(charge);
+		//smoothCircle2(charge);
+		
+		float produced = api.getLastSiteDataEntry().energy_generated;
+		float consumed = api.getLastSiteDataEntry().energy_consumed;
 
+		float maxProduced = api.getMaxProducedWeekly(GRAN.minute);
+		float maxConsumed = api.getMaxConsumedWeekly(GRAN.minute);
+
+		float mapProduce = applet.map(produced, 0, maxProduced, 0, 100);
+		float mapConsumed = applet.map(consumed, 0, maxConsumed, 0, 100);
+
+		smoothCircleConsumed(mapConsumed);
+		//smoothCircle(20);
+		
 		canvas.endDraw();
 		return canvas;
 	}
 
 	void smoothCircle(float r) {
-		int x = canvas.width;
-		int y = canvas.height;
+		int x = canvas.width/2;
+		int y = canvas.height/2;
 		float rad = applet.map(r, 0f, 100f, 10f, 200f);
-		rad = ((applet.sin(step) + 1f) / 2f) * rad * 0.25f + rad * 0.75f;
+		rad = ((applet.sin(0) + 1f) / 2f) * rad * 0.25f + rad * 0.75f;
 		canvas.fill(calcColor(r, applet.color(244, 57, 67, 88),
 				applet.color(227, 229, 229, 88),
 				applet.color(100, 194, 255, 88)));
 		canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(255, 250, 127, 150)));
 		//canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(200, 31, 255, 150)));
+
+		for (int n = 0; n < 5; n++) {
+			canvas.ellipse(x, y, rad * applet.pow(0.66f, n),
+					rad * applet.pow(0.66f, n));
+		}
+	}
+	
+	void smoothCircleConsumed(float r) {
+		int x = canvas.width/2;
+		int y = canvas.height/2;
+		float rad = applet.map(r, 0f, 100f, 10f, 200f);
+		rad = ((applet.sin(0) + 1f) / 2f) * rad * 0.25f + rad * 0.75f;
+		canvas.fill(calcColor(r, applet.color(244, 57, 67, 88),
+				applet.color(227, 229, 229, 88),
+				applet.color(100, 194, 255, 88)));
+		canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(255, 250, 127, 150)));
+		canvas.fill(calcColor(r, applet.color(135, 96, 190, 88), applet.color(153, 109, 214, 88), applet.color(180, 136, 242, 88)));
 
 		for (int n = 0; n < 5; n++) {
 			canvas.ellipse(x, y, rad * applet.pow(0.66f, n),
