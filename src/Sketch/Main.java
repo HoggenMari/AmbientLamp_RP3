@@ -48,7 +48,7 @@ public class Main extends PApplet implements SensorListener {
 		
 		sensorData = SensorData.getInstance();
 		
-		client = new DDPClient("193.168.0.100", 3000);
+		client = new DDPClient("192.168.1.100", 3000);
     	client.connect();
     	
     	SensorData.getInstance().addSensorListener(this);
