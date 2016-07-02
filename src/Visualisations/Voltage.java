@@ -100,8 +100,8 @@ public class Voltage implements CarListener {
 		float mapProduce = applet.map(produced, 0, maxProduced, 0, 100);
 		float mapConsumed = applet.map(consumed, 0, maxConsumed, 0, 100);
 
+		smoothCircle(100);
 		smoothCircleConsumed(mapConsumed);
-		//smoothCircle(20);
 		
 		canvas.endDraw();
 		return canvas;

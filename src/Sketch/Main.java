@@ -71,11 +71,11 @@ public class Main extends PApplet implements SensorListener {
 		
 		//System.out.println(currentBrightness+" "+brightness);
 		
-		//PGraphics pg = voltage.draw();
-		//PGraphics pg_small = downscale(pg,3);
-		
-		PGraphics pg = bargraph.draw();
+		PGraphics pg = voltage.draw();
 		PGraphics pg_small = downscale(pg,3);
+		
+		//PGraphics pg = bargraph.draw();
+		//PGraphics pg_small = downscale(pg,3);
 		
 		sensorData.setCar(100);
 		
