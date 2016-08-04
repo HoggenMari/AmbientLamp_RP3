@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+
 import DDPClient.DDPClient;
 import Event.SensorData;
 import Event.SensorEvent;
@@ -13,6 +18,7 @@ import SolarAPI.SolarAnalyticsAPI;
 import SolarAPI.SolarAnalyticsAPI.GRAN;
 import SolarAPI.SolarAnalyticsAPI.MONITORS;
 import Visualisations.BarGraph;
+import Visualisations.Text;
 import Visualisations.Voltage;
 import processing.core.PApplet;
 import processing.core.PGraphics;
@@ -34,6 +40,8 @@ public class Main extends PApplet implements SensorListener {
 	private Voltage voltage;
 	private SensorData sensorData;
 	private BarGraph bargraph;
+	private Text text;
+	boolean textBol = true;
 	
 	public static void main(final String... args){
     	
@@ -48,19 +56,30 @@ public class Main extends PApplet implements SensorListener {
 		
 		sensorData = SensorData.getInstance();
 		
-		client = new DDPClient("192.168.1.100", 3000);
+		client = new DDPClient("localhost", 3000);
     	client.connect();
     	
     	SensorData.getInstance().addSensorListener(this);
     	
 		size(100,100);
-		screen = new Screen(this, 17, 12);
+		screen = new Screen(this, 17, 12, 1);
 		pSend = createGraphics(17,12,P2D);
 		
     	api = new SolarAnalyticsAPI();
 		voltage = new Voltage(this, sensorData, api, createGraphics(170, 120, P2D));
 		bargraph = new BarGraph(this, sensorData, api, createGraphics(170, 120, P2D));
+		text = new Text(this, sensorData, api, createGraphics(17, 12, P2D));
 
+		/*try {
+			HttpResponse<JsonNode> response = Unirest.get("https://portal.solaranalytics.com.au/api/v2/token").
+					basicAuth("demo@solaranalytics.com.au","demo123").
+					asJson();
+			
+		} catch (UnirestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		
     	delay(2000);
 	}
 	
@@ -71,22 +90,52 @@ public class Main extends PApplet implements SensorListener {
 		
 		//System.out.println(currentBrightness+" "+brightness);
 		
-		PGraphics pg = voltage.draw();
-		PGraphics pg_small = downscale(pg,3);
+		//PGraphics pg = voltage.draw();
+		//PGraphics pg_small = downscale(pg,3);
 		
 		//PGraphics pg = bargraph.draw();
 		//PGraphics pg_small = downscale(pg,3);
 		
-		sensorData.setCar(100);
+
+		//sensorData.setCar(100);
 		
 		
 		pSend.beginDraw();
 		pSend.noStroke();
-		pSend.fill(200,200,200);
+		pSend.fill(255,255,255);
 		pSend.rect(0, 0, pSend.width, pSend.height);
+			//pSend.fill(0,0,0);
+			//pSend.rect(0, 0, pSend.width, pSend.height);
+	    pSend.image(downscale(voltage.draw(), 3),0,0);
+			//pSend.image(text.draw(),0,0);
+		
+		//pSend.rect(0, 0, pSend.width, pSend.height);
+		if(textBol){
+			pSend.image(text.draw(),0,0);
+		}
+		//image(text.draw(),0,0);
+	    //}
 		pSend.fill(0,currentBrightness);
+
 		pSend.rect(0, 0, pSend.width, pSend.height);
-		pSend.image(pg_small,0,0);
+
+		//image(text.draw(),0,0);
+		
+		//pSend.image(pg_small, 0, 0);
+		
+		//pSend.background(frameCount%255);
+		//pSend.fill(255,255,255);
+		//pSend.rect(1, 1, 3, 1);
+		//pSend.fill(0,0,0);
+		//pSend.rect(1, 2, 1, 1);
+		//pSend.fill(0,0,0);
+		//pSend.rect(1, 1, 1, 1);
+		//pSend.fill(255,255,255);
+		//pSend.rect(1, 3, 1, 1);
+		//pSend.fill(255,255,255);
+		//pSend.rect(2, 2, 1, 2);
+		//pSend.fill(0,0,0);
+		//pSend.rect(10, 5, 1, 2);
 		pSend.endDraw();
 		
 		if(currentBrightness<brightness){
@@ -95,18 +144,22 @@ public class Main extends PApplet implements SensorListener {
 			currentBrightness--;
 		}
 		
+		//System.out.println("BRIGHTNESS: "+currentBrightness);
+		
 		screen.addLayer(pSend);
 		if (frameCount % 1 == 0) {
 			//System.out.println(frameRate);
 			screen.drawOnGui();
 		}
-		screen.send(9, 8, 8, 8, 8);
+		screen.send(9, 8, 0, 0, 0);
 		
-		image(pg,0,0);
+		//image(pg,0,0);
 		
-		if(frameCount%1000==0){
-			System.out.println(frameRate);
-		}
+		//System.out.println(api.getIntervall(new GregorianCalendar(), new GregorianCalendar(), GRAN.month, true).get(0).watt_device_id);
+		//System.out.println("AC: "+api.getLastEntry(MONITORS.ac_load_net).power);
+		//System.out.println("PC: "+api.getLastEntry(MONITORS.pv_site_net).power);
+		//System.out.println("HW: "+api.getLastEntry(MONITORS.load_hot_water).power);
+		
 		
 		//System.out.println(api.getDay().energy_generated);
 		
@@ -118,15 +171,15 @@ public class Main extends PApplet implements SensorListener {
 
 		//api.getLastEntry(new GregorianCalendar(2016, 6, 30, 19, 5, 0), true);
 		
-		if(frameCount%1000==0){
+		if(frameCount%1==0){
 			
-			System.out.println("CHANGE: "+api.getCurrentChangeConsumption());
-			System.out.println("MAX: "+api.getMaxConsumedLive());
-			System.out.println("MEAN: "+api.getMeanProducedWeekly(GRAN.day));
-			System.out.println("MAX PRODUCED: "+api.getMaxProducedWeekly(GRAN.minute));
-			System.out.println("MAX CONSUMED: "+api.getMaxConsumedWeekly(GRAN.minute));
+			//System.out.println("CHANGE: "+api.getCurrentChangeInConsumption());
+			//System.out.println("MEAN: "+api.getMeanProducedWeekly(GRAN.day));
+			//System.out.println("MAX PRODUCED: "+api.getMaxProducedWeekly(GRAN.minute));
+			//System.out.println("MAX CONSUMED: "+api.getMaxConsumedWeekly(GRAN.minute));
 			
-
+			//api.getMaxConsumedWeekly(GRAN.minute);
+			
 			//System.out.println(api.getLastSiteDataEntry());
 			//System.out.println(api.getMaxConsumedWeekly(GRAN.minute));
 			//System.out.println(api.getMaxProducedWeekly(GRAN.minute));
@@ -167,6 +220,14 @@ public class Main extends PApplet implements SensorListener {
 	public void speedChanged(SensorEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void keyPressed() {
+		if (key == '1') {
+			voltage.fake = !voltage.fake;
+		}else if(key == '2') {
+			textBol = !textBol;
+		}
 	}
 
 }

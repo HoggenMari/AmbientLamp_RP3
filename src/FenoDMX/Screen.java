@@ -6,6 +6,9 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
+import artnet4j.ArtNet;
+import artnet4j.ArtNetException;
+import artnet4j.packets.ArtDmxPacket;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
@@ -17,35 +20,50 @@ public class Screen extends Thread {
 	static byte[] CMD_DATA = { 0x00, 0x02, 0x00, (byte) 0xff };
 	static byte[] CMD_SYNC = { (byte) 0xff, (byte) 0xff, 0x02, 0x00 };
 	static int CONT_ID = 0;
-
+	
 	int dataIn;
-
+	int controller;
+	
 	static byte[] data = new byte[5000];
 	static int data_counter = 0;
 
 	static byte[] sync_data = new byte[16];
 
-	static final String HOST = "192.168.0.159";
+	static final String HOST = "193.168.0.99";
 	static int PORT = 53280;
 	private static InetAddress INET_ADDR;
 	private static DatagramSocket SOCKET;
-
+	ArtNet artnet;
+	private int sequenceID = 0;
+	
 	private int resX;
 	private int resY;
 	private PApplet p;
 	private PGraphics pgMain;
 
-	public Screen(PApplet p, int resX, int resY) {
+	public Screen(PApplet p, int resX, int resY, int controller) {
 		this.p = p;
 		this.resX = resX;
 		this.resY = resY;
 		this.pgMain = p.createGraphics(resX, resY,PConstants.P2D);
-
-		try {
-			SOCKET = new DatagramSocket();
-		} catch (SocketException e3) {
-			// TODO Auto-generated catch block
-			e3.printStackTrace();
+		this.controller = controller;
+		
+		if(controller == 0){
+			try {
+				SOCKET = new DatagramSocket();
+			} catch (SocketException e3) {
+				// TODO Auto-generated catch block
+				e3.printStackTrace();
+			}
+		}else if(controller == 1){
+			artnet = new ArtNet();
+			try {
+			  artnet.start();
+			} catch (SocketException e) {
+			  throw new AssertionError(e);
+			} catch (ArtNetException e) {
+			  throw new AssertionError(e);
+			}
 		}
 	}
 
@@ -84,7 +102,14 @@ public class Screen extends Thread {
 		}
 	}
 
-	public void send(int... nRow) {
+	public void send(int...nRow ){
+		if(controller == 0){
+			sendFeno(nRow);
+		}else if(controller == 1){
+			sendArtNet(nRow);
+		}
+	}
+	public void sendFeno(int... nRow) {
 
 		// key
 		data[0] = (byte) 0x66;
@@ -224,4 +249,45 @@ public class Screen extends Thread {
 		 */
 
 	}
+	
+	public void sendArtNet(int... nRow) {
+		
+		for (int i_universe = 0; i_universe < nRow.length; i_universe++) {
+
+		ArtDmxPacket dmx = new ArtDmxPacket();
+	    dmx.setUniverse(0, i_universe);
+	    dmx.setSequenceID(sequenceID % 255);
+	    byte[] data = new byte[510];
+	    
+	    int sum = 0;
+		for (int i = 0; i < i_universe; i++) {
+			sum += nRow[i];
+		}
+		
+		int data_counter = 0;
+	    for (int ix = sum; ix < sum + nRow[i_universe]; ix++) {
+			for (int iy = 0; iy < 12; iy++) {
+				int rgb = pgMain.get(ix, iy);
+				data[data_counter + 2] = (byte) (rgb & 0xff);
+				data[data_counter + 1] = (byte) (rgb >> 8 & 0xff);
+				data[data_counter] = (byte) (rgb >> 16 & 0xff);
+				data_counter += 3;
+				// System.out.println("DATACOUNT: "+data_counter);
+			}
+		}
+
+		for (int j = 0; j < 510 - (nRow[i_universe] * 12 * 3); j++) {
+			data[data_counter++] = (byte) 0;
+		}
+	    
+	    dmx.setDMX(data, data.length);
+	    artnet.unicastPacket(dmx, HOST);
+	    sequenceID++;
+	    
+	    //p.delay(5);
+	    
+		}
+
+	}
+	
 }

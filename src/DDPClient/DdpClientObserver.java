@@ -42,8 +42,8 @@ public class DdpClientObserver implements Observer {
 					if(property.equals("changed")){
 						JsonObject fields = jsonObject.getAsJsonObject("fields");
 					
-						if(id.equals("XTzsWbFMpabBcvwjs")){
-							//System.out.println(fields.get("score").getAsFloat());
+						if(id.equals("TEHhfTvG7ArMHpqm7")){
+							System.out.println(fields.get("score").getAsFloat());
 							sensorData.setBrightness((float)(fields.get("score").getAsFloat()/100.0));
 						}
 					}

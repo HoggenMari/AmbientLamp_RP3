@@ -28,8 +28,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import SolarAPI.SolarAnalyticsAPI.GRAN;
-
 public class SolarAnalyticsAPI implements SiteDataDao{
 
 	public enum GRAN
@@ -43,9 +41,9 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	
 	public enum MONITORS
 	{
-		load_hot_water,
 		ac_load_net,
-		pv_site_net,
+		load_hot_water,
+		pv_site_net
 	}
 	
 	String webPage = "https://portal.solaranalytics.com.au/api/v2";
@@ -72,6 +70,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	//LiveData
 	ArrayList<LiveData> liveData;
 	ArrayList<LiveDataEntry> consumptionArray = new ArrayList<LiveDataEntry>();
+	ArrayList<LiveDataEntry>[] liveBuffer = new ArrayList[3];
 	HashMap<String,ArrayList<LiveData>> sLiveData = new HashMap<String, ArrayList<LiveData>>();
 	long lastUpdateSiteLiveData;
 	int MAX_LIVE_DATA_SIZE = 200;
@@ -85,13 +84,17 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		siteDataRaw = new ArrayList<SiteDataRaw>();
 		liveData = new ArrayList<LiveData>();
 		
+		for(int i=0; i<liveBuffer.length; i++){
+			liveBuffer[i] = new ArrayList<LiveDataEntry>();
+		}
+		
 
 	}
 		
 	public JsonObject requestData(String gran){
 		
 		Date date = new Date();
-		long currentTimeStamp = date.getTime();getClass();
+		long currentTimeStamp = date.getTime();
 		
 		
 		if(currentTimeStamp-tokenTimeStamp>=6000){
@@ -110,7 +113,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 			urlConnection.setRequestProperty("Authorization", "Basic " + authStringEnc);
 			InputStream is = urlConnection.getInputStream();
 			InputStreamReader isr = new InputStreamReader(is);
-
+			
 			int numCharsRead;
 			char[] charArray = new char[1024];
 			StringBuffer sb = new StringBuffer();
@@ -127,10 +130,6 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 			
 			//Verify Json with Class
 			List<String> list = verifyElement(jsonObject, LiveData.class);
-
-			for(String s : list){
-			//	System.out.println(s);
-			}
 						
 			return jsonObject;
 			
@@ -186,11 +185,11 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 			return property;
 			
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+			System.out.println("Excpetion: "+e.getMessage());
+			//e.printStackTrace();
+		} 
 		return null;
 	}
 	
@@ -328,50 +327,66 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	        
 	        JsonObject jsonObject = requestData("/site_data/"+Integer.toString(site_id)+"?tstart="+tStartS+"&tend="+tEndS+"&gran="+value);
 			
-			System.out.println("/site_data/"+Integer.toString(site_id)+"?tstart="+tStartS+"&tend="+tEndS+"&gran="+value);
+	        if(jsonObject != null){
+	        	System.out.println("/site_data/"+Integer.toString(site_id)+"?tstart="+tStartS+"&tend="+tEndS+"&gran="+value);
 			
-			JsonArray getArray = jsonObject.getAsJsonArray("data");
+	        	JsonArray getArray = jsonObject.getAsJsonArray("data");
 			
-			Gson gson = new Gson();
-			siteData = new ArrayList<SiteData>();
+	        	Gson gson = new Gson();
+	        	siteData = new ArrayList<SiteData>();
 	        
-			for(int i=0; i<getArray.size(); i++){
-				siteData.add(gson.fromJson(getArray.get(i), SiteData.class));
-			}
-	        sData.put(hash, siteData);
+	        	for(int i=0; i<getArray.size(); i++){
+	        		siteData.add(gson.fromJson(getArray.get(i), SiteData.class));
+	        	}
+	        	sData.put(hash, siteData);
 	        
 		    //System.out.println("AFTER:  "+(System.nanoTime()-before));
 
 		    //System.out.println(sData.get(hash).toString());
 
 	        return sData.get(hash);
+	        
+	        } else {
+	        	//System.out.println("null");
+
+	        	return new ArrayList<SiteData>();
+	        }
 	        //System.out.println("Creating circle of color : " + hash);
-	    }else if(lastUpdateSiteData < timeStamp-(timeStamp%300000) && endCalendar.get(Calendar.YEAR)==GregorianCalendar.getInstance().get(Calendar.YEAR) && endCalendar.get(Calendar.MONTH)==GregorianCalendar.getInstance().get(Calendar.MONTH) && endCalendar.get(Calendar.DAY_OF_MONTH)==GregorianCalendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
+	    }else if(lastUpdateSiteData < timeStamp-(timeStamp%30000) && endCalendar.get(Calendar.YEAR)==GregorianCalendar.getInstance().get(Calendar.YEAR) && endCalendar.get(Calendar.MONTH)==GregorianCalendar.getInstance().get(Calendar.MONTH) && endCalendar.get(Calendar.DAY_OF_MONTH)==GregorianCalendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
 	    	
 	    	lastUpdateSiteData = timeStamp;
 	    	sData.remove(hash);
 	    	siteDataList = new ArrayList<SiteData>();
 	        JsonObject jsonObject = requestData("/site_data/"+Integer.toString(site_id)+"?tstart="+tStartS+"&tend="+tEndS+"&gran="+value);
-			JsonArray getArray = jsonObject.getAsJsonArray("data");
+			
+	        if(jsonObject != null){
+	        	JsonArray getArray = jsonObject.getAsJsonArray("data");
 
-			Gson gson = new Gson();
-			siteData = new ArrayList<SiteData>();
+				Gson gson = new Gson();
+				siteData = new ArrayList<SiteData>();
 	        
-			for(int i=0; i<getArray.size(); i++){
-				siteData.add(gson.fromJson(getArray.get(i), SiteData.class));
-			}
-	        sData.put(hash, siteData);
+				for(int i=0; i<getArray.size(); i++){
+					siteData.add(gson.fromJson(getArray.get(i), SiteData.class));
+				}
+	        	sData.put(hash, siteData);
 	        
-		    //System.out.println("AFTER M:  "+(System.nanoTime()-before));
+		    	//System.out.println("AFTER M:  "+(System.nanoTime()-before));
 
-		    //System.out.println(sData.get(hash).toString());
+		    	//System.out.println(sData.get(hash).toString());
 		    
-	        return sData.get(hash);
+	        	return sData.get(hash);
+	        } else {
+	        	//System.out.println("null");
+
+	        	return new ArrayList<SiteData>();
+	        }
 	    }
 	    
 	    //System.out.println("AFTER:  "+(System.nanoTime()-before));
 	    
 	    //System.out.println(sData.get(hash).toString());
+	    
+	    System.out.println(sData.size());
 
 		return siteDataList;
 	}
@@ -498,6 +513,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 			
 			System.out.println("/site_data/"+Integer.toString(site_id)+"?tstart="+tStartS+"&tend="+tEndS+"&gran="+value+"&raw=true");
 			
+			//if(jsonObject.has("bla")){
 			JsonArray getArray = jsonObject.getAsJsonArray("data");
 			
 			Gson gson = new Gson();
@@ -507,7 +523,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 				siteDataRaw.add(gson.fromJson(getArray.get(i), SiteDataRaw.class));
 			}
 	        sDataRaw.put(hash, siteDataRaw);
-	        
+			//}
 		    //System.out.println("AFTER:  "+(System.nanoTime()-before));
 
 		    //System.out.println(sDataRaw.get(hash).toString());
@@ -520,7 +536,8 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	    	sDataRaw.remove(hash);
 	    	siteDataList = new ArrayList<SiteDataRaw>();
 	        JsonObject jsonObject = requestData("/site_data/"+Integer.toString(site_id)+"?tstart="+tStartS+"&tend="+tEndS+"&gran="+value+"&raw=true");
-			JsonArray getArray = jsonObject.getAsJsonArray("data");
+			
+	        JsonArray getArray = jsonObject.getAsJsonArray("data");
 
 			Gson gson = new Gson();
 			siteDataRaw= new ArrayList<SiteDataRaw>();
@@ -540,7 +557,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	    //System.out.println("AFTER:  "+(System.nanoTime()-before));
 	    
 	    //System.out.println(sData.get(hash).toString());
-
+	    
 		return siteDataList;
 	}
 
@@ -548,7 +565,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	public List<LiveData> getIntervallLive(GregorianCalendar startCalendar, boolean all) {
 		
 		String watt_device_id = getIntervall(new GregorianCalendar(), new GregorianCalendar(), GRAN.month, true).get(0).watt_device_id;
-		
+				
 		Date date = new Date();
 		long timeStamp = date.getTime();
 		
@@ -746,7 +763,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 			max_produced += entry.energy_consumed;
 		}
 		
-		//System.out.println(max_produced/data.size());
+		System.out.println(max_produced/data.size());
 		
 		return max_produced/data.size();
 		
@@ -769,6 +786,53 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		//System.out.println(data);
 		
 		return max_produced;
+	}
+	
+	public ArrayList<LiveDataEntry> getLiveBuffer(MONITORS monitor){
+		
+		List<LiveData> liveData = getIntervallLive(new GregorianCalendar(), true);
+		
+		if(liveBuffer[monitor.ordinal()].isEmpty()){
+			for(LiveDataEntry entry : liveData.get(monitor.ordinal()).live_data){
+				liveBuffer[monitor.ordinal()].add(entry);
+			}
+		}else{
+			
+			int buf1 = liveData.get(monitor.ordinal()).live_data.size();
+			int buf2 = liveBuffer[monitor.ordinal()].size();
+			
+			//System.out.println(buf1+" "+buf2);
+			
+			int num = 0;
+			
+			for(int i=0; i<buf1; i++){
+				boolean comp = false;
+				for(int j=0; j<buf2; j++){
+					if(liveData.get(monitor.ordinal()).live_data.get(i).time.compareTo(liveBuffer[monitor.ordinal()].get(j).time)==0){
+						comp = true;
+					};
+				}
+				if(comp==true){
+					num = i;
+				}
+			}
+			
+			if(num!=buf1-1){
+				for(int i=num+1; i<buf1; i++){
+					liveBuffer[monitor.ordinal()].add(liveData.get(monitor.ordinal()).live_data.get(i));
+				}
+			}
+			
+			//System.out.println(num);
+			
+			if(liveBuffer[monitor.ordinal()].size()>MAX_LIVE_DATA_SIZE){
+				liveBuffer[monitor.ordinal()].remove(0);
+			}
+		}
+		
+		//System.out.println(monitor.ordinal());
+		
+		return liveBuffer[monitor.ordinal()];
 	}
 	
 	public ArrayList<LiveDataEntry> getLiveConsumptionBuffer() {
@@ -824,19 +888,126 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		
 	}
 	
+	public float getCurrentConsumption() {
+		
+		ArrayList<LiveDataEntry> data_ac = getLiveBuffer(MONITORS.ac_load_net);
+		ArrayList<LiveDataEntry> data_pv = getLiveBuffer(MONITORS.pv_site_net);
+		
+		if(data_ac.size()>0){
+			return data_pv.get(data_pv.size()-1).power+data_ac.get(data_ac.size()-1).power;
+		}
+		return 0;
+	}
+	
+	public float getCurrentProduction() {
+		
+		ArrayList<LiveDataEntry> data_pv = getLiveBuffer(MONITORS.pv_site_net);
+		
+		if(data_pv.size()>0){
+			return data_pv.get(data_pv.size()-1).power;
+		}
+		return 0;
 
-	public float getCurrentChangeConsumption() {
+	}
+	
+	public float getCurrentHotWater() {
 		
-		ArrayList<LiveDataEntry> data = getLiveConsumptionBuffer();
+		ArrayList<LiveDataEntry> data_hw = getLiveBuffer(MONITORS.load_hot_water);
 		
-		if(data.size()>=2){
-		return data.get(data.size()-1).power - data.get(data.size()-2).power;
+		if(data_hw.size()>0){
+			return data_hw.get(data_hw.size()-1).power;
+		}
+		return 0;
+	}
+	
+	public float getCurrentChangeInConsumption() {
+		
+		ArrayList<LiveDataEntry> data_ac = getLiveBuffer(MONITORS.ac_load_net);
+		ArrayList<LiveDataEntry> data_pv = getLiveBuffer(MONITORS.pv_site_net);
+		
+		//System.out.println(data_pv.get(data_pv.size()-1).power);
+		//System.out.println(data_ac.get(data_ac.size()-1).power);
+		//System.out.println(data_pv.get(data_pv.size()-2).power);
+		//System.out.println(data_ac.get(data_ac.size()-2).power);
+		
+		if(data_ac.size()>=2){
+			return (data_pv.get(data_pv.size()-1).power+data_ac.get(data_ac.size()-1).power)-(data_pv.get(data_pv.size()-2).power+data_ac.get(data_ac.size()-2).power);
 		}
 		return 0;
 		
 	}
 	
-	public float getMaxConsumedLive() {
+	public float getCurrentChangeInProduction(){
+		
+		ArrayList<LiveDataEntry> data_pv = getLiveBuffer(MONITORS.pv_site_net);
+		
+		if(data_pv.size()>=2){
+			return data_pv.get(data_pv.size()-1).power-data_pv.get(data_pv.size()-2).power;
+		}
+		return 0;
+
+	}
+	
+	public float getCurrentChangeInHotWater(){
+		
+		ArrayList<LiveDataEntry> data_hw = getLiveBuffer(MONITORS.load_hot_water);
+		
+		if(data_hw.size()>=2){
+			return data_hw.get(data_hw.size()-1).power-data_hw.get(data_hw.size()-2).power;
+		}
+		return 0;
+		
+	}
+	
+	public float getMaxInConsumption(){
+		
+		ArrayList<LiveDataEntry> data_ac = getLiveBuffer(MONITORS.ac_load_net);
+		ArrayList<LiveDataEntry> data_pv = getLiveBuffer(MONITORS.pv_site_net);
+		
+		float max_consumed = 0;
+		if(data_ac.size() == data_pv.size()){
+			
+			for(int i=0; i<data_ac.size(); i++){
+				if((data_pv.get(i).power+data_ac.get(i).power)>max_consumed){
+					max_consumed = data_pv.get(i).power+data_ac.get(i).power;
+					//System.out.println(i);
+				}
+			}
+			
+		}
+		
+		return max_consumed;
+	}
+	
+	public float getMaxInProduction(){
+		
+		ArrayList<LiveDataEntry> data_pv = getLiveBuffer(MONITORS.pv_site_net);
+		
+		float max_produced = 0;
+		for(LiveDataEntry entry : data_pv){
+			if(entry.power > max_produced){
+				max_produced = entry.power;
+			}
+		}
+		
+		return max_produced;
+	}
+	
+	public float getMaxInHotWater(){
+		
+		ArrayList<LiveDataEntry> data_hw = getLiveBuffer(MONITORS.load_hot_water);
+		
+		float max_hw = 0;
+		for(LiveDataEntry entry : data_hw){
+			if(entry.power > max_hw){
+				max_hw = entry.power;
+			}
+		}
+		
+		return max_hw;
+	}
+	
+	/*public float getMaxConsumedLive() {
 		
 		ArrayList<LiveDataEntry> data = getLiveConsumptionBuffer();
 		
@@ -849,5 +1020,5 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		
 		return max_consumed;
 		
-	}
+	}*/
 }

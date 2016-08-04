@@ -53,7 +53,7 @@ public class BarGraph {
 				    };
 
 		
-		List<LiveDataEntry> data = api.getLiveDataEntry(MONITORS.ac_load_net);
+		List<LiveDataEntry> data = api.getLiveBuffer(MONITORS.ac_load_net);
 		
 		float highestValue = 0;
 		for(LiveDataEntry entry : data){
