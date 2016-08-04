@@ -97,7 +97,7 @@ public class Main extends PApplet implements SensorListener {
 		//PGraphics pg = bargraph.draw();
 		//PGraphics pg_small = downscale(pg,3);
 		
-
+		voltage.fake = true;
 		//sensorData.setCar(100);
 		System.out.println(frameRate);
 		
@@ -107,7 +107,7 @@ public class Main extends PApplet implements SensorListener {
 		pSend.rect(0, 0, pSend.width, pSend.height);
 			//pSend.fill(0,0,0);
 			//pSend.rect(0, 0, pSend.width, pSend.height);
-	    pSend.image(downscale(voltage.draw(), 2),0,0);
+	    pSend.image(downscale(voltage.draw(), 1),0,0);
 			//pSend.image(text.draw(),0,0);
 		
 		//pSend.rect(0, 0, pSend.width, pSend.height);
@@ -198,7 +198,7 @@ public class Main extends PApplet implements SensorListener {
 
 	PGraphics downscale(PGraphics pg, int intensity) {
 		PImage in = pg.get();
-		//in.filter(BLUR, intensity);
+		in.filter(BLUR, intensity);
 		in.resize(17, 12);
 		PGraphics out = createGraphics(17, 12, P2D);
 		out.image(in, 0, 0);
