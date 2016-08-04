@@ -198,7 +198,7 @@ public class Main extends PApplet implements SensorListener {
 
 	PGraphics downscale(PGraphics pg, int intensity) {
 		PImage in = pg.get();
-		in.filter(BLUR, intensity);
+		//in.filter(BLUR, intensity);
 		in.resize(17, 12);
 		PGraphics out = createGraphics(17, 12, P2D);
 		out.image(in, 0, 0);
