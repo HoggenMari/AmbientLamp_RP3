@@ -19,4 +19,14 @@
       });	
     }
 
+    if (Checkbox.find().count() === 0) {
+      var names = ["Lamp"];
+      _.each(names, function (name) {
+        Checkbox.insert({
+          name: name,
+          checkedValue: true
+        });
+      });
+    }
+
   });

@@ -1,7 +1,7 @@
   var timeout;
   var clicker = 'mousedown';
   clicker = ('ontouchstart' in document.documentElement) ? 'touchstart' : 'mousedown';
- 
+
   Template.settingsList.rendered = function(){
     console.log("test");
       
@@ -9,9 +9,38 @@
       
       
       $('body').append("<script type='text/javascript'>window.onload = function(){var $picker = document.getElementById('colorPicker'),picker  = tinycolorpicker($picker);var $picker = document.getElementById('colorPicker2'),picker  = tinycolorpicker($picker);}</script>");
-      
-      
-      
+
+    var elem = document.querySelector('.js-switch');
+    var init = new Switchery(elem);
+
+    elem.onchange = function() {
+        console.log("clicked button");
+
+
+        Checkbox.findAndModify(
+            {name: 'Lamp'}, // query
+            [['_id','asc']],  // sort order
+            {$set: {checkedValue: elem.checked}}, // replacement, replaces only the field "hi"
+            {}, // options
+            function(err, object) {
+                if (err){
+                    console.warn(err.message);  // returns error if no matching object found
+                }else{
+                    console.dir(object);
+                }
+            });
+
+        //Checkbox.findAndModify({
+        //    {name: 'Lamp'},
+        //    [['_id','asc']],
+        //    {$set: {checkedValue:elem.checked}},
+        //    {}
+        //});
+        //Checkbox.update(this._id, {$set: {checkedValue:elem.checked}});
+
+        //console.log(Checkbox.find(this._id));
+    };
+
   };
 
   Template.leaderboard.helpers({
