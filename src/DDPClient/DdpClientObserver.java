@@ -22,7 +22,7 @@ public class DdpClientObserver implements Observer {
 	public void update(Observable client, Object msg) {
 
 		SensorData sensorData = SensorData.getInstance();
-		
+				
 		if (msg instanceof String) {
 			System.out.println("Test: "+msg);
 			
@@ -42,9 +42,18 @@ public class DdpClientObserver implements Observer {
 					if(property.equals("changed")){
 						JsonObject fields = jsonObject.getAsJsonObject("fields");
 					
-						if(id.equals("TEHhfTvG7ArMHpqm7")){
+						if(id.equals(sensorData.getBrightnessID())){
 							System.out.println(fields.get("score").getAsFloat());
 							sensorData.setBrightness((float)(fields.get("score").getAsFloat()/100.0));
+						}
+					}else if(property.equals("added")){
+						JsonObject fields = jsonObject.getAsJsonObject("fields");
+						
+						String name = fields.get("name").getAsString();
+						
+						if(name.equals("Brightness")){
+							System.out.println("Brightness: "+id);
+							sensorData.setBrightnessID(id);
 						}
 					}
 				}

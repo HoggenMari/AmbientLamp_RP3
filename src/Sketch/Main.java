@@ -59,7 +59,8 @@ public class Main extends PApplet implements SensorListener {
 		client = new DDPClient("localhost", 3000);
     	client.connect();
     	
-    	SensorData.getInstance().addSensorListener(this);
+    	sensorData.addSensorListener(this);
+    	//SensorData.getInstance().addSensorListener(this);
     	
 		size(100,100);
 		screen = new Screen(this, 17, 12, 1);
@@ -115,6 +116,7 @@ public class Main extends PApplet implements SensorListener {
 		}
 		//image(text.draw(),0,0);
 	    //}
+		
 		pSend.fill(0,currentBrightness);
 
 		pSend.rect(0, 0, pSend.width, pSend.height);
@@ -206,7 +208,7 @@ public class Main extends PApplet implements SensorListener {
 	
 	@Override
 	public void brightnessChanged(SensorEvent e) {
-		//System.out.println("Brightness Changed");
+		System.out.println("Brightness Changed");
 		brightness = (int)(255.0-e.getBrightness()*255);
 	}
 

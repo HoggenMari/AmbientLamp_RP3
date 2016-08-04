@@ -8,6 +8,7 @@ public class SensorData {
 
 	// private SensorEventMulticaster multicaster;
 	private float brightness, particles, speed;
+	private String brightnessID;
 	private int speedZ;
 	private float accX, accY, accZ;
 	private float gyroX, gyroY, gyroZ;
@@ -289,5 +290,13 @@ public class SensorData {
 			}
 		}
 
+	}
+
+	public String getBrightnessID() {
+		return brightnessID;
+	}
+
+	public void setBrightnessID(String brightnessID) {
+		this.brightnessID = brightnessID;
 	}
 }
