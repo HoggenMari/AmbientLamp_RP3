@@ -107,7 +107,7 @@ public class Main extends PApplet implements SensorListener {
 		pSend.rect(0, 0, pSend.width, pSend.height);
 			//pSend.fill(0,0,0);
 			//pSend.rect(0, 0, pSend.width, pSend.height);
-	    pSend.image(downscale(voltage.draw(), 2),0,0);
+	    pSend.image(downscale(voltage.draw(), 1),0,0);
 			//pSend.image(text.draw(),0,0);
 		
 		//pSend.rect(0, 0, pSend.width, pSend.height);
