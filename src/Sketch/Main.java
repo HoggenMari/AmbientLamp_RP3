@@ -99,7 +99,7 @@ public class Main extends PApplet implements SensorListener {
 		
 
 		//sensorData.setCar(100);
-		
+		System.out.println(frameRate);
 		
 		pSend.beginDraw();
 		pSend.noStroke();
