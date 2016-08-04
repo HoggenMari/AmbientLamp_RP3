@@ -162,16 +162,16 @@ public class Voltage implements CarListener {
 		//System.out.println("LIVEBUFFER: "+api.getLiveBuffer(MONITORS.ac_load_net));
 		//System.out.println("MAX: "+api.getMaxInConsumption());
 
-		float mapProduce2 = applet.map(produced, 0, consumed, 0, 100);
-		float mapConsumed2 = applet.map(consumed, 0, produced, 0, 100);
+		float mapProduce2 = applet.map(produced, 0, consumed, 0, canvas.width/2);
+		float mapConsumed2 = applet.map(consumed, 0, produced, 0, canvas.width/2);
 		
 		
 		
 		if(produced>consumed){
-			smoothCircle(100);
+			smoothCircle(canvas.width/2);
 			smoothCircleConsumed(mapConsumed2);
 		}else{
-			smoothCircleConsumed(100);
+			smoothCircleConsumed(canvas.width/2);
 			smoothCircle(mapProduce2);
 		}
 		
