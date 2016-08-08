@@ -117,7 +117,7 @@ public class Circle implements CarListener {
 				22 * applet.sin(0), 55);
 		bc = c[22];
 		
-		canvas.background(182,153,81);
+		canvas.background(90,75,40);
 		canvas.fill(255);
 
 		
@@ -234,7 +234,7 @@ public class Circle implements CarListener {
 				applet.color(100, 194, 255, 88)));
 		canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(255, 250, 127, 150)));
 		canvas.fill(calcColor(100, applet.color(135, 96, 190, 88), applet.color(153, 109, 214, 88), applet.color(180, 136, 242, 88)));
-		canvas.fill(calcColor(60, applet.color(255, 144, 36, 88), applet.color(255, 144, 36, 150), applet.color(255, 144, 36, 200)));
+		canvas.fill(calcColor(60, applet.color(245, 164, 64, 88), applet.color(245, 164, 64, 88), applet.color(245, 164, 64, 88)));
 
 		for (int n = 0; n < 5; n++) {
 			canvas.ellipse(x, y, rad * applet.pow(0.9f, n),
