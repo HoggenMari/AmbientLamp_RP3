@@ -18,6 +18,7 @@ import SolarAPI.SolarAnalyticsAPI;
 import SolarAPI.SolarAnalyticsAPI.GRAN;
 import SolarAPI.SolarAnalyticsAPI.MONITORS;
 import Visualisations.BarGraph;
+import Visualisations.Circle;
 import Visualisations.Text;
 import Visualisations.Voltage;
 import processing.core.PApplet;
@@ -38,6 +39,7 @@ public class Main extends PApplet implements SensorListener {
 	SolarAnalyticsAPI api;
 	
 	private Voltage voltage;
+	private Circle circle;
 	private SensorData sensorData;
 	private BarGraph bargraph;
 	private Text text;
@@ -68,6 +70,8 @@ public class Main extends PApplet implements SensorListener {
 		
     	api = new SolarAnalyticsAPI();
 		voltage = new Voltage(this, sensorData, api, createGraphics(85, 60, P2D));
+		circle = new Circle(this, sensorData, api, createGraphics(85, 60, P2D));
+
 		bargraph = new BarGraph(this, sensorData, api, createGraphics(170, 120, P2D));
 		text = new Text(this, sensorData, api, createGraphics(17, 12, P2D));
 
@@ -107,7 +111,7 @@ public class Main extends PApplet implements SensorListener {
 		pSend.rect(0, 0, pSend.width, pSend.height);
 			//pSend.fill(0,0,0);
 			//pSend.rect(0, 0, pSend.width, pSend.height);
-	    pSend.image(downscale(voltage.draw(), 1),0,0);
+	    pSend.image(downscale(circle.draw(), 1),0,0);
 			//pSend.image(text.draw(),0,0);
 		
 		//pSend.rect(0, 0, pSend.width, pSend.height);
