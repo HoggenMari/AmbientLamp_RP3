@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "jquery": "^2.2.3",
+    "jsftp": "^1.5.3",
     "meteor-node-stubs": "~0.2.0"
   }
 }
