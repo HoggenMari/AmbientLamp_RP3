@@ -29,7 +29,7 @@ public class Voltage implements CarListener {
 	float producedCur;
 	float consumedCur;
 	public boolean valueChanged = false;
-	public boolean fake = false;
+	public boolean fake = true;
 
 	float produced, consumed;
 

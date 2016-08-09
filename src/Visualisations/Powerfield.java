@@ -14,7 +14,7 @@ public class Powerfield {
 		this.applet = applet;
 		this.canvas = canvas;
 		rad = 0;
-		color = applet.color(255, 200);
+		color = applet.color(255, 100);
 	}
 	
 	public Powerfield(PApplet applet, PGraphics canvas, int color) {
@@ -29,7 +29,7 @@ public class Powerfield {
 		canvas.beginDraw();
 		canvas.noFill();
 		canvas.stroke(color);
-		canvas.strokeWeight(10);
+		canvas.strokeWeight(7);
 		canvas.ellipse(canvas.width / 2, canvas.height / 2, rad, rad);
 		canvas.endDraw();
 	}

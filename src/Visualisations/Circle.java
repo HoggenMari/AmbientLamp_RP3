@@ -29,7 +29,7 @@ public class Circle implements CarListener {
 	float producedCur;
 	float consumedCur;
 	public boolean valueChanged = false;
-	public boolean fake = false;
+	public boolean fake = true;
 
 	float produced, consumed;
 
@@ -212,7 +212,7 @@ public class Circle implements CarListener {
 		canvas.fill(calcColor(r, applet.color(244, 57, 67, 88),
 				applet.color(227, 229, 229, 88),
 				applet.color(100, 194, 255, 88)));
-		canvas.fill(calcColor(60, applet.color(163, 49, 49, 150), applet.color(163, 49, 49, 200), applet.color(163, 49, 49, 255)));
+		canvas.fill(calcColor(60, applet.color(123, 49, 49, 150), applet.color(143, 49, 49, 200), applet.color(163, 49, 49, 255)));
 		//canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(200, 31, 255, 150)));
 
 		for (int n = 0; n < 5; n++) {
