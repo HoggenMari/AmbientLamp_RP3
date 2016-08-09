@@ -167,13 +167,13 @@ public class Circle implements CarListener {
 		
 		
 		
-		if(produced>consumed){
-			smoothCircle(canvas.width/2);
-			smoothCircleConsumed(mapConsumed2);
-		}else{
+		//if(produced>consumed){
+		//	smoothCircle(canvas.width/2);
+		//	smoothCircleConsumed(mapConsumed2);
+		//}else{
 			smoothCircleConsumed((int)(canvas.width/2.5));
 			smoothCircle((int)(canvas.width/4));
-		}
+		//}
 		
 		for (int e = 0; e < electrons.size(); e++) {
 			if (electrons.get(e).dead()) {
@@ -208,7 +208,7 @@ public class Circle implements CarListener {
 		int x = canvas.width/2;
 		int y = canvas.height/2;
 		float rad = applet.map(r, 0f, 100f, 10f, 200f);
-		rad = ((applet.sin(0) + 1f) / 2f) * rad * 0.25f + rad * 0.75f;
+		rad = ((applet.sin(step) + 1f) / 3f) * rad * 0.25f + rad * 0.75f;
 		canvas.fill(calcColor(r, applet.color(244, 57, 67, 88),
 				applet.color(227, 229, 229, 88),
 				applet.color(100, 194, 255, 88)));
@@ -226,9 +226,9 @@ public class Circle implements CarListener {
 		int y = canvas.height/2;
 		float rad = applet.map(r, 0f, 100f, 10f, 200f);
 		rad = ((applet.sin(0) + 1f) / 2f) * rad * 0.25f + rad * 0.75f;
-		if(change){
+		//if(change){
 			rad = ((applet.sin(step) + 1f) / 2f) * rad * 0.3f + rad * 0.8f;
-		}
+		//}
 		canvas.fill(calcColor(r, applet.color(244, 57, 67, 88),
 				applet.color(227, 229, 229, 88),
 				applet.color(100, 194, 255, 88)));
