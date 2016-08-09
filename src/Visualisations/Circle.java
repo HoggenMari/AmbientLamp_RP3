@@ -212,7 +212,7 @@ public class Circle implements CarListener {
 		canvas.fill(calcColor(r, applet.color(244, 57, 67, 88),
 				applet.color(227, 229, 229, 88),
 				applet.color(100, 194, 255, 88)));
-		canvas.fill(calcColor(60, applet.color(163, 49, 49, 88), applet.color(163, 49, 49, 150), applet.color(163, 49, 49, 200)));
+		canvas.fill(calcColor(60, applet.color(163, 49, 49, 150), applet.color(163, 49, 49, 200), applet.color(163, 49, 49, 255)));
 		//canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(200, 31, 255, 150)));
 
 		for (int n = 0; n < 5; n++) {
@@ -234,7 +234,7 @@ public class Circle implements CarListener {
 				applet.color(100, 194, 255, 88)));
 		canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(255, 250, 127, 150)));
 		canvas.fill(calcColor(100, applet.color(135, 96, 190, 88), applet.color(153, 109, 214, 88), applet.color(180, 136, 242, 88)));
-		canvas.fill(calcColor(60, applet.color(245, 164, 64, 88), applet.color(245, 164, 64, 88), applet.color(245, 164, 64, 88)));
+		canvas.fill(calcColor(60, applet.color(245, 230, 210, 88), applet.color(245, 164, 120, 88), applet.color(245, 164, 64, 150)));
 
 		for (int n = 0; n < 5; n++) {
 			canvas.ellipse(x, y, rad * applet.pow(0.9f, n),
