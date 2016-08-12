@@ -2,10 +2,55 @@
   var clicker = 'mousedown';
   clicker = ('ontouchstart' in document.documentElement) ? 'touchstart' : 'mousedown';
 
+  Router.configure({
+    layoutTemplate: 'mainPage'
+  });
+
+  Router.route('/', {
+    name: 'leaderboard',
+    template: 'leaderboard'
+  });
+
+  Router.route('/list/:_id', {
+    name: 'listPage',
+    template: 'listPage',
+    data: function(){
+      var currentList = this.params._id;
+      return Visuals.findOne({ _id: currentList });
+    }
+  });
+
+  Template.listPage.rendered = function() {
+      console.log(Visuals.find({}));
+
+  }
+
+  Template.header.rendered = function (){
+
+    elem.onchange = function() {
+      console.log("clicked button");
+
+
+      Checkbox.findAndModify(
+          {name: 'Lamp'}, // query
+          [['_id','asc']],  // sort order
+          {$set: {checkedValue: elem.checked}}, // replacement, replaces only the field "hi"
+          {}, // options
+          function(err, object) {
+            if (err){
+              console.warn(err.message);  // returns error if no matching object found
+            }else{
+              console.dir(object);
+            }
+          });
+    };
+
+  }
+
   Template.settingsList.rendered = function(){
     console.log("test");
       
-      $('body').append("<script type='text/javascript' src='tinycolorpicker.js'>");
+      $('body').append("<script type='text/javascript' src='tinycolorpicker.js'></script>");
       
       
       $('body').append("<script type='text/javascript'>window.onload = function(){var $picker = document.getElementById('colorPicker'),picker  = tinycolorpicker($picker);var $picker = document.getElementById('colorPicker2'),picker  = tinycolorpicker($picker);}</script>");
@@ -13,45 +58,7 @@
     var elem = document.querySelector('.js-switch');
     var init = new Switchery(elem);
 
-    elem.onchange = function() {
-        console.log("clicked button");
-
-
-        Checkbox.findAndModify(
-            {name: 'Lamp'}, // query
-            [['_id','asc']],  // sort order
-            {$set: {checkedValue: elem.checked}}, // replacement, replaces only the field "hi"
-            {}, // options
-            function(err, object) {
-                if (err){
-                    console.warn(err.message);  // returns error if no matching object found
-                }else{
-                    console.dir(object);
-                }
-            });
-
-        //Checkbox.findAndModify({
-        //    {name: 'Lamp'},
-        //    [['_id','asc']],
-        //    {$set: {checkedValue:elem.checked}},
-        //    {}
-        //});
-        //Checkbox.update(this._id, {$set: {checkedValue:elem.checked}});
-
-        //console.log(Checkbox.find(this._id));
-    };
-
   };
-
-  Template.leaderboard.helpers({
-    players: function () {
-      return Players.find({}, { sort: { score: -1, name: 1 } });
-    },
-    selectedName: function () {
-      var player = Players.findOne(Session.get("selectedPlayer"));
-      return player && player.name;
-    }
-  });
 
   Template.settingsList.helpers({
     settings: function () {
@@ -61,23 +68,11 @@
       var setting = Settings.findOne(Session.get("selectedSetting"));
       return setting && setting.name;
     }
-  });	
-
-  Template.leaderboard.events({
-    'click .inc': function () {
-      Players.update(Session.get("selectedPlayer"), {$inc: {score: 5}});
-    }
   });
 
   Template.settingsList.events({
     'click .inc': function () {
-      Players.update(Session.get("selectedSetting"), {$inc: {score: 5}});
-    }
-  });
-
-  Template.player.helpers({
-    selected: function () {
-      return Session.equals("selectedPlayer", this._id) ? "selected" : '';
+      Settings.update(Session.get("selectedSetting"), {$inc: {score: 5}});
     }
   });
 
@@ -87,12 +82,21 @@
     }
   });
 
-  Template.player.events({
-    'click': function () {
-      Session.set("selectedPlayer", this._id);
+  Template.leaderboard.helpers({
+    visuals: function () {
+      return Visuals.find({});
+    },
+    selectedSetting: function () {
+      var visual = Visuals.findOne(Session.get("selectedSetting"));
+      return visual && visual.name;
     }
   });
 
+  Template.visual.helpers({
+    selected: function () {
+      return Session.equals("selectedSetting", this._id) ? "selected" : '';
+    }
+  });
   function increase(setting) {
     var count = Settings.findOne(setting, {fields: {score: 1} });
     if(count.score<100){

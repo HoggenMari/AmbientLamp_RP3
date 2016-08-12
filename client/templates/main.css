@@ -73,7 +73,49 @@ body {
     background-color: #fafafa;
 }
 
-.player {
+.settings {
+  z-index: 9999;
+  border-top: 1px solid #f1f1f1;
+  counter-reset: ol-counter;
+  list-style-type: none;
+  padding: 0;
+  bottom: 0;
+  position: fixed;
+  width: 480px;
+  padding: 0px 10px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  background-color: #fafafa;
+}
+
+.visualList {
+  z-index: 9999;
+  counter-reset: ol-counter;
+  list-style-type: none;
+  padding: 0;
+  bottom: 0;
+  width: 480px;
+  padding: 10px 10px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  background-color: #ffffff;
+}
+
+.visual {
+  z-index: 9999;
+  border-top: 1px solid #f1f1f1;
+  counter-reset: ol-counter;
+  list-style-type: none;
+  padding: 0;
+  bottom: 0;
+  width: 480px;
+  padding: 0px 10px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  background-color: #ffffff;
+}
+
+.setting {
   border-bottom: 1px solid #f1f1f1;
   cursor: pointer;
   padding: 0.1em .1em;
@@ -83,13 +125,13 @@ body {
   margin-left: 4px;
 }
 
-.player .avatar {
+.setting .avatar {
   display: inline-block;
   margin-right: 1em;
   vertical-align: middle;
 }
 
-.player .name {
+.setting .name  {
   display: inline-block;
   font-size: 1.25em;
   font-weight: 300;
@@ -100,7 +142,19 @@ body {
   vertical-align: middle;
 }
 
-.player .icon {
+.visual .name {
+  display: inline-block;
+  font-size: 1.25em;
+  font-weight: 300;
+  vertical-align: middle;
+  text-align: right;
+  line-height: 3em;
+  text-align: center;
+  vertical-align: middle;
+}
+
+
+.setting .icon, .visual .icon {
   display: inline-block;
   font-size: 1.25em;
   font-weight: 300;
@@ -109,7 +163,7 @@ body {
   vertical-align: middle;
 }
 
-.player .score {
+.setting .score {
   color: #333;
   display: block;
   float: right;
@@ -119,7 +173,7 @@ body {
   padding-right: 1.25em;
 }
 
-.player.selected {
+.setting.selected {
   background-color: #fefff4;
   border-left: #eb5f3a 4px solid;
 }

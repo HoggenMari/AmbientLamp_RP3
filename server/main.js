@@ -103,6 +103,7 @@ Meteor.startup(function () {
 
     });*/
 
+
     if (Settings.find().count() === 0) {
       var names = ["Brightness", "Saturation"];
       _.each(names, function (name) {
@@ -122,5 +123,15 @@ Meteor.startup(function () {
         });
       });
     }
+
+    //if(Visuals.find().count() == 0) {
+        var names = ["Visual 1", "Visual 2", "Visual 3"];
+        _.each(names, function (name) {
+            Visuals.insert({
+                name: name,
+                colors: [ "FFFFFF", "FF0000" ]
+            });
+        });
+    //}
 
   });

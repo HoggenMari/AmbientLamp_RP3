@@ -1,0 +1,86 @@
+<head>
+  <title>Ambient Light Display</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+
+
+
+</body>
+
+<template name="header">
+    <div class="header">
+        <h1 class="title">Ambient</h1>
+        <input type="checkbox" class="js-switch" checked />
+    </div>
+</template>
+
+<template name="settingsList">
+  <ol class="settings">
+    {{#each settings}}
+      {{> setting}}
+    {{/each}}
+  </ol>
+
+    <div id="colorPicker">
+        <a class="color"><div class="colorInner"></div></a>
+        <div class="track"></div>
+        <ul class="dropdown"><li></li></ul>
+        <input type="hidden" class="colorInput"/>
+    </div>
+    <div id="colorPicker2">
+        <a class="color"><div class="colorInner"></div></a>
+        <div class="track"></div>
+        <ul class="dropdown"><li></li></ul>
+        <input type="hidden" class="colorInput"/>
+    </div>
+</template>
+
+<template name="setting">
+  <li class="setting {{selected}}">
+    <img class="icon" src="/{{name}}.png">
+    <span class="name">{{name}}: </span>
+    <span class="name">{{score}}</span>
+    <span><button class="dec">-</button></span>
+    <button class="inc">+</button>
+  </li>
+</template>
+
+
+<template name="leaderboard">
+    <ol class="visualList">
+        {{#each visuals}}
+            {{> visual}}
+        {{/each}}
+    </ol>
+</template>
+
+<template name="visual">
+    <a href="{{pathFor route='listPage'}}"><li class="visual {{selected}}">
+        <span class="name">{{name}}</span>
+        <span><img class="icon" src="/right-arrow.png"></span>
+    </li></a>
+</template>
+
+<template name="mainPage">
+    <div class="outer">
+        {{> header}}
+        {{> settingsList}}
+
+    </div>
+</template>
+
+<template name="listPage">
+    <h2>Tasks: {{colors}}</h2>
+    <ol>
+        {{#each colors}}
+            {{> colors}}
+        {{/each}}
+    </ol>
+</template>
+
+<template name="color">
+    <h1>Test</h1>
+</template>
