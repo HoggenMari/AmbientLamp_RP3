@@ -1,33 +1,35 @@
 /* COLORPICKER 1 EXAMPLE */
-#colorPicker, #colorPicker2
+.colorPicker
 {
     width:          30px;
     height:         30px;
     position: relative;
-    clear: both;
-    margin: 80px auto 20px;
+    float: left;
+    margin-left: 30px;
+    padding-left: 5px;
 }
 
-#colorPicker .track, #colorPicker2 .track {
+.colorPicker .track {
     background:     url(text-color3.png) no-repeat 50% 50%;
     height:         150px;
     width:          150px;
     padding:        10px;
-    position:       absolute;
+    position:       fixed;
     cursor:         crosshair;
-    float:          left;
-    left:           -71px;
-    top:            -71px;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -80%);
     display:        none;
     /*border:         1px solid #ccc;*/
-    z-index:        10;
+    z-index:        9999;
     -webkit-border-radius: 150px;
     -moz-border-radius: 150px;
     border-radius: 150px;
 
 }
 
-#colorPicker .color, #colorPicker2 .color {
+.colorPicker .color {
     width:          25px;
     height:         25px;
     padding:        0px;
@@ -48,7 +50,7 @@
     
 }
 
-#colorPicker .colorInner, #colorPicker2 .colorInner {
+.colorPicker .colorInner {
     margin: 0px;
     width:          25px;
     height:         25px;
@@ -59,7 +61,7 @@
     
 }
 
-#colorPicker .dropdown, #colorPicker2 .dropdown {
+.colorPicker .dropdown {
     list-style: none;
     display: none;
     width: 27px;
@@ -70,7 +72,7 @@
     z-index: 1000;
 }
 
-#colorPicker .dropdown li, #colorPicker2 .dropdown li{
+.colorPicker .dropdown li {
     height: 25px;
     cursor: pointer;
 }

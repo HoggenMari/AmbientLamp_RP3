@@ -1,6 +1,9 @@
   var timeout;
   var clicker = 'mousedown';
   clicker = ('ontouchstart' in document.documentElement) ? 'touchstart' : 'mousedown';
+  var counter = 0;
+  var currentID = 0;
+  var cols = 0;
 
   Router.configure({
     layoutTemplate: 'mainPage'
@@ -16,16 +19,29 @@
     template: 'listPage',
     data: function(){
       var currentList = this.params._id;
+      //currentID = this.params._id;
+      //console.log(this.params._id);
+      currentID = this.params._id;
       return Visuals.findOne({ _id: currentList });
     }
   });
 
   Template.listPage.rendered = function() {
+      counter = 0;
       console.log(Visuals.find({}));
-
+      console.log(currentID);
+      cols = Visuals.findOne(currentID, {fields: {colors: 1}} ).colors;
+      console.log(cols[0].color);
   }
 
   Template.header.rendered = function (){
+
+    //$('body').append("<script type='text/javascript' src='tinycolorpicker.js'></script>");
+
+    //var $picker = document.getElementById('colorPicker');
+    //picker  = tinycolorpicker($picker);
+
+    //$('body').append("<script type='text/javascript'>window.onload = function(){var $picker = document.getElementById('colorPicker'),picker  = tinycolorpicker($picker);var $picker = document.getElementById('colorPicker2'),picker  = tinycolorpicker($picker);}</script>");
 
     elem.onchange = function() {
       console.log("clicked button");
@@ -49,14 +65,9 @@
 
   Template.settingsList.rendered = function(){
     console.log("test");
-      
-      $('body').append("<script type='text/javascript' src='tinycolorpicker.js'></script>");
-      
-      
-      $('body').append("<script type='text/javascript'>window.onload = function(){var $picker = document.getElementById('colorPicker'),picker  = tinycolorpicker($picker);var $picker = document.getElementById('colorPicker2'),picker  = tinycolorpicker($picker);}</script>");
 
-    var elem = document.querySelector('.js-switch');
-    var init = new Switchery(elem);
+    //var elem = document.querySelector('.js-switch');
+    //var init = new Switchery(elem);
 
   };
 
@@ -89,14 +100,36 @@
     selectedSetting: function () {
       var visual = Visuals.findOne(Session.get("selectedSetting"));
       return visual && visual.name;
-    }
+    },
+    incompleteCount: function() {
+      return Visuals.find({ checked: { $ne: false } }).count();
+    },
   });
+
+  Template.leaderboard.rendered = function() {
+    var elem = document.querySelector('.genius');
+    var init = new Switchery(elem);
+  }
 
   Template.visual.helpers({
     selected: function () {
       return Session.equals("selectedSetting", this._id) ? "selected" : '';
     }
   });
+
+  Template.visual.events({
+    'click .toggle-checked': function() {
+      // Set the checked property to the opposite of its current value
+      console.log(this._id);
+      console.log(this.checked);
+      Meteor.call('visual.setChecked', this._id, !this.checked);
+    },
+    'click .name': function() {
+      console.log("tester");
+      Meteor.call('visual.setActive', this._id, true);
+    }
+  });
+
   function increase(setting) {
     var count = Settings.findOne(setting, {fields: {score: 1} });
     if(count.score<100){
@@ -165,3 +198,24 @@
       decrease(setting);
     }
   });
+
+  Template.visual.rendered = function () {
+    counter = 0;
+    console.log("call visual");
+    //console.log(currentID);
+  }
+
+  Template.color.rendered = function () {
+    counter++;
+
+    cols = Visuals.findOne(currentID, {fields: {colors: 1}} ).colors;
+    $('#colors').append("<div id='colorPicker"+counter+"' class='colorPicker'><a class='color'><div class='colorInner'></div></a><div class='track'></div><ul class='dropdown'><li></li></ul> <input type='hidden' class='colorInput'/></div>");
+
+    var $picker = document.getElementById('colorPicker'+counter);
+    picker  = tinycolorpicker($picker);
+    var col = cols[counter-1].color;
+    //var col1 = col.color;
+    picker.setColor(col);
+
+    console.log(col);
+  }

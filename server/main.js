@@ -16,6 +16,8 @@ Meteor.startup(function () {
       });
     }*/
 
+
+
     var ftp = new JSFtp({
         host: "server47.webgo24.de",
         port: 21,
@@ -124,14 +126,37 @@ Meteor.startup(function () {
       });
     }
 
-    //if(Visuals.find().count() == 0) {
-        var names = ["Visual 1", "Visual 2", "Visual 3"];
+    if(Visuals.find().count() == 0) {
+        var names = ["Visual 1", "Visual 2"];
         _.each(names, function (name) {
             Visuals.insert({
                 name: name,
-                colors: [ "FFFFFF", "FF0000" ]
+                colors: [ { color: "#FFFFFF" }, { color: "#FF0000" }, { color: "#FFFF00"} ],
+                checked: false,
+                active: false
             });
         });
-    //}
+        var names = ["Visual 3", "Visual 4"];
+        _.each(names, function (name) {
+            Visuals.insert({
+                name: name,
+                colors: [ { color: "#FF00FF" }, { color: "#F0000F" }, { color: "#FFFFA0"} ],
+                checked: false,
+                active: false
+            });
+        });
+    }
 
   });
+
+Meteor.methods({
+    'visual.setChecked': function(visualId, setChecked) {
+        const visual = Visuals.findOne(visualId);
+        Visuals.update(visualId, { $set: { checked: setChecked } });
+    },
+    'visual.setActive': function(visualId, setActive) {
+        const visual = Visuals.findOne(visualId);
+        Visuals.update({}, { $set: { active: false } }, { multi: true })
+        Visuals.update(visualId, { $set: { active: setActive } });
+    }
+});

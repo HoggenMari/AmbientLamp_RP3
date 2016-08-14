@@ -2,6 +2,7 @@
   <title>Ambient Light Display</title>
   <meta name="viewport" content="width=device-width, user-scalable=no">
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600' rel='stylesheet' type='text/css'>
+  <script type='text/javascript' src='/tinycolorpicker.js'></script>
 </head>
 
 <body>
@@ -12,30 +13,21 @@
 
 <template name="header">
     <div class="header">
-        <h1 class="title">Ambient</h1>
-        <input type="checkbox" class="js-switch" checked />
+        <h1 class="title">Ambient Lamp</h1>
     </div>
 </template>
 
 <template name="settingsList">
   <ol class="settings">
+    <!--<li class="snap">
+        <span><img class="arrow" src="/right-arrow.png"></span>
+    </li>-->
     {{#each settings}}
       {{> setting}}
     {{/each}}
   </ol>
 
-    <div id="colorPicker">
-        <a class="color"><div class="colorInner"></div></a>
-        <div class="track"></div>
-        <ul class="dropdown"><li></li></ul>
-        <input type="hidden" class="colorInput"/>
-    </div>
-    <div id="colorPicker2">
-        <a class="color"><div class="colorInner"></div></a>
-        <div class="track"></div>
-        <ul class="dropdown"><li></li></ul>
-        <input type="hidden" class="colorInput"/>
-    </div>
+
 </template>
 
 <template name="setting">
@@ -44,13 +36,21 @@
     <span class="name">{{name}}: </span>
     <span class="name">{{score}}</span>
     <span><button class="dec">-</button></span>
-    <button class="inc">+</button>
+    <span><button class="inc">+</button></span>
   </li>
 </template>
 
 
 <template name="leaderboard">
-    <ol class="visualList">
+    <!--<div class="table_header">
+        <img class="icon" src="/power-button.png">
+        Visualisation
+    </div>-->
+    <ol>
+        <li class="genius_tab">
+            <span style="vertical-align: middle; font-size: 18px;">Genius-Mode ({{incompleteCount}})</span>
+            <input type="checkbox" class="js-switch genius" checked />
+        </li>
         {{#each visuals}}
             {{> visual}}
         {{/each}}
@@ -58,29 +58,40 @@
 </template>
 
 <template name="visual">
-    <a href="{{pathFor route='listPage'}}"><li class="visual {{selected}}">
+    <li class="{{#if active}}active{{/if}}">
+        <input type="checkbox" checked="{{checked}}" class="toggle-checked" />
         <span class="name">{{name}}</span>
-        <span><img class="icon" src="/right-arrow.png"></span>
-    </li></a>
+        <a href="{{pathFor route='listPage'}}"><span><img class="arrow" src="/right-arrow.png"></span></a>
+    </li>
 </template>
 
 <template name="mainPage">
     <div class="outer">
         {{> header}}
+        {{> yield}}
         {{> settingsList}}
-
     </div>
 </template>
 
 <template name="listPage">
-    <h2>Tasks: {{colors}}</h2>
-    <ol>
-        {{#each colors}}
-            {{> colors}}
-        {{/each}}
-    </ol>
+    <div>
+        <ol>
+            <a href="{{pathFor route='leaderboard'}}">
+                <li class="genius_tab">
+                    <span><img class="back" src="/back.png"></span>
+                    <span style="vertical-align: middle; font-size: 18px;">Back</span>
+                </li>
+            </a>
+            <li class="colors_tab">
+                <div style="font-size: 1.2em; font-weight: 600; float: left">Colors</div>
+                <div id="colors"></div>
+                    {{#each colors}}
+                        {{> color}}
+                    {{/each}}
+            </li>
+        </ol>
+    </div>
 </template>
 
 <template name="color">
-    <h1>Test</h1>
 </template>
