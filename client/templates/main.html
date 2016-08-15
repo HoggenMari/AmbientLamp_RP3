@@ -84,14 +84,24 @@
             </a>
             <li class="colors_tab">
                 <div style="font-size: 1.2em; font-weight: 600; float: left">Colors</div>
-                <div id="colors"></div>
+                <div id="colors">
                     {{#each colors}}
                         {{> color}}
                     {{/each}}
+                </div>
             </li>
         </ol>
     </div>
 </template>
 
 <template name="color">
+    <div id="colorPicker" class="colorPicker">
+        <a class="color">
+            <div class="colorInner"></div>
+        </a>
+        <div class="track"></div>
+        <ul class="dropdown">
+            <li></li>
+        </ul>
+        <input type="hidden" class="colorInput"/></div>
 </template>

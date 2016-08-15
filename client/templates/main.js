@@ -3,7 +3,8 @@
   clicker = ('ontouchstart' in document.documentElement) ? 'touchstart' : 'mousedown';
   var counter = 0;
   var currentID = 0;
-  var cols = 0;
+  var cols, colsOld = 0;
+  var visualBol = false;
 
   Router.configure({
     layoutTemplate: 'mainPage'
@@ -27,11 +28,27 @@
   });
 
   Template.listPage.rendered = function() {
-      counter = 0;
+
+      console.log("COLOR COLOR");
+
+      //counter = 0;
       console.log(Visuals.find({}));
       console.log(currentID);
-      cols = Visuals.findOne(currentID, {fields: {colors: 1}} ).colors;
-      console.log(cols[0].color);
+      cols = Visuals.findOne({ _id: currentID }, {fields: {colors: 1}});
+      console.log(cols);
+
+      var $picker = document.getElementsByClassName('colorPicker');
+
+      console.log($picker);
+
+      visualBol = true;
+
+      //var $picker = document.getElementById('colorPicker');
+      //picker = tinycolorpicker($picker);
+
+      //for (i = 0; i < cols.length; i++) {
+      //    $('#colors').append("<div id='colorPicker" + i + "' class='colorPicker'><a class='color'><div class='colorInner'></div></a><div class='track'></div><ul class='dropdown'><li></li></ul> <input type='hidden' class='colorInput'/></div>");
+      //}
   }
 
   Template.header.rendered = function (){
@@ -202,20 +219,86 @@
   Template.visual.rendered = function () {
     counter = 0;
     console.log("call visual");
+    visualBol = true;
     //console.log(currentID);
   }
 
   Template.color.rendered = function () {
-    counter++;
 
-    cols = Visuals.findOne(currentID, {fields: {colors: 1}} ).colors;
-    $('#colors').append("<div id='colorPicker"+counter+"' class='colorPicker'><a class='color'><div class='colorInner'></div></a><div class='track'></div><ul class='dropdown'><li></li></ul> <input type='hidden' class='colorInput'/></div>");
+      console.log(this);
 
-    var $picker = document.getElementById('colorPicker'+counter);
-    picker  = tinycolorpicker($picker);
-    var col = cols[counter-1].color;
-    //var col1 = col.color;
-    picker.setColor(col);
+      console.log(colsOld);
+      cols = Visuals.findOne(currentID, {fields: {colors: 1}}).colors;
+      console.log(cols);
 
-    console.log(col);
+
+
+      for(i=0; i<cols.length; i++){
+          if(colsOld[i] != cols[i]){
+              break;
+          }
+      }
+
+
+
+      //console.log("cols length");
+      var count = cols.length;
+
+
+       //$('#colors').remove('div #colorPicker');
+       //$('#colors').append("<div id='colorPicker" + counter + "' class='colorPicker'><a class='color'><div class='colorInner'></div></a><div class='track'></div><ul class='dropdown'><li></li></ul> <input type='hidden' class='colorInput'/></div>");
+
+
+        //var $picker = document.getElementsByClassName('colorPicker');
+        //console.log($picker[counter])
+        picker = tinycolorpicker(this.firstNode);
+        if(counter<cols.length) {
+            console.log("false");
+            var col = cols[counter];
+        }else{
+            console.log("true");
+            var col = cols[i];
+        }
+        console.log("COL "+i+" "+counter);
+        //var col1 = col.color;
+
+          picker.setColor(col);
+
+          //console.log(col);
+          // visualBol = false;
+
+          colsOld = Visuals.findOne(currentID, {fields: {colors: 1}}).colors;
+
+      counter++;
+      /*if(counter<cols.length) {
+          counter++;
+      }else{
+          counter=1;
+      }*/
   }
+
+  function keyValue(key, value){
+      this.Key = key;
+      this.Value = value;
+  };
+
+  Template.listPage.events({
+      'click .track': function() {
+          var color_array = [];
+          for (i = 0; i < $('.colorInput').length; i++) {
+              console.log($('input').get(i).getAttribute('value'));
+              color_array.push($('input').get(i).getAttribute('value'));
+          }
+          Visuals.update(currentID, { $unset: { colors: ""}});
+          Visuals.update(currentID, { $set: { colors: color_array} });
+          //location.reload();
+      },
+      'touchend .track': function() {
+          var color_array = [];// = [ {color: "#000000"}, {color: "#000000"}, {color: "#000000"}];
+          for (i = 0; i < $('.colorInput').length; i++) {
+              console.log($('input').get(i).getAttribute('value'));
+              color_array.push($('input').get(i).getAttribute('value'));
+          }
+          Visuals.update(currentID, { $set: { colors: color_array} });
+      }
+  });

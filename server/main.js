@@ -131,7 +131,7 @@ Meteor.startup(function () {
         _.each(names, function (name) {
             Visuals.insert({
                 name: name,
-                colors: [ { color: "#FFFFFF" }, { color: "#FF0000" }, { color: "#FFFF00"} ],
+                colors: [ "#FFFFFF", "#FF00FF", "#3693FF", "#6FF063" ],
                 checked: false,
                 active: false
             });
@@ -140,13 +140,12 @@ Meteor.startup(function () {
         _.each(names, function (name) {
             Visuals.insert({
                 name: name,
-                colors: [ { color: "#FF00FF" }, { color: "#F0000F" }, { color: "#FFFFA0"} ],
+                colors: [ "#FF00FF", "#FF00FF", "#3693FF", "#6FF063" ],
                 checked: false,
                 active: false
             });
         });
     }
-
   });
 
 Meteor.methods({

@@ -5,12 +5,12 @@
     height:         30px;
     position: relative;
     float: left;
-    margin-left: 30px;
+    margin-left: 20px;
     padding-left: 5px;
 }
 
 .colorPicker .track {
-    background:     url(text-color3.png) no-repeat 50% 50%;
+    background:     url(bg_color.png) no-repeat 50% 50%;
     height:         150px;
     width:          150px;
     padding:        10px;
@@ -19,7 +19,7 @@
     position: fixed;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -80%);
+    transform: translate(-50%, -30%);
     display:        none;
     /*border:         1px solid #ccc;*/
     z-index:        9999;
