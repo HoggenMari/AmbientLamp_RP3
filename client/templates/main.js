@@ -333,6 +333,7 @@
           updateColors(prevAll(event.target.parentElement.parentElement).length);
       },
       'touchend .track': function() {
-          updateColors();
+          console.log(prevAll(event.target.parentElement.parentElement).length);
+          updateColors(prevAll(event.target.parentElement.parentElement).length);
       }
   });

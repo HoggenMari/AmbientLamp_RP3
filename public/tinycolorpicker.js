@@ -134,6 +134,14 @@
 
                     $track.style.display = 'block';
 
+                    // Red rectangle
+                    context.beginPath();
+                    context.lineWidth = "6";
+                    context.strokeStyle = "red";
+                    context.fillStyle = "rgba(0, 0, 0, 0.1)";
+                    context.fillRect(0,0,150,150)
+                    context.stroke();
+
                     document.onmousedown = function(event) {
                         document.onmousedown = null;
 

@@ -187,6 +187,13 @@ body {
   background-color: #fdfdfd;
   height: 60px;
 }
+#over {
+  background-color: Black;
+  opacity: 0.0;
+  width: 100%;
+  position: absolute;
+  height: 100%;
+}
 
 .arrow {
   display: inline-block;
