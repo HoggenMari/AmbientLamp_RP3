@@ -259,7 +259,7 @@
               var col = cols[i];
           }
           picker = tinycolorpicker(this.firstNode);
-          console.log("COL Test " + i + " " + counter + " " + cols.colors[counter].color);
+          console.log("COL " + i + " " + counter + " " + cols.colors[counter].color);
           //var col1 = col.color;
 
           picker.setColor(col);
