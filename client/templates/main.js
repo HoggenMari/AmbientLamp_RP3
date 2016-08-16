@@ -5,6 +5,8 @@
   var currentID = 0;
   var cols, colsOld = 0;
   var visualBol = false;
+  var resultElement = document.getElementById('result'),
+      sliders = document.getElementsByClassName('sliders');
 
   Router.configure({
     layoutTemplate: 'mainPage'
@@ -43,12 +45,45 @@
 
       visualBol = true;
 
+
+      for ( var i = 0; i < sliders.length; i++ ) {
+
+          noUiSlider.create(sliders[i], {
+              start: 127,
+              connect: "lower",
+              orientation: "vertical",
+              range: {
+                  'min': 0,
+                  'max': 255
+              }
+          });
+
+          // Bind the color changing function
+          // to the slide event.
+          sliders[i].noUiSlider.on('slide', setColor);
+      }
       //var $picker = document.getElementById('colorPicker');
       //picker = tinycolorpicker($picker);
 
       //for (i = 0; i < cols.length; i++) {
       //    $('#colors').append("<div id='colorPicker" + i + "' class='colorPicker'><a class='color'><div class='colorInner'></div></a><div class='track'></div><ul class='dropdown'><li></li></ul> <input type='hidden' class='colorInput'/></div>");
       //}
+  }
+
+
+  function setColor(){
+
+
+      // Get the slider values,
+      // stick them together.
+      var color = 'rgb(' +
+          sliders[0].noUiSlider.get() + ',' +
+          sliders[1].noUiSlider.get() + ',' +
+          sliders[2].noUiSlider.get() + ')';
+
+      // Fill the color box.
+      resultElement.style.background = color;
+      resultElement.style.color = color;
   }
 
   Template.header.rendered = function (){
@@ -59,6 +94,8 @@
     //picker  = tinycolorpicker($picker);
 
     //$('body').append("<script type='text/javascript'>window.onload = function(){var $picker = document.getElementById('colorPicker'),picker  = tinycolorpicker($picker);var $picker = document.getElementById('colorPicker2'),picker  = tinycolorpicker($picker);}</script>");
+
+
 
     elem.onchange = function() {
       console.log("clicked button");
