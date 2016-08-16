@@ -58,11 +58,15 @@
 </template>
 
 <template name="visual">
-    <li class="{{#if active}}active{{/if}}">
+    <li style="width: 15%; text-align: center;" class="vList">
         <input type="checkbox" checked="{{checked}}" class="toggle-checked" />
-        <span class="name">{{name}}</span>
-        <a href="{{pathFor route='listPage'}}"><span><img class="arrow" src="/right-arrow.png"></span></a>
     </li>
+    <li class="vList vListName {{#if active}}active{{/if}}" style="width: 70%; text-align: left; border-right: #eee solid 1px;">
+        <span class="name">{{name}}</span>
+    </li>
+    <a href="{{pathFor route='listPage'}}"><li class="vList" style="width: 15%; text-align: center;">
+        <img src="/right-arrow.png" class="arrow"/>
+    </li></a>
 </template>
 
 <template name="mainPage">

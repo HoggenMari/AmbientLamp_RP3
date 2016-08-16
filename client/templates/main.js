@@ -141,7 +141,7 @@
       console.log(this.checked);
       Meteor.call('visual.setChecked', this._id, !this.checked);
     },
-    'click .name': function() {
+    'click .vListName': function() {
       console.log("tester");
       Meteor.call('visual.setActive', this._id, true);
     }

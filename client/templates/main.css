@@ -186,6 +186,8 @@ body {
 .genius_tab {
   background-color: #fdfdfd;
   height: 60px;
+  padding: 15px;
+  width: 100%
 }
 #over {
   background-color: Black;
@@ -197,12 +199,11 @@ body {
 
 .arrow {
   display: inline-block;
-  font-size: 1.25em;
+  font-size: 1em;
   font-weight: 300;
   margin-right: 0.5em;
   height: 1em;
   vertical-align: middle;
-  float: right;
 }
 
 .back {
@@ -270,10 +271,15 @@ body {
   position: relative;
 }
 
+input[type="radio"], input[type="checkbox"] {
+  margin: 0px;
+}
+
 ol {
   margin-top: 10px;
   padding: 0;
   background: white;
+  list-style-type: disc;
 }
 
 .colors_tab {
@@ -287,8 +293,17 @@ ol {
 li {
   position: relative;
   list-style: none;
-  padding: 15px;
   border-bottom: #eee solid 1px;
+  padding:15px;
+}
+
+.vList {
+  position: relative;
+  list-style: none;
+  border-bottom: #eee solid 1px;
+  padding: 15px 0px 15px 0px;
+  float: left;
+  width: 33%;
 }
 
 li .text {
