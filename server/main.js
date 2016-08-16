@@ -131,7 +131,10 @@ Meteor.startup(function () {
         _.each(names, function (name) {
             Visuals.insert({
                 name: name,
-                colors: [ "#FFFFFF", "#FF00FF", "#3693FF", "#6FF063" ],
+                colors: [ { color: "#FFFFAF", index: 0},
+                          { color: "#FF00EF", index: 1},
+                          { color: "#3693FF", index: 2},
+                          { color: "#6FF063", index: 3} ],
                 checked: false,
                 active: false
             });
@@ -140,7 +143,10 @@ Meteor.startup(function () {
         _.each(names, function (name) {
             Visuals.insert({
                 name: name,
-                colors: [ "#FF00FF", "#FF00FF", "#3693FF", "#6FF063" ],
+                colors: [ { color: "#FFFFAF", index: 0},
+                    { color: "#FF00EF", index: 1 },
+                    { color: "#3693FF", index: 2 },
+                    { color: "#6FF063", index: 3 } ],
                 checked: false,
                 active: false
             });
@@ -157,5 +163,8 @@ Meteor.methods({
         const visual = Visuals.findOne(visualId);
         Visuals.update({}, { $set: { active: false } }, { multi: true })
         Visuals.update(visualId, { $set: { active: setActive } });
+    },
+    'update': function(id, index, color) {
+        Visuals.update({_id: id, "colors.index": index}, { $set: { "colors.$.color": color}});
     }
 });

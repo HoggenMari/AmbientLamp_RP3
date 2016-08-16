@@ -127,9 +127,12 @@
         <item url="file://$USER_HOME$/.meteor/packages/mongo-id/1.0.4/web.browser/id.js" />
         <item url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/datetime-local/datetime-local.js" />
         <item url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/contenteditable/contenteditable.js" />
+        <item url="file://$USER_HOME$/.meteor/packages/risul_bootstrap-colorpicker/2.3.0/web.browser/lib/js/bootstrap-colorpicker.js" />
         <item url="file://$USER_HOME$/.meteor/packages/tracker/1.0.13/web.browser/deprecated.js" />
+        <item url="file://$USER_HOME$/.meteor/packages/risul_bootstrap-colorpicker/2.3.0/web.browser/lib/css/overrides.css" />
         <item url="file://$USER_HOME$/.meteor/packages/tracker/1.0.13/web.browser/tracker.js" />
         <item url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/select-checkbox/select-checkbox.js" />
+        <item url="file://$USER_HOME$/.meteor/packages/risul_bootstrap-colorpicker/2.3.0/web.browser/lib/css/bootstrap-colorpicker.css" />
         <item url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/select-multiple/select-multiple.js" />
         <item url="file://$USER_HOME$/.meteor/packages/abpetkov_switchery/0.1.0/web.browser/packages/abpetkov_switchery.js" />
         <item url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/boolean-checkbox/boolean-checkbox.js" />
@@ -392,9 +395,12 @@
       <root url="file://$USER_HOME$/.meteor/packages/mongo-id/1.0.4/web.browser/id.js" />
       <root url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/datetime-local/datetime-local.js" />
       <root url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/contenteditable/contenteditable.js" />
+      <root url="file://$USER_HOME$/.meteor/packages/risul_bootstrap-colorpicker/2.3.0/web.browser/lib/js/bootstrap-colorpicker.js" />
       <root url="file://$USER_HOME$/.meteor/packages/tracker/1.0.13/web.browser/deprecated.js" />
+      <root url="file://$USER_HOME$/.meteor/packages/risul_bootstrap-colorpicker/2.3.0/web.browser/lib/css/overrides.css" />
       <root url="file://$USER_HOME$/.meteor/packages/tracker/1.0.13/web.browser/tracker.js" />
       <root url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/select-checkbox/select-checkbox.js" />
+      <root url="file://$USER_HOME$/.meteor/packages/risul_bootstrap-colorpicker/2.3.0/web.browser/lib/css/bootstrap-colorpicker.css" />
       <root url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/select-multiple/select-multiple.js" />
       <root url="file://$USER_HOME$/.meteor/packages/abpetkov_switchery/0.1.0/web.browser/packages/abpetkov_switchery.js" />
       <root url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/boolean-checkbox/boolean-checkbox.js" />

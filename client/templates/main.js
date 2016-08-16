@@ -225,51 +225,53 @@
 
   Template.color.rendered = function () {
 
-      console.log(this);
 
+          console.log("CALLLLED");
+      console.log(this.connection);
       console.log(colsOld);
-      cols = Visuals.findOne(currentID, {fields: {colors: 1}}).colors;
-      console.log(cols);
+      cols = Visuals.findOne(currentID, {fields: {"colors": 1}});
+      console.log(cols.colors[2].color);
 
 
-
-      for(i=0; i<cols.length; i++){
-          if(colsOld[i] != cols[i]){
-              break;
+          for (i = 0; i < cols.length; i++) {
+              if (colsOld[i] != cols[i]) {
+                  break;
+              }
           }
-      }
 
 
-
-      //console.log("cols length");
-      var count = cols.length;
-
-
-       //$('#colors').remove('div #colorPicker');
-       //$('#colors').append("<div id='colorPicker" + counter + "' class='colorPicker'><a class='color'><div class='colorInner'></div></a><div class='track'></div><ul class='dropdown'><li></li></ul> <input type='hidden' class='colorInput'/></div>");
+          //console.log("cols length");
+          var count = cols.length;
 
 
-        //var $picker = document.getElementsByClassName('colorPicker');
-        //console.log($picker[counter])
-        picker = tinycolorpicker(this.firstNode);
-        if(counter<cols.length) {
-            console.log("false");
-            var col = cols[counter];
-        }else{
-            console.log("true");
-            var col = cols[i];
-        }
-        console.log("COL "+i+" "+counter);
-        //var col1 = col.color;
+          //$('#colors').remove('div #colorPicker');
+          //$('#colors').append("<div id='colorPicker" + counter + "' class='colorPicker'><a class='color'><div class='colorInner'></div></a><div class='track'></div><ul class='dropdown'><li></li></ul> <input type='hidden' class='colorInput'/></div>");
+
+
+          //var $picker = document.getElementsByClassName('colorPicker');
+          //console.log($picker[counter])
+          if (counter < cols.colors.length) {
+              console.log("false");
+              var col = cols.colors[counter].color;
+
+          } else {
+              console.log("true");
+              var col = cols[i];
+          }
+          picker = tinycolorpicker(this.firstNode);
+          console.log("COL " + i + " " + counter + " " + cols.colors[counter].color);
+          //var col1 = col.color;
 
           picker.setColor(col);
+      counter++;
 
           //console.log(col);
           // visualBol = false;
 
           colsOld = Visuals.findOne(currentID, {fields: {colors: 1}}).colors;
 
-      counter++;
+
+
       /*if(counter<cols.length) {
           counter++;
       }else{
@@ -282,23 +284,55 @@
       this.Value = value;
   };
 
-  Template.listPage.events({
-      'click .track': function() {
-          var color_array = [];
-          for (i = 0; i < $('.colorInput').length; i++) {
-              console.log($('input').get(i).getAttribute('value'));
-              color_array.push($('input').get(i).getAttribute('value'));
-          }
-          Visuals.update(currentID, { $unset: { colors: ""}});
-          Visuals.update(currentID, { $set: { colors: color_array} });
+  function updateColors(index){
+      var color_array = [];
+
+      //var i = 0;
+      //while( (this.firstnode = this.firstnode.previousSibling) != null )
+      //    i++;
+      console.log(this.firstnode);
+
+      for (i = 0; i < $('.colorInput').length; i++) {
+          console.log($('input').get(i).getAttribute('value'));
+          color_array.push($('input').get(i).getAttribute('value'));
+      }
+      //Visuals.update(currentID, { $unset: { colors: ""}});
+      //Visuals.update(currentID, { $set: { "colors.$.colors": 0} });
+      //var sel = colors.+index+.color;
+      //console.log(sel);
+
+      var color = $('input').get(index).getAttribute('value');
+      Meteor.call('update', currentID, index, color);
+      //Visuals.update({_id: currentID, "colors.index": index}, { $set: { "color.$.color": "#000000"}});
+
+      /*var colsOldBuf = cols;
+      colsOldBuf = $.unique(colsOldBuf);
+      console.log("listpage"+colsOldBuf.length+" "+colsOldBuf.length)
+      if(colsOldBuf.length < colsOld.length) {
           //location.reload();
+      }*/
+  }
+
+  function prevAll(element) {
+      var result = [];
+
+      while (element = element.previousElementSibling)
+          result.push(element);
+      return result;
+  }
+
+  Template.listPage.events({
+      'click .track': function(event) {
+          //var i = 0;
+          //while( (event.target.parentElement.parentElement = event.target.parentElement.parentElement.previousSibling) != null )
+          //    i++;
+          //var i = 0;
+          //while((event.target.parentElement.parentElement == event.target.parentElement.parentElement.previousElementSibling) != null)
+          //      i++;
+          console.log(prevAll(event.target.parentElement.parentElement).length);
+          updateColors(prevAll(event.target.parentElement.parentElement).length);
       },
       'touchend .track': function() {
-          var color_array = [];// = [ {color: "#000000"}, {color: "#000000"}, {color: "#000000"}];
-          for (i = 0; i < $('.colorInput').length; i++) {
-              console.log($('input').get(i).getAttribute('value'));
-              color_array.push($('input').get(i).getAttribute('value'));
-          }
-          Visuals.update(currentID, { $set: { colors: color_array} });
+          updateColors();
       }
   });

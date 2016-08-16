@@ -208,6 +208,8 @@
          * @chainable
          */
         this.setColor = function(color) {
+
+            console.log("CAAAAALL SET COLOR");
             if(color.indexOf("#") >= 0) {
                 self.colorHex = color;
                 self.colorRGB = self.hexToRgb(self.colorHex);
