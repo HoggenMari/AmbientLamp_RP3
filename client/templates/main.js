@@ -327,7 +327,9 @@
       //var i = 0;
       //while( (this.firstnode = this.firstnode.previousSibling) != null )
       //    i++;
+      console.log("Update Colors");
       console.log(this.firstnode);
+      console.log(index);
 
       for (i = 0; i < $('.colorInput').length; i++) {
           console.log($('input').get(i).getAttribute('value'));
@@ -366,11 +368,11 @@
           //var i = 0;
           //while((event.target.parentElement.parentElement == event.target.parentElement.parentElement.previousElementSibling) != null)
           //      i++;
-          console.log(prevAll(event.target.parentElement.parentElement).length);
-          updateColors(prevAll(event.target.parentElement.parentElement).length);
+          console.log(prevAll(event.target.parentElement.parentElement.parentElement.parentElement).length);
+          updateColors(prevAll(event.target.parentElement.parentElement.parentElement.parentElement).length);
       },
       'touchend .track': function() {
-          console.log(prevAll(event.target.parentElement.parentElement).length);
-          updateColors(prevAll(event.target.parentElement.parentElement).length);
+          console.log(prevAll(event.target.parentElement.parentElement.parentElement.parentElement).length);
+          updateColors(prevAll(event.target.parentElement.parentElement.parentElement.parentElement).length);
       }
   });

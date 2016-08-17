@@ -162,6 +162,7 @@ Meteor.methods({
         Visuals.update(visualId, { $set: { active: setActive } });
     },
     'update': function(id, index, color) {
+        console.log("update");
         Visuals.update({_id: id, "colors.index": index}, { $set: { "colors.$.color": color}});
     }
 });
