@@ -98,7 +98,7 @@
                 console.log($($slider).find(".sliders"));
 
                 noUiSlider.create($($slider).find(".sliders")[0], {
-                    start: 127,
+                    start: 0,
                     connect: "lower",
                     orientation: "vertical",
                     range: {
@@ -107,10 +107,13 @@
                     }
                 });
 
+                $($slider).find(".sliders")[0].noUiSlider.on('change', setColor);
                 $($slider).find(".sliders")[0].noUiSlider.on('slide', setColor);
 
 
                 context = $canvas.getContext("2d");
+
+                //document.find(".overlayBg").style.visibility = true;
 
                 _setImage();
             }
@@ -122,6 +125,39 @@
 
         function setColor() {
             console.log("test");
+            console.log($($slider).find(".sliders")[0].noUiSlider.get());
+
+            var colorPicker   = new Image()
+                ,   style         = $track.currentStyle || window.getComputedStyle($track, false)
+                ,   backgroundUrl = style.backgroundImage.replace(/"/g, "").replace(/url\(|\)$/ig, "")
+                ;
+
+            colorPicker.crossOrigin = "Anonymous";
+            //$track.style.backgroundImage = "none";
+
+
+            console.log(colorPicker);
+
+            var image = document.getElementById("source");
+            context.clearRect(0,0,150,150);
+            context.drawImage(image, 0, 0, 150, 150);
+
+            var sliderValue = $($slider).find(".sliders")[0].noUiSlider.get();
+
+            context.beginPath();
+            context.fillStyle = "rgba(0, 0, 0, "+sliderValue/255.0+")";
+            context.arc(75, 75, 75, 0, 2 * Math.PI, false);
+            context.fill();
+
+
+            //colorPicker.src = self.options.backgroundUrl || backgroundUrl;
+
+            /*context.beginPath();
+            context.lineWidth = "6";
+            context.strokeStyle = "red";
+            context.fillStyle = "rgba(0, 0, 0, 0.1)";
+            context.fillRect(0,0,150,150)
+            context.stroke();*/
         }
 
         /**
@@ -136,6 +172,8 @@
 
             colorPicker.crossOrigin = "Anonymous";
             $track.style.backgroundImage = "none";
+
+            console.log(colorPicker);
 
             colorPicker.onload = function() {
                 $canvas.width = this.width;
@@ -161,16 +199,17 @@
 
                     $track.style.display = 'block';
                     $track.parentElement.style.display = 'block';
-                    // Red rectangle
-                    context.beginPath();
-                    context.lineWidth = "6";
-                    context.strokeStyle = "red";
-                    context.fillStyle = "rgba(0, 0, 0, 0.1)";
-                    context.fillRect(0,0,150,150)
-                    context.stroke();
+
+                    console.log("test");
+                    console.log(document.querySelectorAll(".overlayBG").style);
+                    document.querySelectorAll(".overlayBG")[0].style.visibility = 'visible';
+                    $($color).css('z-index',11);
 
                     document.onmousedown = function(event) {
                         document.onmousedown = null;
+
+                        document.querySelectorAll(".overlayBG")[0].style.visibility = 'hidden';
+                        $($color).css('z-index',1);
 
                         self.close();
                     };
@@ -187,6 +226,9 @@
 
                         document.onmouseup = function(event) {
                             document.onmouseup = null;
+
+                            document.querySelectorAll(".overlayBG")[0].style.visibility = 'hidden';
+                            $($color).css('z-index',1);
 
                             self.close();
 
@@ -212,6 +254,10 @@
                     };
 
                     $canvas.ontouchend = function(event) {
+
+                        document.querySelectorAll(".overlayBG")[0].style.visibility = 'hidden';
+                        $($color).css('z-index',1);
+
                         self.close();
 
                         return false;

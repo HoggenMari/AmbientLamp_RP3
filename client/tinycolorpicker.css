@@ -13,7 +13,6 @@
     background:     url(text-color4.png) no-repeat 50% 50%;
     height:         150px;
     width:          150px;
-    padding:        10px;
     cursor:         crosshair;
     display:        none;
     /*border:         1px solid #ccc;*/
@@ -31,7 +30,6 @@
     /*border:         1px solid #ccc;*/
     display:        block;
     position:       relative;
-    z-index:        11;
     background-color: #EFEFEF;
     -webkit-border-radius: 27px;
     -moz-border-radius: 27px;

@@ -348,6 +348,23 @@ a:hover {
   text-decoration: none;
 }
 
+.pOuterContainer{
+  position: fixed;
+  left: 40%;
+  z-index: 9999;
+}
+.overlayBG {
+  position: absolute;
+  width:100%;
+  height: 100%;
+  margin:auto;
+  background-color: #000;
+  opacity:0.5;
+  z-index:2;
+  top:0;
+  left:0;
+}
+
 @media (max-width: 500px) {
    .settings {
        width: 100%;
@@ -377,6 +394,12 @@ a:hover {
     margin: 0em 0 4em 0;
   }
 
+  .pOuterContainer {
+    position: fixed;
+    left: 10%;
+    z-index: 9999;
+  }
+
 }
 
 
@@ -385,8 +408,9 @@ a:hover {
 
 
 
+
 #red, #green, #blue {
-  margin: 10px;
+  margin-left: 15px;
   display: inline-block;
   height: 150px;
 }
@@ -412,7 +436,7 @@ a:hover {
 }
 
 #red {
-  background: #c0392b;
+  background: #000000;
 }
 
 #green {

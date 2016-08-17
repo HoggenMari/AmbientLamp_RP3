@@ -142,7 +142,8 @@ Meteor.startup(function () {
             Visuals.insert({
                 name: name,
                 colors: [ { color: "#FFFFAF", index: 0},
-                          { color: "#FFFFFF", index: 1}],
+                          { color: "#FFFFFF", index: 1},
+                          { color: "#FFFFFF", index: 2}],
                 checked: false,
                 active: false
             });

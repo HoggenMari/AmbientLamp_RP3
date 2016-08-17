@@ -18,6 +18,10 @@
     <div class="header">
         <h1 class="title">Ambient Lamp</h1>
     </div>
+    <div style="display:none;">
+        <img id="source" src="text-color4.png"
+             width="150" height="150">
+    </div>
 </template>
 
 <template name="settingsList">
@@ -98,6 +102,7 @@
                 </div>
             </li>
         </ol>
+        <div class="overlayBG" style="visibility: hidden;"></div>
     </div>
 </template>
 
@@ -106,10 +111,12 @@
         <a class="color">
             <div class="colorInner"></div>
         </a>
-        <div class="pContainer" style="left: 10%; top:30%; position: fixed; display: none;">
-            <div class="track" style="float: right">
+            <div class="pOuterContainer">
+                <div class="pContainer" style="display: none;">
+                    <div class="track" style="float: right">
+                    </div>
+                </div>
             </div>
-        </div>
         <ul class="dropdown">
             <li></li>
         </ul>
