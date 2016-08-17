@@ -10,7 +10,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script type='text/javascript' src='/tinycolorpicker.js'></script>
-<script type='text/javascript' src='/nouislider.min.js'></script>
+<script type='text/javascript' src='/nouislider.js'></script>
 
 </body>
 
@@ -75,10 +75,6 @@
 <template name="mainPage">
     <div class="outer">
         {{> header}}
-        <div id="colorpicker">
-            <div class="sliders" id="red"></div>
-            <div class="result"></div>
-        </div>
         {{> yield}}
         {{> settingsList}}
     </div>
@@ -110,7 +106,9 @@
         <a class="color">
             <div class="colorInner"></div>
         </a>
-        <div class="track">
+        <div class="pContainer" style="left: 10%; top:30%; position: fixed; display: none;">
+            <div class="track" style="float: right">
+            </div>
         </div>
         <ul class="dropdown">
             <li></li>

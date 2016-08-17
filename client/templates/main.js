@@ -46,7 +46,7 @@
       visualBol = true;
 
 
-      for ( var i = 0; i < sliders.length; i++ ) {
+      /*for ( var i = 0; i < sliders.length; i++ ) {
 
           noUiSlider.create(sliders[i], {
               start: 127,
@@ -61,7 +61,7 @@
           // Bind the color changing function
           // to the slide event.
           sliders[i].noUiSlider.on('slide', setColor);
-      }
+      }*/
       //var $picker = document.getElementById('colorPicker');
       //picker = tinycolorpicker($picker);
 
@@ -263,11 +263,11 @@
   Template.color.rendered = function () {
 
 
-          console.log("CALLLLED");
-      console.log(this.connection);
-      console.log(colsOld);
+      //console.log("CALLLLED");
+      //console.log(this.connection);
+      //console.log(colsOld);
       cols = Visuals.findOne(currentID, {fields: {"colors": 1}});
-      console.log(cols.colors[2].color);
+      //console.log(cols.colors[2].color);
 
 
           for (i = 0; i < cols.length; i++) {

@@ -50,6 +50,7 @@
         ,   $colorInner   = $container.querySelectorAll(".colorInner")[0]
         ,   $canvas       = null
         ,   $colorInput   = $container.querySelectorAll(".colorInput")[0]
+        ,   $slider       = $container.querySelectorAll(".pContainer")[0]
 
         ,   context      = null
         ,   mouseIsDown  = false
@@ -83,9 +84,31 @@
          * @private
          */
         function _initialize() {
+
+            console.log("init");
+
             if(hasCanvas) {
                 $canvas = document.createElement("canvas");
                 $track.appendChild($canvas);
+                console.log($('.pContainer'));
+                //var $t = document.createElement("div");
+                //$($t).attr("id","colorpicker");
+                $($slider).append('<div id="colorpicker"><div class="sliders" id="red"></div> <div class="result"></div></div>');
+
+                console.log($($slider).find(".sliders"));
+
+                noUiSlider.create($($slider).find(".sliders")[0], {
+                    start: 127,
+                    connect: "lower",
+                    orientation: "vertical",
+                    range: {
+                        'min': 0,
+                        'max': 255
+                    }
+                });
+
+                $($slider).find(".sliders")[0].noUiSlider.on('slide', setColor);
+
 
                 context = $canvas.getContext("2d");
 
@@ -95,6 +118,10 @@
             _setEvents();
 
             return self;
+        }
+
+        function setColor() {
+            console.log("test");
         }
 
         /**
@@ -133,7 +160,7 @@
                     event.stopPropagation();
 
                     $track.style.display = 'block';
-
+                    $track.parentElement.style.display = 'block';
                     // Red rectangle
                     context.beginPath();
                     context.lineWidth = "6";
@@ -241,6 +268,8 @@
             mouseIsDown = false;
 
             $track.style.display = 'none';
+            $track.parentElement.style.display = 'none';
+
         };
 
         /**

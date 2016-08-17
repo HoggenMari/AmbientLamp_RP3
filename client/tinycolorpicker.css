@@ -14,12 +14,7 @@
     height:         150px;
     width:          150px;
     padding:        10px;
-    position:       fixed;
     cursor:         crosshair;
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -30%);
     display:        none;
     /*border:         1px solid #ccc;*/
     z-index:        9999;
