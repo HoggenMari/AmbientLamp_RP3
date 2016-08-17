@@ -98,7 +98,7 @@ public class Circle implements CarListener {
 		
 		
 		if(change_consumption>0.1*max_consumption || fake){
-			System.out.println(fake);
+			//System.out.println(fake);
 		if (timer % 30 == 0)
 			fields.add(new Powerfield(applet, canvas, applet.color(255,50)));
 		}

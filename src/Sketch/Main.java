@@ -13,6 +13,7 @@ import DDPClient.DDPClient;
 import Event.SensorData;
 import Event.SensorEvent;
 import Event.SensorListener;
+import Event.Visual;
 import FenoDMX.Screen;
 import SolarAPI.SolarAnalyticsAPI;
 import SolarAPI.SolarAnalyticsAPI.GRAN;
@@ -45,6 +46,8 @@ public class Main extends PApplet implements SensorListener {
 	private Text text;
 	boolean textBol = true;
 	
+	ArrayList<Visual> visualList;
+	
 	public static void main(final String... args){
     	
 		PApplet.main(new String[] { "--present", "Sketch.Main" });
@@ -75,6 +78,11 @@ public class Main extends PApplet implements SensorListener {
 		bargraph = new BarGraph(this, sensorData, api, createGraphics(170, 120, P2D));
 		text = new Text(this, sensorData, api, createGraphics(17, 12, P2D));
 
+		visualList = new ArrayList<Visual>();
+		
+		visualList.add(new Visual("Circle", new String[] { "#FFFFFF", "#FFFFFF", "#FFFFFF" }, false, false));
+		visualList.add(new Visual("Powerfield", new String[] { "#FFFFFF", "#FFFFFF", "#FFFFFF" }, false, false));
+
 		/*try {
 			HttpResponse<JsonNode> response = Unirest.get("https://portal.solaranalytics.com.au/api/v2/token").
 					basicAuth("demo@solaranalytics.com.au","demo123").
@@ -103,7 +111,7 @@ public class Main extends PApplet implements SensorListener {
 		
 		voltage.fake = true;
 		//sensorData.setCar(100);
-		System.out.println(frameRate);
+		//System.out.println(frameRate);
 		
 		pSend.beginDraw();
 		pSend.noStroke();
@@ -157,7 +165,7 @@ public class Main extends PApplet implements SensorListener {
 			//System.out.println(frameRate);
 			screen.drawOnGui();
 		}
-		screen.send(9, 8, 0, 0, 0);
+		//screen.send(9, 8, 0, 0, 0);
 		
 		//image(pg,0,0);
 		
