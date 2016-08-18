@@ -60,9 +60,6 @@ public class Main extends PApplet implements SensorListener {
 	public void setup() {
 		
 		sensorData = SensorData.getInstance();
-		
-		client = new DDPClient("localhost", 3000);
-    	client.connect();
     	
     	sensorData.addSensorListener(this);
     	//SensorData.getInstance().addSensorListener(this);
@@ -83,6 +80,9 @@ public class Main extends PApplet implements SensorListener {
 		visualList.add(new Visual("Circle", new String[] { "#FFFFFF", "#FFFFFF", "#FFFFFF" }, false, false));
 		visualList.add(new Visual("Powerfield", new String[] { "#FFFFFF", "#FFFFFF", "#FFFFFF" }, false, false));
 
+		client = new DDPClient("localhost", 3000);
+    	client.connect();
+    	
 		/*try {
 			HttpResponse<JsonNode> response = Unirest.get("https://portal.solaranalytics.com.au/api/v2/token").
 					basicAuth("demo@solaranalytics.com.au","demo123").
@@ -165,7 +165,7 @@ public class Main extends PApplet implements SensorListener {
 			//System.out.println(frameRate);
 			screen.drawOnGui();
 		}
-		//screen.send(9, 8, 0, 0, 0);
+		screen.send(9, 8, 0, 0, 0);
 		
 		//image(pg,0,0);
 		

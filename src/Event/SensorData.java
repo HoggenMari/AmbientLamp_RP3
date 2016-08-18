@@ -1,5 +1,7 @@
 package Event;
 
+import java.util.HashMap;
+
 import javax.swing.event.EventListenerList;
 
 public class SensorData {
@@ -20,6 +22,7 @@ public class SensorData {
 	private int carValue;
 	private int co2Value;
 	private float averagePowerValue;
+	HashMap<String,Visual> visuals = new HashMap<String,Visual>();
 
 	private SensorData () {}
 
@@ -94,6 +97,14 @@ public class SensorData {
 		listenerList.remove(MusicListener.class, l);
 	}
 
+	public void addVisualListener(VisualListener l) {
+		listenerList.add(VisualListener.class, l);
+	}
+
+	public void removeVisualListener(VisualListener l) {
+		listenerList.remove(VisualListener.class, l);
+	}
+	
 	public void setBrightness(float brightness) {
 		this.brightness = brightness;
 		Object[] listeners = listenerList.getListenerList();
@@ -299,4 +310,24 @@ public class SensorData {
 	public void setBrightnessID(String brightnessID) {
 		this.brightnessID = brightnessID;
 	}
+	
+	public HashMap<String, Visual> getVisualList() {
+		return visuals;
+	}
+	
+	public void setVisual() {
+		Object[] listeners = listenerList.getListenerList();
+		System.out.println("Set Visual");
+		
+		// System.out.println("Brightness"+listeners.length);
+
+		for (int i = 0; i < listeners.length; i++) {
+			if (listeners[i] == VisualListener.class) {
+				((VisualListener) listeners[i + 1])
+						.visualsChanged(new VisualEvent(this,
+								VisualEvent.VISUAL_CHANGED, visuals));
+			}
+		}
+	}
+	
 }

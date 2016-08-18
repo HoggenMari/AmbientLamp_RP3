@@ -4,6 +4,7 @@ import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.Observer;
 
+import Event.SensorData;
 import me.kutrumbos.DdpClient;
 import me.kutrumbos.examples.SimpleDdpClientObserver;
 

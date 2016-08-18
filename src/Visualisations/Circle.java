@@ -1,20 +1,28 @@
 package Visualisations;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import Event.CarEvent;
 import Event.CarListener;
 import Event.SensorData;
+import Event.Visual;
+import Event.VisualEvent;
+import Event.VisualListener;
 import SolarAPI.SiteData;
 import SolarAPI.SolarAnalyticsAPI;
 import SolarAPI.SolarAnalyticsAPI.GRAN;
 import SolarAPI.SolarAnalyticsAPI.MONITORS;
 
-public class Circle implements CarListener {
+public class Circle implements CarListener, VisualListener {
 	PGraphics canvas;
 	PApplet applet;
+	String visual_name = "Visual 1";
+	
+	int[] color;
+	
 	ArrayList<Electron> electrons;
 	ArrayList<Powerfield> fields;
 	float charge, step;
@@ -43,8 +51,14 @@ public class Circle implements CarListener {
 		fields = new ArrayList<Powerfield>();
 		charge = 0;
 		chargeStep = 0;
+		
+		color = new int[]{ applet.color(24, 34, 43),
+			    applet.color(41, 46, 49),
+			    applet.color(68, 58, 46),
+			    applet.color(255,255,255)};
 
 		sensorData.addCarListener(this);
+		sensorData.addVisualListener(this);
 		
 	}
 
@@ -117,7 +131,7 @@ public class Circle implements CarListener {
 				22 * applet.sin(0), 55);
 		bc = c[22];
 		
-		canvas.background(90,75,40);
+		canvas.background(color[0]);
 		canvas.fill(255);
 
 		
@@ -209,10 +223,12 @@ public class Circle implements CarListener {
 		int y = canvas.height/2;
 		float rad = applet.map(r, 0f, 100f, 10f, 200f);
 		rad = ((applet.sin(step) + 1f) / 3f) * rad * 0.25f + rad * 0.75f;
-		canvas.fill(calcColor(r, applet.color(244, 57, 67, 88),
-				applet.color(227, 229, 229, 88),
-				applet.color(100, 194, 255, 88)));
-		canvas.fill(calcColor(60, applet.color(123, 49, 49, 150), applet.color(143, 49, 49, 200), applet.color(163, 49, 49, 255)));
+		System.out.println(color[1]);
+		float c1 = color[1] >> 16 & 0xFF;
+		float c2 = color[1] >> 8 & 0xFF;;
+		float c3 = color[1] & 0xFF;
+		
+		canvas.fill(calcColor(60, applet.color(c1, c2, c3, 150), applet.color(c1, c2, c3, 200), applet.color(c1, c2, c3, 255)));
 		//canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(200, 31, 255, 150)));
 
 		for (int n = 0; n < 5; n++) {
@@ -234,7 +250,15 @@ public class Circle implements CarListener {
 				applet.color(100, 194, 255, 88)));
 		canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(255, 250, 127, 150)));
 		canvas.fill(calcColor(100, applet.color(135, 96, 190, 88), applet.color(153, 109, 214, 88), applet.color(180, 136, 242, 88)));
-		canvas.fill(calcColor(60, applet.color(245, 230, 210, 88), applet.color(245, 164, 120, 88), applet.color(245, 164, 64, 150)));
+		
+		System.out.println(color[2]);
+		float c1 = color[2] >> 16 & 0xFF;
+		float c2 = color[2] >> 8 & 0xFF;;
+		float c3 = color[2] & 0xFF;
+
+		//canvas.fill(calcColor(60, applet.color(245, 230, 210, 88), applet.color(245, 164, 120, 88), applet.color(245, 164, 64, 150)));
+
+		canvas.fill(calcColor(60, applet.color(c1, c2, c3, 88), applet.color(c1, c2, c3, 88), applet.color(c1, c2, c3, 150)));
 
 		for (int n = 0; n < 5; n++) {
 			canvas.ellipse(x, y, rad * applet.pow(0.9f, n),
@@ -300,5 +324,21 @@ public class Circle implements CarListener {
 		//System.out.println("BLLLAAAA");
 		setCharge((float) (e.getCarValue() / 100.0));
 
+	}
+
+	@Override
+	public void visualsChanged(VisualEvent e) {
+		// TODO Auto-generated method stub
+		//System.out.println("visual event"+e.getVisualList());
+		HashMap<String,Visual> vList = e.getVisualList();
+		for (Visual value : vList.values()) {
+			if(value.getName().equals(visual_name)){
+				System.out.println("Value = " + value.getColorsAsRGB().get(0));
+				for(int i=0; i<value.getColorsAsRGB().size(); i++){
+					int[] col = value.getColorsAsRGB().get(i);
+					color[i] = applet.color(col[0], col[1], col[2]);
+				}
+			}
+		}
 	}
 }

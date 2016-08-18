@@ -1,5 +1,7 @@
 package Event;
 
+import java.util.ArrayList;
+
 public class Visual {
 	
 	String id;
@@ -49,6 +51,19 @@ public class Visual {
 
 	public void setColors(String[] colors) {
 		this.colors = colors;
+	}
+	
+	public ArrayList<int[]> getColorsAsRGB() {
+		ArrayList<int[]> colorList = new ArrayList<int[]>();
+		for(int i=0; i<colors.length; i++){
+			colorList.add(new int[] {
+					Integer.valueOf(colors[i].substring(1, 3), 16), 
+					Integer.valueOf(colors[i].substring(3, 5), 16),
+					Integer.valueOf(colors[i].substring(5, 7), 16)	
+			});
+		}
+		
+		return colorList;
 	}
 	
 	public boolean isChecked() {
