@@ -263,7 +263,7 @@
   Template.color.rendered = function () {
 
 
-      //console.log("CALLLLED");
+      console.log("CALLLLED");
       //console.log(this.connection);
       //console.log(colsOld);
       cols = Visuals.findOne(currentID, {fields: {"colors": 1}});
@@ -374,5 +374,24 @@
       'touchend .track': function() {
           console.log(prevAll(event.target.parentElement.parentElement.parentElement.parentElement).length);
           updateColors(prevAll(event.target.parentElement.parentElement.parentElement.parentElement).length);
+      },
+      'touchmove .track': function() {
+          console.log(prevAll(event.target.parentElement.parentElement.parentElement.parentElement).length);
+          updateColors(prevAll(event.target.parentElement.parentElement.parentElement.parentElement).length);
+      },
+      'click .reset_tab': function() {
+          console.log("reset");
+          reset();
       }
   });
+
+
+  function reset(){
+
+      //for(var i=0; i<4; i++) {
+      //    var color = "#FFFFFF";
+          Meteor.call('reset', currentID);
+      //}
+
+      location.reload();
+  }

@@ -36,7 +36,10 @@ Meteor.startup(function () {
     Object.keys(ifaces).forEach(function(ifname) {
         var alias = 0;
 
-        ifaces[ifname].forEach(function(iface) {
+        ifaces[ifname].forEach(function(iface){
+
+            console.log(iface);
+
             if ('IPv4' !== iface.family || iface.internal !== false) {
                 // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
                 return;
@@ -49,6 +52,7 @@ Meteor.startup(function () {
             } else {
                 // this interface has only one ipv4 adress
                 localIP = iface.address;
+                console.log(localIP);
 
                 fs.writeFile("ipaddress", iface.address, function(err) {
                     if (err) {
@@ -127,12 +131,24 @@ Meteor.startup(function () {
     }
 
     if(Visuals.find().count() == 0) {
-        var names = ["Visual 1", "Visual 2"];
+        var names = ["Visual 1"];
+        _.each(names, function (name) {
+            Visuals.insert({
+                name: name,
+                colors: [ { color: "#FFFFFF", index: 0},
+                          { color: "#FFFFFF", index: 1},
+                          { color: "#FFFFFF", index: 2},
+                          { color: "#FFFFFF", index: 3}],
+                checked: false,
+                active: false
+            });
+        });
+        var names = ["Visual 2"];
         _.each(names, function (name) {
             Visuals.insert({
                 name: name,
                 colors: [ { color: "#FFFFAF", index: 0},
-                          { color: "#FFFFFF", index: 1}],
+                    { color: "#FFFFFF", index: 1}],
                 checked: false,
                 active: false
             });
@@ -162,7 +178,30 @@ Meteor.methods({
         Visuals.update(visualId, { $set: { active: setActive } });
     },
     'update': function(id, index, color) {
-        console.log("update");
         Visuals.update({_id: id, "colors.index": index}, { $set: { "colors.$.color": color}});
+    },
+    'reset': function(id) {
+        console.log("RESET");
+        var myjson = {};
+        myjson = JSON.parse(Assets.getText("settings.json"));
+        //console.log(myjson.Visuals[0]);
+        console.log(Visuals.findOne(id).name);
+        var visual = null;
+        for(var i=0; i<myjson.Visuals.length; i++){
+            if(myjson.Visuals[i].name==Visuals.findOne(id).name){
+                console.log("test");
+                visual = myjson.Visuals[i];
+                break;
+            }
+        }
+        console.log(visual.colors);
+        const visual_db = Visuals.findOne(id);
+        visual_db.colors = visual.colors;
+        Visuals.update(id, visual_db);
+
+        //if(Visuals.findOne(id).name=="Visual 1"){
+        //    console.log("Visual 1");
+        //}
+        //console.log(myjson.Visuals);
     }
 });

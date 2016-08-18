@@ -90,17 +90,21 @@
             <a href="{{pathFor route='leaderboard'}}">
                 <li class="genius_tab">
                     <span><img class="back" src="/back.png"></span>
-                    <span style="vertical-align: middle; font-size: 18px;">Back</span>
+                    <span style="vertical-align: middle; font-size: 18px; font-weight: 600;">Back</span>
                 </li>
             </a>
             <li class="colors_tab">
-                <div style="font-size: 1.2em; font-weight: 600; float: left">Colors</div>
+                <div style="font-size: 1.2em; font-weight: 400; float: left">Colors</div>
                 <div id="colors">
                     {{#each colors}}
                         {{> color}}
                     {{/each}}
                 </div>
             </li>
+            <li class="reset_tab">
+                <div style="font-size: 1.2em; font-weight: 400; float: left">Reset to default</div>
+            </li>
+
         </ol>
         <div class="overlayBG" style="visibility: hidden;"></div>
     </div>

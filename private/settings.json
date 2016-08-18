@@ -1,0 +1,50 @@
+{
+  "Visuals": [
+
+    {
+      "_id" : "rD9jTubopu4xztdSa",
+      "name" : "Visual 1",
+      "colors" : [
+        { "color" : "#110B45", "index" : 0 },
+        { "color" : "#761916", "index" : 1 },
+        { "color" : "#C1AA45", "index" : 2 },
+        { "color" : "#000000", "index" : 3 }
+      ],
+      "checked" : false,
+      "active" : false
+    },
+    {
+      "_id" : "RH8TD6zpG3p4ZgdcQ",
+      "name" : "Visual 2",
+      "colors" : [
+        { "color" : "#FFFFAF", "index" : 0 },
+        { "color" : "#FFFFFF", "index" : 1 }
+      ],
+      "checked" : false,
+      "active" : false
+    },
+    {
+      "_id" : "hDPiBv93PtjtMRGyQ",
+      "name" : "Visual 3",
+      "colors" : [
+        { "color" : "#FFFFAF", "index" : 0 },
+        { "color" : "#FFFFFF", "index" : 1 },
+        { "color" : "#FFFFFF", "index" : 2 }
+      ],
+      "checked" : false,
+      "active" : false
+    },
+    {
+      "_id" : "Zb8FDDLizNFNzBtaL",
+      "name" : "Visual 4",
+      "colors" : [
+        { "color" : "#FFFFAF", "index" : 0 },
+        { "color" : "#FFFFFF", "index" : 1 },
+        { "color" : "#FFFFFF", "index" : 2 }
+      ],
+      "checked" : false,
+      "active" : false
+    }
+
+  ]
+}
