@@ -1,20 +1,29 @@
 package Visualisations;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import Event.CarEvent;
 import Event.CarListener;
 import Event.SensorData;
+import Event.Visual;
+import Event.VisualEvent;
+import Event.VisualListener;
 import SolarAPI.SiteData;
 import SolarAPI.SolarAnalyticsAPI;
 import SolarAPI.SolarAnalyticsAPI.GRAN;
 import SolarAPI.SolarAnalyticsAPI.MONITORS;
 
-public class Voltage implements CarListener {
+public class Voltage implements CarListener, VisualListener {
 	PGraphics canvas;
 	PApplet applet;
+	String visual_name = "Visual 1";
+
+	int[] color;
+
+	
 	ArrayList<Electron> electrons;
 	ArrayList<Powerfield> fields;
 	float charge, step;
@@ -44,7 +53,13 @@ public class Voltage implements CarListener {
 		charge = 0;
 		chargeStep = 0;
 
+		color = new int[]{ applet.color(45, 47, 48),
+			    applet.color(244, 99, 97),
+			    applet.color(135, 96, 190),
+			    applet.color(255,255,255)};
+		
 		sensorData.addCarListener(this);
+		sensorData.addVisualListener(this);
 		
 	}
 
@@ -90,17 +105,23 @@ public class Voltage implements CarListener {
 			electronEmitted = false;
 		}
 
-		float change_consumption = api.getCurrentChangeInConsumption();
-		float max_consumption = api.getMaxInConsumption();
+		float change_consumption = api.getChangeCons();//api.getCurrentChangeInConsumption();
+		float max_consumption = api.getMaxCons();//api.getMaxInConsumption();
 		
-		float change_water = api.getCurrentChangeInHotWater();
-		float max_water = api.getMaxInHotWater();
+		//float change_water = api.getCurrentChangeInHotWater();
+		//float max_water = api.getMaxInHotWater();
 		
+		//System.out.println(change_consumption+" "+(0.1*max_consumption));
 		
 		if(change_consumption>0.1*max_consumption || fake){
-			System.out.println(fake);
-		if (timer % 30 == 0)
-			fields.add(new Powerfield(applet, canvas, applet.color(255,50)));
+		if (timer % 30 == 0){
+			float c1 = color[3] >> 16 & 0xFF;
+			float c2 = color[3] >> 8 & 0xFF;;
+			float c3 = color[3] & 0xFF;
+
+			fields.add(new Powerfield(applet, canvas, applet.color(c1,c2,c3,50)));
+
+		}
 		}
 		
 	
@@ -115,7 +136,8 @@ public class Voltage implements CarListener {
 		canvas.beginDraw();
 		int bc = applet.color(22 + 22 * applet.sin(0),
 				22 * applet.sin(0), 55);
-		bc = c[22];
+		
+		bc = color[0];
 		
 		canvas.background(bc);
 		canvas.fill(255);
@@ -126,9 +148,21 @@ public class Voltage implements CarListener {
 		//smoothCircle3(charge);
 		//smoothCircle2(charge);
 		
-		produced = api.getCurrentProduction(); //api.getLastSiteDataEntry().energy_generated;
-		consumed = api.getCurrentConsumption();
+
+			produced = api.getCurrentGen();//api.getCurrentProduction(); //api.getLastSiteDataEntry().energy_generated;
+			consumed = api.getCurrentCons();//api.getCurrentConsumption();
 		
+			//produced = api.getLastSiteDataEntry().energy_generated;
+			//consumed = api.getLastSiteDataEntry().energy_consumed;
+			
+		if(applet.frameCount%1==0){
+			//System.out.println(produced);
+			//System.out.println(consumed);
+			System.out.println(api.getChangeCons());
+			System.out.println(api.getChangeGen());
+			//api.getLiveSiteData(true, false);
+		}
+			
 		//produced = 100;
 		//consumed = 50;
 		
@@ -209,10 +243,13 @@ public class Voltage implements CarListener {
 		int y = canvas.height/2;
 		float rad = applet.map(r, 0f, 100f, 10f, 200f);
 		rad = ((applet.sin(0) + 1f) / 2f) * rad * 0.25f + rad * 0.75f;
-		canvas.fill(calcColor(r, applet.color(244, 57, 67, 88),
-				applet.color(227, 229, 229, 88),
-				applet.color(100, 194, 255, 88)));
-		canvas.fill(calcColor(60, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 150), applet.color(255, 250, 170, 200)));
+
+		
+		float c1 = color[1] >> 16 & 0xFF;
+		float c2 = color[1] >> 8 & 0xFF;;
+		float c3 = color[1] & 0xFF;
+		
+		canvas.fill(calcColor(60, applet.color(c1, c2, c3, 88), applet.color(c1, c2, c3, 150), applet.color(c1, c2, c3, 200)));
 		//canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(200, 31, 255, 150)));
 
 		for (int n = 0; n < 5; n++) {
@@ -229,11 +266,12 @@ public class Voltage implements CarListener {
 		if(change){
 			rad = ((applet.sin(step) + 1f) / 2f) * rad * 0.3f + rad * 0.8f;
 		}
-		canvas.fill(calcColor(r, applet.color(244, 57, 67, 88),
-				applet.color(227, 229, 229, 88),
-				applet.color(100, 194, 255, 88)));
-		canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(255, 250, 127, 150)));
-		canvas.fill(calcColor(100, applet.color(135, 96, 190, 88), applet.color(153, 109, 214, 88), applet.color(180, 136, 242, 88)));
+		
+		float c1 = color[2] >> 16 & 0xFF;
+		float c2 = color[2] >> 8 & 0xFF;;
+		float c3 = color[2] & 0xFF;
+		
+		canvas.fill(calcColor(100, applet.color(c1, c2, c3, 88), applet.color(c1, c2, c3, 88), applet.color(c1, c2, c3, 88)));
 
 		for (int n = 0; n < 5; n++) {
 			canvas.ellipse(x, y, rad * applet.pow(0.9f, n),
@@ -299,5 +337,21 @@ public class Voltage implements CarListener {
 		//System.out.println("BLLLAAAA");
 		setCharge((float) (e.getCarValue() / 100.0));
 
+	}
+	
+	@Override
+	public void visualsChanged(VisualEvent e) {
+		// TODO Auto-generated method stub
+		//System.out.println("visual event"+e.getVisualList());
+		HashMap<String,Visual> vList = e.getVisualList();
+		for (Visual value : vList.values()) {
+			if(value.getName().equals(visual_name)){
+				//System.out.println("Value = " + value.getColorsAsRGB().get(0));
+				for(int i=0; i<value.getColorsAsRGB().size(); i++){
+					int[] col = value.getColorsAsRGB().get(i);
+					color[i] = applet.color(col[0], col[1], col[2]);
+				}
+			}
+		}
 	}
 }

@@ -3,6 +3,7 @@ package Sketch;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -14,6 +15,8 @@ import Event.SensorData;
 import Event.SensorEvent;
 import Event.SensorListener;
 import Event.Visual;
+import Event.VisualEvent;
+import Event.VisualListener;
 import FenoDMX.Screen;
 import SolarAPI.SolarAnalyticsAPI;
 import SolarAPI.SolarAnalyticsAPI.GRAN;
@@ -26,7 +29,7 @@ import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
 
-public class Main extends PApplet implements SensorListener {
+public class Main extends PApplet implements SensorListener, VisualListener {
 
     /**
 	 * 
@@ -62,6 +65,8 @@ public class Main extends PApplet implements SensorListener {
 		sensorData = SensorData.getInstance();
     	
     	sensorData.addSensorListener(this);
+    	sensorData.addVisualListener(this);
+    	
     	//SensorData.getInstance().addSensorListener(this);
     	
 		size(100,100);
@@ -119,7 +124,7 @@ public class Main extends PApplet implements SensorListener {
 		pSend.rect(0, 0, pSend.width, pSend.height);
 			//pSend.fill(0,0,0);
 			//pSend.rect(0, 0, pSend.width, pSend.height);
-	    pSend.image(downscale(circle.draw(), 3),0,0);
+	    pSend.image(downscale(voltage.draw(), 3),0,0);
 			//pSend.image(text.draw(),0,0);
 		
 		//pSend.rect(0, 0, pSend.width, pSend.height);
@@ -244,4 +249,18 @@ public class Main extends PApplet implements SensorListener {
 		}
 	}
 
+	@Override
+	public void visualsChanged(VisualEvent e) {
+		// TODO Auto-generated method stub
+		HashMap<String,Visual> vList = e.getVisualList();
+		int i=0;
+		for (Visual value : vList.values()) {
+			System.out.println(value);
+			if(value.isActive()){
+				System.out.println(value.getName());
+				break;
+			}
+			i++;
+		}		
+	}
 }

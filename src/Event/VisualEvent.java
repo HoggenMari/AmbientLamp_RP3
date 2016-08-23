@@ -14,7 +14,7 @@ public class VisualEvent extends EventObject {
 	HashMap<String,Visual> visuals = new HashMap<String,Visual>();
     protected int id;
 
-	public VisualEvent(Object source, int id, HashMap<String,Visual> visuals) {
+	public VisualEvent(Object source, int id, HashMap<String, Visual> visuals) {
 		super(source);
 		this.id = id;
 		this.visuals = visuals;

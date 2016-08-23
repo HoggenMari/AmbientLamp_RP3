@@ -48,8 +48,11 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	
 	String webPage = "https://portal.solaranalytics.com.au/api/v2";
 	String name = "demo@solaranalytics.com.au";
-	String password = "demo123";
+	//String name = "m.hoggenmueller@googlemail.com";
+	String password = "demo123";//"fr21muc08";
+	//String password = "fr21muc08";
 	int site_id = 8072;
+	//int site_id = 8753;
 	String token;
 	long tokenTimeStamp;
 	
@@ -74,6 +77,10 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	HashMap<String,ArrayList<LiveData>> sLiveData = new HashMap<String, ArrayList<LiveData>>();
 	long lastUpdateSiteLiveData;
 	int MAX_LIVE_DATA_SIZE = 200;
+	
+	//LiveSiteData
+	ArrayList<LiveSiteDataEntry> live_site_data;
+	long lastUpdateLiveSiteData;
 		
 	public SolarAnalyticsAPI(){
 		
@@ -97,7 +104,8 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		long currentTimeStamp = date.getTime();
 		
 		
-		if(currentTimeStamp-tokenTimeStamp>=6000){
+		if(currentTimeStamp-tokenTimeStamp>=60000){
+			System.out.println("Request Secure Token");
 			token = requestSecureToken();
 		}
 		String authString = token + ":x";
@@ -109,6 +117,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 			
 			//url = new URL(webPage+"/site_data/140?tstart=20160504&tend=20160504&gran="+gran+"&raw=false&trunc=false");
 			url = new URL(webPage+gran);
+			System.out.println("URL: "+url);
 			URLConnection urlConnection = url.openConnection();
 			urlConnection.setRequestProperty("Authorization", "Basic " + authStringEnc);
 			InputStream is = urlConnection.getInputStream();
@@ -386,7 +395,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	    
 	    //System.out.println(sData.get(hash).toString());
 	    
-	    System.out.println(sData.size());
+	    //System.out.println(sData.size());
 
 		return siteDataList;
 	}
@@ -565,7 +574,8 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	public List<LiveData> getIntervallLive(GregorianCalendar startCalendar, boolean all) {
 		
 		String watt_device_id = getIntervall(new GregorianCalendar(), new GregorianCalendar(), GRAN.month, true).get(0).watt_device_id;
-				
+		//System.out.println(watt_device_id);
+		
 		Date date = new Date();
 		long timeStamp = date.getTime();
 		
@@ -580,6 +590,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	        
 			for(int i=0; i<getArray.size(); i++){
 				liveData.add(gson.fromJson(getArray.get(i), LiveData.class));
+				//System.out.println(getArray.get(i));
 			}
 			
 			lastUpdateSiteLiveData = timeStamp;
@@ -902,7 +913,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	public float getCurrentProduction() {
 		
 		ArrayList<LiveDataEntry> data_pv = getLiveBuffer(MONITORS.pv_site_net);
-		
+				
 		if(data_pv.size()>0){
 			return data_pv.get(data_pv.size()-1).power;
 		}
@@ -1021,4 +1032,120 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		return max_consumed;
 		
 	}*/
+	
+	public ArrayList<LiveSiteDataEntry> getLiveSiteData() {
+        
+		//if(1==1){
+		Date date = new Date();
+		long timeStamp = date.getTime();
+		
+		if(live_site_data == null){
+		
+			JsonObject jsonObject = requestData("/live_site_data/"+Integer.toString(site_id)+"?last_hour=true&last_sync=false");
+			JsonArray getArray = jsonObject.getAsJsonArray("data");
+		
+			Gson gson = new Gson();
+			live_site_data = new ArrayList<LiveSiteDataEntry>();
+        
+			for(int i=0; i<getArray.size(); i++){
+				live_site_data.add(gson.fromJson(getArray.get(i), LiveSiteDataEntry.class));
+			}
+			
+			//System.out.println("NEW: "+live_site_data.size());
+
+		}else if(lastUpdateSiteLiveData < timeStamp-(timeStamp%30000)) {
+			
+			lastUpdateSiteLiveData = timeStamp;
+			
+			JsonObject jsonObject = requestData("/live_site_data/"+Integer.toString(site_id)+"?last_six=true"+"&last_sync=false");
+			JsonArray getArray = jsonObject.getAsJsonArray("data");
+		
+			Gson gson = new Gson();
+			//live_site_data = new ArrayList<LiveSiteDataEntry>();
+        
+			for(int i=0; i<getArray.size(); i++){
+				LiveSiteDataEntry entry = gson.fromJson(getArray.get(i), LiveSiteDataEntry.class);
+				//System.out.println(entry.t_stamp);
+				boolean contains = false;
+				for(int j=live_site_data.size()-1; j>0; j--){
+					if(live_site_data.get(j).t_stamp.equals(entry.t_stamp)){
+						//System.out.println("true");
+						contains = true;
+					}	
+				}
+				if(!contains){
+					live_site_data.add(entry);
+				}
+				
+			}
+			//System.out.println("UPDATE: "+live_site_data.size());
+
+		}
+		
+		return live_site_data;
+	}
+	
+	public float getCurrentCons(){
+		ArrayList<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
+		
+		if(live_site_data_list.size()>0){
+			return live_site_data_list.get(live_site_data_list.size()-1).cons;
+		}
+		return 0;
+	}
+	
+	public float getCurrentGen(){
+		ArrayList<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
+		
+		if(live_site_data_list.size()>0){
+			return live_site_data_list.get(live_site_data_list.size()-1).gen;
+		}
+		return 0;
+	}
+	
+	public float getMaxCons(){
+		
+		ArrayList<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
+		
+		float max_consumed = 0;
+		for(LiveSiteDataEntry entry : live_site_data_list){
+			if(entry.cons > max_consumed){
+				max_consumed = entry.cons;
+			}
+		}
+		return max_consumed;
+	}
+	
+	public float getMaxGen(){
+		
+		ArrayList<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
+		
+		float max_produced = 0;
+		for(LiveSiteDataEntry entry : live_site_data_list){
+			if(entry.gen > max_produced){
+				max_produced = entry.gen;
+			}
+		}
+		return max_produced;
+	}
+	
+	public float getChangeCons(){
+		
+		ArrayList<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
+		
+		if(live_site_data_list.size()>=2){
+			return live_site_data_list.get(live_site_data_list.size()-1).cons-live_site_data_list.get(live_site_data_list.size()-2).cons;
+		}
+		return 0;
+	}
+	
+	public float getChangeGen(){
+		
+		ArrayList<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
+		
+		if(live_site_data_list.size()>=2){
+			return live_site_data_list.get(live_site_data_list.size()-1).gen-live_site_data_list.get(live_site_data_list.size()-2).gen;
+		}
+		return 0;
+	}
 }

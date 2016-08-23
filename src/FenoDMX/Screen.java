@@ -5,14 +5,17 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 
 import artnet4j.ArtNet;
 import artnet4j.ArtNetException;
 import artnet4j.packets.ArtDmxPacket;
+import hypermedia.net.UDP;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
+
 
 public class Screen extends Thread {
 
@@ -35,6 +38,11 @@ public class Screen extends Thread {
 	private static DatagramSocket SOCKET;
 	ArtNet artnet;
 	private int sequenceID = 0;
+	
+	//iPad prototyping
+	static final String HOST_IPAD = "192.168.0.102";
+	static int PORT_IPAD = 53281;
+	UDP udp;
 	
 	private int resX;
 	private int resY;
@@ -65,6 +73,8 @@ public class Screen extends Thread {
 			  throw new AssertionError(e);
 			}
 		}
+		
+		udp = new UDP( this, 53282 );
 	}
 
 	public void addLayer(PGraphics pg) {
@@ -107,8 +117,36 @@ public class Screen extends Thread {
 			sendFeno(nRow);
 		}else if(controller == 1){
 			sendArtNet(nRow);
+			sendIpad(nRow);
 		}
 	}
+	
+	public void sendIpad(int... nRow) {
+		
+		String data = "";
+		
+		for (int ix = 0; ix < 17; ix++) {
+			for (int iy = 0; iy < 12; iy++) {
+				int rgb = pgMain.get(ix, iy);
+				data = data+"#";
+				data = data+PApplet.hex(rgb, 6);
+			}
+		}
+		
+		
+		String message  = data;	// the message to send
+	    String ip       = "192.168.0.102";	// the remote IP address
+	    int port        = 53282;		// the destination port
+	    
+	    // formats the message for Pd
+	    message = message+";\n";
+	    
+	    //System.out.println(message);
+	    // send the message
+	    udp.send( message, ip, port );
+		
+	}
+	
 	public void sendFeno(int... nRow) {
 
 		// key

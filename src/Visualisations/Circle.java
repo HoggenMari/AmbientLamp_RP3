@@ -223,7 +223,7 @@ public class Circle implements CarListener, VisualListener {
 		int y = canvas.height/2;
 		float rad = applet.map(r, 0f, 100f, 10f, 200f);
 		rad = ((applet.sin(step) + 1f) / 3f) * rad * 0.25f + rad * 0.75f;
-		System.out.println(color[1]);
+		//System.out.println(color[1]);
 		float c1 = color[1] >> 16 & 0xFF;
 		float c2 = color[1] >> 8 & 0xFF;;
 		float c3 = color[1] & 0xFF;
@@ -251,7 +251,7 @@ public class Circle implements CarListener, VisualListener {
 		canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(255, 250, 127, 150)));
 		canvas.fill(calcColor(100, applet.color(135, 96, 190, 88), applet.color(153, 109, 214, 88), applet.color(180, 136, 242, 88)));
 		
-		System.out.println(color[2]);
+		//System.out.println(color[2]);
 		float c1 = color[2] >> 16 & 0xFF;
 		float c2 = color[2] >> 8 & 0xFF;;
 		float c3 = color[2] & 0xFF;
@@ -333,7 +333,7 @@ public class Circle implements CarListener, VisualListener {
 		HashMap<String,Visual> vList = e.getVisualList();
 		for (Visual value : vList.values()) {
 			if(value.getName().equals(visual_name)){
-				System.out.println("Value = " + value.getColorsAsRGB().get(0));
+				//System.out.println("Value = " + value.getColorsAsRGB().get(0));
 				for(int i=0; i<value.getColorsAsRGB().size(); i++){
 					int[] col = value.getColorsAsRGB().get(i);
 					color[i] = applet.color(col[0], col[1], col[2]);
