@@ -15,15 +15,14 @@ import SolarAPI.SiteData;
 import SolarAPI.SolarAnalyticsAPI;
 import SolarAPI.SolarAnalyticsAPI.GRAN;
 import SolarAPI.SolarAnalyticsAPI.MONITORS;
+import SolarAPI.SolarListener;
 
-public class Voltage implements CarListener, VisualListener {
+public class Voltage implements VisualListener, SolarListener {
 	PGraphics canvas;
 	PApplet applet;
 	String visual_name = "Visual 1";
-
 	int[] color;
 
-	
 	ArrayList<Electron> electrons;
 	ArrayList<Powerfield> fields;
 	float charge, step;
@@ -38,15 +37,19 @@ public class Voltage implements CarListener, VisualListener {
 	float producedCur;
 	float consumedCur;
 	public boolean valueChanged = false;
-	public boolean fake = true;
+	public boolean fake = false;
 
 	float produced, consumed;
+	private float change_consumption;
+	private float max_consumption;
 
 
-	public Voltage(PApplet a, SensorData sensorData, SolarAnalyticsAPI api, PGraphics c) {
+	public Voltage(PApplet a, SensorData sensorData, PGraphics c) {
 		applet = a;
 		this.sensorData = sensorData;
-		this.api = api;
+		this.api = SolarAnalyticsAPI.getInstance();
+		api.addLiveDataListener(this);
+		
 		canvas = c;
 		electrons = new ArrayList<Electron>();
 		fields = new ArrayList<Powerfield>();
@@ -58,7 +61,11 @@ public class Voltage implements CarListener, VisualListener {
 			    applet.color(135, 96, 190),
 			    applet.color(255,255,255)};
 		
-		sensorData.addCarListener(this);
+		produced = api.getCurrentGen(); //api.getLastSiteDataEntry().energy_generated;
+		consumed = api.getCurrentCons();
+		change_consumption = api.getChangeCons();
+		max_consumption = api.getMaxCons();
+		
 		sensorData.addVisualListener(this);
 		
 	}
@@ -105,14 +112,6 @@ public class Voltage implements CarListener, VisualListener {
 			electronEmitted = false;
 		}
 
-		float change_consumption = api.getChangeCons();//api.getCurrentChangeInConsumption();
-		float max_consumption = api.getMaxCons();//api.getMaxInConsumption();
-		
-		//float change_water = api.getCurrentChangeInHotWater();
-		//float max_water = api.getMaxInHotWater();
-		
-		//System.out.println(change_consumption+" "+(0.1*max_consumption));
-		
 		if(change_consumption>0.1*max_consumption || fake){
 		if (timer % 30 == 0){
 			float c1 = color[3] >> 16 & 0xFF;
@@ -123,15 +122,6 @@ public class Voltage implements CarListener, VisualListener {
 
 		}
 		}
-		
-	
-		//if(change_consumption>0.1*max_consumption){
-		//	change = true;
-		//}else{
-		//	change = false;
-		//}
-		
-		//change = true;
 		
 		canvas.beginDraw();
 		int bc = applet.color(22 + 22 * applet.sin(0),
@@ -145,61 +135,17 @@ public class Voltage implements CarListener, VisualListener {
 		
 
 		canvas.noStroke();
-		//smoothCircle3(charge);
-		//smoothCircle2(charge);
+		
 		
 
-			produced = api.getCurrentGen();//api.getCurrentProduction(); //api.getLastSiteDataEntry().energy_generated;
-			consumed = api.getCurrentCons();//api.getCurrentConsumption();
-		
-			//produced = api.getLastSiteDataEntry().energy_generated;
-			//consumed = api.getLastSiteDataEntry().energy_consumed;
-			
-		if(applet.frameCount%1==0){
-			//System.out.println(produced);
-			//System.out.println(consumed);
-			System.out.println(api.getChangeCons());
-			System.out.println(api.getChangeGen());
-			//api.getLiveSiteData(true, false);
-		}
-			
-		//produced = 100;
-		//consumed = 50;
-		
-		//if(applet.frameCount%1800==0){
-		//	produced = applet.random(0, 100);
-		//	consumed = applet.random(0, 100);
-		//}
 		
 		if(producedOld != produced || consumedOld != consumed){
 			valueChanged = true;
 		}
 		
-		
-	
-		/*if(producedCur<produced){
-			producedCur+=0.5;
-		}else if(producedCur>produced){
-			producedCur-=0.5;
-		}
-		if(consumedCur<consumed){
-			consumedCur+=0.5;
-		}else if(consumedCur>consumed){
-			consumedCur-=0.5;
-		}*/
-			
-		
-		//System.out.println("PRODUCED: "+produced+" "+producedCur);
-		//System.out.println("CONSUMED: "+consumed+" "+consumedCur);
-		//System.out.println(max);
-		//System.out.println(change);
-		//System.out.println("LIVEBUFFER: "+api.getLiveBuffer(MONITORS.ac_load_net));
-		//System.out.println("MAX: "+api.getMaxInConsumption());
 
 		float mapProduce2 = applet.map(produced, 0, consumed, 0, canvas.width/2);
-		float mapConsumed2 = applet.map(consumed, 0, produced, 0, canvas.width/2);
-		
-		
+		float mapConsumed2 = applet.map(consumed, 0, produced, 0, canvas.width/2);		
 		
 		if(produced>consumed){
 			smoothCircle(canvas.width/2);
@@ -330,19 +276,10 @@ public class Voltage implements CarListener, VisualListener {
 		//System.out.println(c);
 		charge = c * 100;
 	}
-
-	@Override
-	public void carChanged(CarEvent e) {
-		// TODO Auto-generated method stub
-		//System.out.println("BLLLAAAA");
-		setCharge((float) (e.getCarValue() / 100.0));
-
-	}
 	
 	@Override
 	public void visualsChanged(VisualEvent e) {
 		// TODO Auto-generated method stub
-		//System.out.println("visual event"+e.getVisualList());
 		HashMap<String,Visual> vList = e.getVisualList();
 		for (Visual value : vList.values()) {
 			if(value.getName().equals(visual_name)){
@@ -353,5 +290,15 @@ public class Voltage implements CarListener, VisualListener {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void liveSiteDataChanged() {
+		// TODO Auto-generated method stub
+		//System.out.println("DataChanged");
+		produced = api.getCurrentGen(); //api.getLastSiteDataEntry().energy_generated;
+		consumed = api.getCurrentCons();
+		change_consumption = api.getChangeCons();
+		max_consumption = api.getMaxCons();
 	}
 }

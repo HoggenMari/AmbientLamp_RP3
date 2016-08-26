@@ -40,7 +40,7 @@ public class Screen extends Thread {
 	private int sequenceID = 0;
 	
 	//iPad prototyping
-	static final String HOST_IPAD = "192.168.0.102";
+	static final String HOST_IPAD = "192.168.0.100";
 	static int PORT_IPAD = 53281;
 	UDP udp;
 	
@@ -116,7 +116,7 @@ public class Screen extends Thread {
 		if(controller == 0){
 			sendFeno(nRow);
 		}else if(controller == 1){
-			sendArtNet(nRow);
+			//sendArtNet(nRow);
 			sendIpad(nRow);
 		}
 	}
@@ -135,7 +135,6 @@ public class Screen extends Thread {
 		
 		
 		String message  = data;	// the message to send
-	    String ip       = "192.168.0.102";	// the remote IP address
 	    int port        = 53282;		// the destination port
 	    
 	    // formats the message for Pd
@@ -143,7 +142,7 @@ public class Screen extends Thread {
 	    
 	    //System.out.println(message);
 	    // send the message
-	    udp.send( message, ip, port );
+	    udp.send( message, HOST_IPAD, port );
 		
 	}
 	

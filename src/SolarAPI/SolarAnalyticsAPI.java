@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.event.EventListenerList;
+
 import org.apache.commons.codec.binary.Base64;
 
 import com.google.gson.Gson;
@@ -28,7 +30,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-public class SolarAnalyticsAPI implements SiteDataDao{
+
+public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 
 	public enum GRAN
 	{
@@ -46,6 +49,8 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		pv_site_net
 	}
 	
+	private static SolarAnalyticsAPI instance;
+	
 	String webPage = "https://portal.solaranalytics.com.au/api/v2";
 	String name = "demo@solaranalytics.com.au";
 	//String name = "m.hoggenmueller@googlemail.com";
@@ -54,6 +59,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	int site_id = 8072;
 	//int site_id = 8753;
 	String token;
+	int duration;
 	long tokenTimeStamp;
 	
 	DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -75,15 +81,15 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	ArrayList<LiveDataEntry> consumptionArray = new ArrayList<LiveDataEntry>();
 	ArrayList<LiveDataEntry>[] liveBuffer = new ArrayList[3];
 	HashMap<String,ArrayList<LiveData>> sLiveData = new HashMap<String, ArrayList<LiveData>>();
-	long lastUpdateSiteLiveData;
+	long lastUpdateLiveData;
 	int MAX_LIVE_DATA_SIZE = 200;
 	
 	//LiveSiteData
 	ArrayList<LiveSiteDataEntry> live_site_data;
 	long lastUpdateLiveSiteData;
-		
-	public SolarAnalyticsAPI(){
-		
+	EventListenerList listenerList = new EventListenerList();
+	
+	private SolarAnalyticsAPI () {
 		token = requestSecureToken();
 		System.out.println(token);
 		//requestData("day");
@@ -95,16 +101,42 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 			liveBuffer[i] = new ArrayList<LiveDataEntry>();
 		}
 		
-
 	}
-		
-	public JsonObject requestData(String gran){
+	
+	public void start() {
+		super.start();
+	}
+
+	public void run() {
+		while (true) {
+			
+			getLiveSiteData();
+			//getLiveSiteData();
+		}
+	}
+
+	public static synchronized SolarAnalyticsAPI getInstance() {
+		if (SolarAnalyticsAPI.instance == null) {
+			SolarAnalyticsAPI.instance = new SolarAnalyticsAPI ();
+		}
+		return SolarAnalyticsAPI.instance;
+    }
+
+	public void addLiveDataListener(SolarListener l) {
+		listenerList.add(SolarListener.class, l);
+	}
+
+	public void removeSensorListener(SolarListener l) {
+		listenerList.remove(SolarListener.class, l);
+	}
+	
+	public synchronized JsonObject requestData(String gran){
 		
 		Date date = new Date();
 		long currentTimeStamp = date.getTime();
 		
 		
-		if(currentTimeStamp-tokenTimeStamp>=60000){
+		if(currentTimeStamp-tokenTimeStamp>=duration*10){
 			System.out.println("Request Secure Token");
 			token = requestSecureToken();
 		}
@@ -130,6 +162,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 				sb.append(charArray, 0, numCharsRead);
 			}
 			String result = sb.toString();
+
 			
 			JsonObject jsonObject;
 			JsonParser jejpl = new JsonParser();
@@ -140,6 +173,8 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 			//Verify Json with Class
 			List<String> list = verifyElement(jsonObject, LiveData.class);
 						
+			//System.out.println("sb"+jsonObject);
+
 			return jsonObject;
 			
 		} catch (MalformedURLException e) {
@@ -157,6 +192,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 		return null;
 	}
 	
+
 	private String requestSecureToken(){
 		String authString = name + ":" + password;
 		byte[] authEncBytes = Base64.encodeBase64(authString.getBytes());
@@ -186,7 +222,8 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 			jsonObject = el.getAsJsonObject();
 
 			String property = jsonObject.get("token").getAsString();
-			
+			duration = jsonObject.get("duration").getAsInt();
+						
 			Date date = new Date();
 			tokenTimeStamp = date.getTime();
 			
@@ -574,12 +611,11 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	public List<LiveData> getIntervallLive(GregorianCalendar startCalendar, boolean all) {
 		
 		String watt_device_id = getIntervall(new GregorianCalendar(), new GregorianCalendar(), GRAN.month, true).get(0).watt_device_id;
-		//System.out.println(watt_device_id);
 		
 		Date date = new Date();
 		long timeStamp = date.getTime();
 		
-		if(liveData == null || lastUpdateSiteLiveData < timeStamp-(timeStamp%30000)){
+		if(liveData == null || lastUpdateLiveData < timeStamp-(timeStamp%30000)){
 			
 			liveData = new ArrayList<LiveData>();
 			JsonObject jsonObject = requestData("/live_data?device="+watt_device_id+"&all="+all);
@@ -593,7 +629,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 				//System.out.println(getArray.get(i));
 			}
 			
-			lastUpdateSiteLiveData = timeStamp;
+			lastUpdateLiveData = timeStamp;
 			
 		}
 		
@@ -802,7 +838,7 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 	public ArrayList<LiveDataEntry> getLiveBuffer(MONITORS monitor){
 		
 		List<LiveData> liveData = getIntervallLive(new GregorianCalendar(), true);
-		
+				
 		if(liveBuffer[monitor.ordinal()].isEmpty()){
 			for(LiveDataEntry entry : liveData.get(monitor.ordinal()).live_data){
 				liveBuffer[monitor.ordinal()].add(entry);
@@ -1051,11 +1087,19 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 				live_site_data.add(gson.fromJson(getArray.get(i), LiveSiteDataEntry.class));
 			}
 			
-			//System.out.println("NEW: "+live_site_data.size());
+			//update listeners
+			System.out.println("update listeners");
+			Object[] listeners = listenerList.getListenerList();
 
-		}else if(lastUpdateSiteLiveData < timeStamp-(timeStamp%30000)) {
+			for (int i = 0; i < listeners.length; i++) {
+				if (listeners[i] == SolarListener.class) {
+					((SolarListener) listeners[i + 1]).liveSiteDataChanged();
+				}
+			}
 			
-			lastUpdateSiteLiveData = timeStamp;
+		}else if(lastUpdateLiveSiteData < timeStamp-(timeStamp%30000)) {
+			
+			lastUpdateLiveSiteData = timeStamp;
 			
 			JsonObject jsonObject = requestData("/live_site_data/"+Integer.toString(site_id)+"?last_six=true"+"&last_sync=false");
 			JsonArray getArray = jsonObject.getAsJsonArray("data");
@@ -1078,8 +1122,16 @@ public class SolarAnalyticsAPI implements SiteDataDao{
 				}
 				
 			}
-			//System.out.println("UPDATE: "+live_site_data.size());
+			
+			//update listeners
+			System.out.println("update listeners");
+			Object[] listeners = listenerList.getListenerList();
 
+			for (int i = 0; i < listeners.length; i++) {
+				if (listeners[i] == SolarListener.class) {
+					((SolarListener) listeners[i + 1]).liveSiteDataChanged();
+				}
+			}
 		}
 		
 		return live_site_data;

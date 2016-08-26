@@ -6,13 +6,15 @@ public class Visual {
 	
 	String id;
 	String name;
+	int index;
 	String[] colors;
 	boolean checked;
 	boolean active;
 
-	public Visual(String id, String name, String[] colors, boolean checked, boolean active ){
+	public Visual(String id, String name, int index, String[] colors, boolean checked, boolean active ){
 		this.id = id;
 		this.name = name;
+		this.index = index;
 		this.colors = colors;
 		this.checked = checked;
 		this.active = active;
@@ -80,5 +82,13 @@ public class Visual {
 
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+	
+	public int getIndex() {
+		return index;
+	}
+	
+	public void setIndex(int index) {
+		this.index = index;
 	}
 }

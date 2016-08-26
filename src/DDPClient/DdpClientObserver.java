@@ -54,6 +54,8 @@ public class DdpClientObserver implements Observer {
 						String name = fields.get("name").getAsString();
 						//System.out.println(name);
 						
+						int index = fields.get("index").getAsInt();
+						
 						boolean checked = fields.get("checked").getAsBoolean();
 						//System.out.println(checked);
 						
@@ -69,7 +71,7 @@ public class DdpClientObserver implements Observer {
 							colorsAsString[i] = color.get("color").getAsString();
 						}
 						
-						Visual visual = new Visual(id, name, colorsAsString, checked, active);
+						Visual visual = new Visual(id, name, index, colorsAsString, checked, active);
 						sensorData.getVisualList().put(id, visual);
 
 						sensorData.setVisual();
