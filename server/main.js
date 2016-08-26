@@ -111,13 +111,21 @@ Meteor.startup(function () {
 
 
     if (Settings.find().count() === 0) {
-      var names = ["Brightness", "Saturation"];
+      var names = ["Brightness"];
       _.each(names, function (name) {
         Settings.insert({
           name: name,
-          score: 0
+          score: 100
         });
-      });	
+      });
+      var names = ["Settings"];
+      _.each(names, function(name) {
+        Settings.insert({
+          name: name,
+          index: 0,
+          isActive: false
+        })
+      })
     }
 
     if (Checkbox.find().count() === 0) {
@@ -130,11 +138,28 @@ Meteor.startup(function () {
       });
     }
 
+
+
+
+
     if(Visuals.find().count() == 0) {
-        var names = ["Visual 1"];
+
+
+        var myjson = {};
+        myjson = JSON.parse(Assets.getText("settings.json"));
+        console.log(myjson.Visuals[0]);
+
+        _.each(myjson.Visuals, function(visual) {
+            Visuals.insert(visual)
+        });
+
+
+        /*var names = ["Visual 1"];
+        var index = 0;
         _.each(names, function (name) {
             Visuals.insert({
                 name: name,
+                index: index,
                 colors: [ { color: "#FFFFFF", index: 0},
                           { color: "#FFFFFF", index: 1},
                           { color: "#FFFFFF", index: 2},
@@ -142,28 +167,33 @@ Meteor.startup(function () {
                 checked: false,
                 active: false
             });
+            index++;
         });
         var names = ["Visual 2"];
         _.each(names, function (name) {
             Visuals.insert({
                 name: name,
+                index: index,
                 colors: [ { color: "#FFFFAF", index: 0},
                     { color: "#FFFFFF", index: 1}],
                 checked: false,
                 active: false
             });
+            index++;
         });
         var names = ["Visual 3", "Visual 4"];
         _.each(names, function (name) {
             Visuals.insert({
                 name: name,
+                index: index,
                 colors: [ { color: "#FFFFAF", index: 0},
                           { color: "#FFFFFF", index: 1},
                           { color: "#FFFFFF", index: 2}],
                 checked: false,
                 active: false
             });
-        });
+            index++;
+        });*/
     }
   });
 

@@ -162,7 +162,7 @@
 
   Template.leaderboard.rendered = function() {
     var elem = document.querySelector('.genius');
-    var init = new Switchery(elem);
+    var init = new Switchery(elem, { color: '#6f47a8', jackColor: '#ffffff' });
   }
 
   Template.visual.helpers({
@@ -385,13 +385,18 @@
       }
   });
 
+  function sleep(milliseconds) {
+      var start = new Date().getTime();
+      for (var i = 0; i < 1e7; i++) {
+          if ((new Date().getTime() - start) > milliseconds){
+              break;
+          }
+      }
+  }
 
   function reset(){
-
-      //for(var i=0; i<4; i++) {
-      //    var color = "#FFFFFF";
-          Meteor.call('reset', currentID);
-      //}
-
-      location.reload();
+      Meteor.call('reset', currentID, function(){
+          sleep(500);
+          location.reload();
+      });
   }
