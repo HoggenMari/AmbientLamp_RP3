@@ -74,7 +74,7 @@ public class Voltage implements VisualListener, SolarListener {
 
 		// if (charge + 0.03f < 100.0f)
 		// setCharge(charge += 0.03f);
-		
+				
 		int[] c = { applet.color(24, 34, 43),
 			    applet.color(41, 46, 49),
 			    applet.color(68, 58, 46),

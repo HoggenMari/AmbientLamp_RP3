@@ -1181,6 +1181,42 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 		return max_produced;
 	}
 	
+	public float getMaxGen(int sample_size){
+		
+		ArrayList<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
+		
+		int start = 0;
+		if(live_site_data_list.size()-sample_size>0){
+			start = live_site_data_list.size()-sample_size;
+		}
+		
+		float max_produced = 0;
+		for(int i=start; i<live_site_data_list.size(); i++){
+			if(live_site_data_list.get(i).getGen() > max_produced){
+				max_produced = live_site_data_list.get(i).getGen();
+			}
+		}
+		return max_produced;
+	}
+	
+	public float getMaxCons(int sample_size){
+		
+		ArrayList<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
+		
+		int start = 0;
+		if(live_site_data_list.size()-sample_size>0){
+			start = live_site_data_list.size()-sample_size;
+		}
+		
+		float max_consumed = 0;
+		for(int i=start; i<live_site_data_list.size(); i++){
+			if(live_site_data_list.get(i).getCons() > max_consumed){
+				max_consumed = live_site_data_list.get(i).getCons();
+			}
+		}
+		return max_consumed;
+	}
+	
 	public float getChangeCons(){
 		
 		ArrayList<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();

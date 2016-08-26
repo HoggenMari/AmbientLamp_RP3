@@ -85,13 +85,13 @@ public class Main extends PApplet implements SensorListener, VisualListener {
 		voltage = new Voltage(this, sensorData, createGraphics(85, 60, P2D));
 		//circle = new Circle(this, sensorData, api, createGraphics(85, 60, P2D));
 
-		//bargraph = new BarGraph(this, sensorData, api, createGraphics(170, 120, P2D));
+		bargraph = new BarGraph(this, sensorData, createGraphics(170, 120, P2D));
 		text = new Text(this, sensorData, createGraphics(17, 12, P2D));
 
 		visualList = new ArrayList<Visual>();
 		
-		visualList.add(new Visual("Circle", new String[] { "#FFFFFF", "#FFFFFF", "#FFFFFF" }, false, false));
-		visualList.add(new Visual("Powerfield", new String[] { "#FFFFFF", "#FFFFFF", "#FFFFFF" }, false, false));
+		//visualList.add(new Visual("Circle", new String[] { "#FFFFFF", "#FFFFFF", "#FFFFFF" }, false, false));
+		//visualList.add(new Visual("Powerfield", new String[] { "#FFFFFF", "#FFFFFF", "#FFFFFF" }, false, false));
 
 		client = new DDPClient("localhost", 3000);
     	client.connect();
@@ -148,6 +148,8 @@ public class Main extends PApplet implements SensorListener, VisualListener {
 			return downscale(voltage.draw(), 3);
 		case 1:
 			return text.draw();
+		case 2:
+			return downscale(bargraph.draw(), 0);
 		default:
 			return voltage.draw();
 		}

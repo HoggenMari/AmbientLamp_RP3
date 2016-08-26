@@ -1,30 +1,47 @@
 package Visualisations;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import Event.SensorData;
+import Event.Visual;
+import Event.VisualEvent;
+import Event.VisualListener;
 import SolarAPI.*;
 import SolarAPI.SolarAnalyticsAPI.MONITORS;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 
-public class BarGraph {
+public class BarGraph implements VisualListener, SolarListener {
 
 	private PApplet applet;
 	private SensorData sensorData;
 	private PGraphics canvas;
-	private SolarAnalyticsAPI api;
+	String visual_name = "Visual 3";
+	int[] color;
 	
-	public BarGraph(PApplet a, SensorData sensorData, SolarAnalyticsAPI api, PGraphics c) {
+	private SolarAnalyticsAPI api;
+	ArrayList<LiveSiteDataEntry> live_site_data;
+	float highestValue;
+	
+	public BarGraph(PApplet a, SensorData sensorData, PGraphics c) {
 		applet = a;
 		this.sensorData = sensorData;
-		this.api = api;
+		sensorData.addVisualListener(this);
+		this.api = SolarAnalyticsAPI.getInstance();
+		api.addLiveDataListener(this);
 		canvas = c;
+		
+		color = new int[]{ applet.color(45, 47, 48),
+			    applet.color(244, 99, 97) };
+		
+		live_site_data  = api.getLiveSiteData();
+		highestValue = api.getMaxCons(120);
 	}
 	
 	public PGraphics draw() {
-		
+				
 		int[] c = { applet.color(24, 34, 43),
 				    applet.color(41, 46, 49),
 				    applet.color(68, 58, 46),
@@ -53,14 +70,8 @@ public class BarGraph {
 				    };
 
 		
-		List<LiveDataEntry> data = api.getLiveBuffer(MONITORS.ac_load_net);
 		
-		float highestValue = 0;
-		for(LiveDataEntry entry : data){
-			if(entry.power>highestValue){
-				highestValue = entry.power;
-			}
-		}
+	
 		
 		//System.out.println(highestValue);
 		//System.out.println(data.size());
@@ -68,25 +79,48 @@ public class BarGraph {
 		
 		canvas.beginDraw();
 		canvas.background(0);
-		canvas.fill(c[8]);
+		canvas.fill(color[0]);
 		canvas.noStroke();
 		canvas.rect(0, 0, canvas.width, canvas.height);
-		canvas.fill(120,50,20);
+		canvas.fill(color[1]);
 		int start = 0;
-		if(data.size()>17){
-			start = data.size()-17;
+		if(live_site_data.size()>17){
+			start = live_site_data.size()-17;
 		}
-		for(int i=start; i<data.size(); i++){
-			float power = data.get(i).power;
+		for(int i=start; i<live_site_data.size(); i++){
+			float power = live_site_data.get(i).getCons();
 			float val = applet.map(power, 0, highestValue, 0, 120);
 			//System.out.println(17-(data.size()-i)+" "+val);
 			//canvas.rect((17-(data.size()-i))*10,0,(17-(data.size()-i+1))*10,val);
-			canvas.rect((17-(data.size()-i))*10, 120-val, 10, 120);
+			canvas.rect((17-(live_site_data.size()-i))*10, 120-val, 10, 120);
 		}
 		canvas.endDraw();
 		
 		return canvas;	
 		
+	}
+
+	@Override
+	public void liveSiteDataChanged() {
+		// TODO Auto-generated method stub
+		live_site_data = api.getLiveSiteData();
+		highestValue = api.getMaxCons(120);
+		System.out.println(highestValue);
+	}
+
+	@Override
+	public void visualsChanged(VisualEvent e) {
+		// TODO Auto-generated method stub
+		HashMap<String,Visual> vList = e.getVisualList();
+		for (Visual value : vList.values()) {
+			if(value.getName().equals(visual_name)){
+				//System.out.println("Value = " + value.getColorsAsRGB().get(0));
+				for(int i=0; i<value.getColorsAsRGB().size(); i++){
+					int[] col = value.getColorsAsRGB().get(i);
+					color[i] = applet.color(col[0], col[1], col[2]);
+				}
+			}
+		}
 	}
 
 }
