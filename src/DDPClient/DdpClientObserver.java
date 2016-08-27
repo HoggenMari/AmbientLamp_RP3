@@ -71,7 +71,14 @@ public class DdpClientObserver implements Observer {
 							colorsAsString[i] = color.get("color").getAsString();
 						}
 						
-						Visual visual = new Visual(id, name, index, colorsAsString, checked, active);
+						Visual visual;
+						if(fields.has("notification")){
+							boolean notification = fields.get("notification").getAsBoolean();
+							visual = new Visual(id, name, index, colorsAsString, checked, active, notification);
+						}else{
+							visual = new Visual(id, name, index, colorsAsString, checked, active);
+						}
+						
 						sensorData.getVisualList().put(id, visual);
 
 						sensorData.setVisual();
@@ -105,6 +112,9 @@ public class DdpClientObserver implements Observer {
 							//System.out.println(active);
 							
 							sensorData.getVisualList().get(id).setActive(active);
+						}else if(fields.has("notification")){
+							boolean notification = fields.get("notification").getAsBoolean();
+							sensorData.getVisualList().get(id).setNotification(notification);
 						}
 						
 						sensorData.setVisual();

@@ -105,7 +105,6 @@ public class Main extends PApplet implements SensorListener, VisualListener {
 	
 	public void draw() {
 		
-
 		// -------FADE
 		if (fade < 1 && next != active) {
 			fade += 0.01f;
@@ -155,7 +154,7 @@ public class Main extends PApplet implements SensorListener, VisualListener {
 		case 2:
 			return downscale(bargraph.draw(), 0);
 		case 3:
-			return downscale(bargraph_gencons.draw(), 0);
+			return downscale(bargraph_gencons.draw(), 3);
 		default:
 			return voltage.draw();
 		}

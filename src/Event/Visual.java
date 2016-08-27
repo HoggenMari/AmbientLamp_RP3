@@ -10,7 +10,18 @@ public class Visual {
 	String[] colors;
 	boolean checked;
 	boolean active;
+	boolean notification;
 
+	public Visual(String id, String name, int index, String[] colors, boolean checked, boolean active, boolean notification ){
+		this.id = id;
+		this.name = name;
+		this.index = index;
+		this.colors = colors;
+		this.checked = checked;
+		this.active = active;
+		this.notification = notification;
+	}
+	
 	public Visual(String id, String name, int index, String[] colors, boolean checked, boolean active ){
 		this.id = id;
 		this.name = name;
@@ -90,5 +101,13 @@ public class Visual {
 	
 	public void setIndex(int index) {
 		this.index = index;
+	}
+	
+	public boolean isNotification() {
+		return notification;
+	}
+
+	public void setNotification(boolean notification) {
+		this.notification = notification;
 	}
 }

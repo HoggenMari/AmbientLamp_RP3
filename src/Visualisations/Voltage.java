@@ -22,7 +22,8 @@ public class Voltage implements VisualListener, SolarListener {
 	PApplet applet;
 	String visual_name = "Visual 1";
 	int[] color;
-
+	boolean notification = true;
+	
 	ArrayList<Electron> electrons;
 	ArrayList<Powerfield> fields;
 	float charge, step;
@@ -37,7 +38,7 @@ public class Voltage implements VisualListener, SolarListener {
 	float producedCur;
 	float consumedCur;
 	public boolean valueChanged = false;
-	public boolean fake = false;
+	public boolean fake = true;
 
 	float produced, consumed;
 	private float change_consumption;
@@ -112,15 +113,15 @@ public class Voltage implements VisualListener, SolarListener {
 			electronEmitted = false;
 		}
 
-		if(change_consumption>0.1*max_consumption || fake){
-		if (timer % 30 == 0){
-			float c1 = color[3] >> 16 & 0xFF;
-			float c2 = color[3] >> 8 & 0xFF;;
-			float c3 = color[3] & 0xFF;
-
-			fields.add(new Powerfield(applet, canvas, applet.color(c1,c2,c3,50)));
-
-		}
+		if(notification){
+			if(change_consumption>0.1*max_consumption || fake){
+				if (timer % 30 == 0){
+					float c1 = color[3] >> 16 & 0xFF;
+					float c2 = color[3] >> 8 & 0xFF;;
+					float c3 = color[3] & 0xFF;
+					fields.add(new Powerfield(applet, canvas, applet.color(c1,c2,c3,50)));
+				}
+			}
 		}
 		
 		canvas.beginDraw();
@@ -288,6 +289,7 @@ public class Voltage implements VisualListener, SolarListener {
 					int[] col = value.getColorsAsRGB().get(i);
 					color[i] = applet.color(col[0], col[1], col[2]);
 				}
+				notification = value.isNotification();
 			}
 		}
 	}
