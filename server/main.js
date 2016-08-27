@@ -207,6 +207,11 @@ Meteor.methods({
         Visuals.update({}, { $set: { active: false } }, { multi: true })
         Visuals.update(visualId, { $set: { active: setActive } });
     },
+    'notification.setChecked': function(visualId, setChecked) {
+        console.log("notification setChecked");
+        const visual = Visuals.findOne(visualId);
+        Visuals.update(visualId, { $set: { notification: setChecked } });
+    },
     'update': function(id, index, color) {
         Visuals.update({_id: id, "colors.index": index}, { $set: { "colors.$.color": color}});
     },

@@ -12,7 +12,8 @@
         { "color" : "#FFFFFF", "index" : 3 }
       ],
       "checked" : false,
-      "active" : false
+      "active" : false,
+      "notification" : true
     },
     {
       "_id" : "RH8TD6zpG3p4ZgdcQ",
@@ -44,9 +45,9 @@
       "name" : "Visual 4",
       "index" : 3,
       "colors" : [
-        { "color" : "#FFFFAF", "index" : 0 },
-        { "color" : "#FFFFFF", "index" : 1 },
-        { "color" : "#FFFFFF", "index" : 2 }
+        { "color" : "#040725", "index" : 0 },
+        { "color" : "#8f6cb6", "index" : 1 },
+        { "color" : "#ffca6b", "index" : 2 }
       ],
       "checked" : false,
       "active" : false

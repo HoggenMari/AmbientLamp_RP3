@@ -45,7 +45,6 @@
 
       visualBol = true;
 
-
       /*for ( var i = 0; i < sliders.length; i++ ) {
 
           noUiSlider.create(sliders[i], {
@@ -174,6 +173,7 @@
   Template.visual.events({
     'click .toggle-checked': function() {
       // Set the checked property to the opposite of its current value
+      console.log("visual events");
       console.log(this._id);
       console.log(this.checked);
       Meteor.call('visual.setChecked', this._id, !this.checked);
@@ -383,6 +383,39 @@
           console.log("reset");
           reset();
       }
+  });
+
+  Template.notification.events({
+      'click .switchery.switchery-default': function() {
+      // Set the checked property to the opposite of its current value
+      console.log("notification events");
+      console.log(this._id);
+      console.log(this.notification);
+
+      Meteor.call('notification.setChecked', this._id, !this.notification);
+      }
+  })
+
+  Template.notification.rendered = function() {
+      var elem = document.querySelector('.js-switch.notification');
+      var init = new Switchery(elem, { color: '#969696', jackColor: '#ffffff' });
+  }
+
+  Template.listPage.helpers({
+      checkIfNotificationExists: function () {
+          var visual = Visuals.findOne(currentID);
+          if(typeof visual.notification === "undefined"){
+              return false;
+          }else {
+              return true;
+          }
+      }/*,
+      notificationState: function () {
+          var visual = Visuals.findOne(currentID);
+          console.log("notificationstate");
+          console.log(visual.notification);
+          return visual.notification;
+      }*/
   });
 
   function sleep(milliseconds) {

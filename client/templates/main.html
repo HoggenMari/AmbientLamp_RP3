@@ -55,7 +55,7 @@
     </div>-->
     <ol>
         <li class="genius_tab">
-            <span style="vertical-align: middle; font-size: 18px;">Genius-Mode ({{incompleteCount}})</span>
+            <span style="vertical-align: middle; font-size: 18px; float: left;">Genius-Mode ({{incompleteCount}})</span>
             <input type="checkbox" class="js-switch genius" checked />
         </li>
         {{#each visuals}}
@@ -87,12 +87,12 @@
 <template name="listPage">
     <div>
         <ol>
-            <a href="{{pathFor route='leaderboard'}}">
-                <li class="genius_tab">
-                    <span><img class="back" src="/back.png"></span>
-                    <span style="vertical-align: middle; font-size: 18px; font-weight: 600;">Back</span>
-                </li>
-            </a>
+            <li class="genius_tab">
+                <a href="{{pathFor route='leaderboard'}}"><span style="float: left;"><img class="back" src="/back2.png"></span></a>
+                <a href="{{pathFor route='leaderboard'}}"><span style="vertical-align: middle; font-size: 18px; font-weight: 400; float: left;">Back</span></a>
+                <span style="font-size: 18px; font-weight: 600; margin-left: -25px;">{{name}}</span>
+                <span style="float: right;"><img class="info" src="/info.png"></span>
+            </li>
             <li class="colors_tab">
                 <div style="font-size: 1.2em; font-weight: 400; float: left">Colors</div>
                 <div id="colors">
@@ -101,6 +101,9 @@
                     {{/each}}
                 </div>
             </li>
+            {{#if checkIfNotificationExists}}
+                {{> notification}}
+            {{/if}}
             <li class="reset_tab">
                 <div style="font-size: 1.2em; font-weight: 400; float: left">Reset to default</div>
             </li>
@@ -125,4 +128,11 @@
             <li></li>
         </ul>
         <input type="hidden" class="colorInput"/></div>
+</template>
+
+<template name="notification">
+    <li class="notification_tab">
+        <div style="font-size: 1.2em; font-weight: 400; float: left">Notification</div>
+        <input type="checkbox" checked="{{notification}}" class="js-switch notification" />
+    </li>
 </template>
