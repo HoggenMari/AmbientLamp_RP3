@@ -1217,6 +1217,18 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 		return max_consumed;
 	}
 	
+	public float getMaxGenCons(int sample_size){
+		
+		float maxCons = getMaxCons(sample_size);
+		float maxGen = getMaxGen(sample_size);
+		
+		if(maxCons>=maxGen){
+			return maxCons;
+		}else{
+			return maxGen;
+		}
+	}
+	
 	public float getChangeCons(){
 		
 		ArrayList<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
