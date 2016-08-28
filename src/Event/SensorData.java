@@ -11,6 +11,8 @@ public class SensorData {
 	// private SensorEventMulticaster multicaster;
 	private float brightness, particles, speed;
 	private String brightnessID;
+	private boolean genius;
+	private String geniusID;
 	private int speedZ;
 	private float accX, accY, accZ;
 	private float gyroX, gyroY, gyroZ;
@@ -33,6 +35,14 @@ public class SensorData {
 		return SensorData.instance;
     }
 
+	public void addGeniusListener(GeniusListener l) {
+		listenerList.add(GeniusListener.class, l);
+	}
+
+	public void removeGeniusListener(GeniusListener l) {
+		listenerList.remove(GeniusListener.class, l);
+	}
+	
 	public void addSensorListener(SensorListener l) {
 		listenerList.add(SensorListener.class, l);
 	}
@@ -328,6 +338,34 @@ public class SensorData {
 								VisualEvent.VISUAL_CHANGED, visuals));
 			}
 		}
+	}
+
+	public boolean getGenius() {
+		return genius;
+	}
+
+	public void setGenius(boolean genius) {
+		this.genius = genius;
+		
+		Object[] listeners = listenerList.getListenerList();
+
+		// System.out.println("Brightness"+listeners.length);
+
+		for (int i = 0; i < listeners.length; i++) {
+			if (listeners[i] == GeniusListener.class) {
+				((GeniusListener) listeners[i + 1])
+						.geniusModeChanged(new GeniusEvent(this,
+								genius));
+			}
+		}
+	}
+
+	public String getGeniusID() {
+		return geniusID;
+	}
+
+	public void setGeniusID(String geniusID) {
+		this.geniusID = geniusID;
 	}
 	
 }

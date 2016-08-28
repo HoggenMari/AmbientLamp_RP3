@@ -11,6 +11,8 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
 import DDPClient.DDPClient;
+import Event.GeniusEvent;
+import Event.GeniusListener;
 import Event.SensorData;
 import Event.SensorEvent;
 import Event.SensorListener;
@@ -30,7 +32,7 @@ import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
 
-public class Main extends PApplet implements SensorListener, VisualListener {
+public class Main extends PApplet implements SensorListener, VisualListener, GeniusListener {
 
     /**
 	 * 
@@ -76,7 +78,8 @@ public class Main extends PApplet implements SensorListener, VisualListener {
     	
     	sensorData.addSensorListener(this);
     	sensorData.addVisualListener(this);
-    	    	
+    	sensorData.addGeniusListener(this);
+    	
 		size(100,100);
 		screen = new Screen(this, 17, 12, 1);
 		pSend = createGraphics(17,12,P2D);
@@ -235,5 +238,11 @@ public class Main extends PApplet implements SensorListener, VisualListener {
 			i++;
 		}
 		System.out.print(activeVisual);
+	}
+
+	@Override
+	public void geniusModeChanged(GeniusEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println(e.getGenius());
 	}
 }

@@ -10,6 +10,7 @@ public class SensorEvent extends EventObject {
 	public final static int BRIGHTNESS_CHANGED = 10001;
     public final static int PARTICLES_CHANGED = 10002;
     public final static int SPEED_CHANGED = 10003;
+    public final static int GENIUS_MODE_CHANGED = 1004;
 
     protected int id;
     protected float brightness, particles, speed;

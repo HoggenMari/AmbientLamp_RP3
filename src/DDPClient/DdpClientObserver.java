@@ -26,7 +26,7 @@ public class DdpClientObserver implements Observer {
 		SensorData sensorData = SensorData.getInstance();
 		
 		if (msg instanceof String) {
-			//System.out.println("Test: "+msg);
+			System.out.println("Test: "+msg);
 			
 			JsonObject jsonObject;
 			JsonParser jejpl = new JsonParser();
@@ -122,28 +122,37 @@ public class DdpClientObserver implements Observer {
 
 					}
 										
-				}
+				}else if(collection.equals("settings")){
 				
-				property = jsonObject.get("msg").getAsString();
+					property = jsonObject.get("msg").getAsString();
 				
-				if(jsonObject.has("id")){
-					String id = jsonObject.get("id").getAsString();
+					if(jsonObject.has("id")){
+						String id = jsonObject.get("id").getAsString();
 
-					if(property.equals("changed")){
-						JsonObject fields = jsonObject.getAsJsonObject("fields");
+						if(property.equals("changed")){
+							JsonObject fields = jsonObject.getAsJsonObject("fields");
 					
-						if(id.equals(sensorData.getBrightnessID())){
-							System.out.println(fields.get("score").getAsFloat());
-							sensorData.setBrightness((float)(fields.get("score").getAsFloat()/100.0));
-						}
-					}else if(property.equals("added")){
-						JsonObject fields = jsonObject.getAsJsonObject("fields");
+							if(id.equals(sensorData.getBrightnessID())){
+								System.out.println(fields.get("score").getAsFloat());
+								sensorData.setBrightness((float)(fields.get("score").getAsFloat()/100.0));
+							}else if(id.equals(sensorData.getGeniusID())){
+								System.out.println(fields.get("geniusActive").getAsBoolean());
+								sensorData.setGenius(fields.get("geniusActive").getAsBoolean());
+							}
+							
+						}else if(property.equals("added")){
+							JsonObject fields = jsonObject.getAsJsonObject("fields");
 						
-						String name = fields.get("name").getAsString();
+							String name = fields.get("name").getAsString();
 						
-						if(name.equals("Brightness")){
-							System.out.println("Brightness: "+id);
-							sensorData.setBrightnessID(id);
+							if(name.equals("Brightness")){
+								System.out.println("Brightness: "+id);
+								sensorData.setBrightnessID(id);
+								sensorData.setBrightness((float)(fields.get("score").getAsFloat()/100.0));
+							}else if(name.equals("Genius")){
+								sensorData.setGeniusID(id);
+								sensorData.setGenius(fields.get("geniusActive").getAsBoolean());
+							}
 						}
 					}
 				}
