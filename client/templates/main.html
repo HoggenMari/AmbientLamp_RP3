@@ -30,7 +30,7 @@
         <span><img class="arrow" src="/right-arrow.png"></span>
     </li>-->
     {{#each settings}}
-      {{> setting}}
+        {{#if display}}{{> setting}}{{/if}}
     {{/each}}
   </ol>
 
@@ -56,7 +56,7 @@
     <ol>
         <li class="genius_tab">
             <span style="vertical-align: middle; font-size: 18px; float: left;">Genius-Mode ({{incompleteCount}})</span>
-            <input type="checkbox" class="js-switch genius" checked />
+            <input type="checkbox" class="js-switch genius"/>
         </li>
         {{#each visuals}}
             {{> visual}}

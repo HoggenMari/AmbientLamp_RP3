@@ -118,14 +118,28 @@ Meteor.startup(function () {
           score: 100
         });
       });
+      var names = ["Contrast"];
+      _.each(names, function (name) {
+          Settings.insert({
+              name: name,
+              score: 100
+          });
+      });
       var names = ["Settings"];
       _.each(names, function(name) {
         Settings.insert({
           name: name,
           index: 0,
           isActive: false
-        })
-      })
+        });
+      });
+      var names = ["Genius"];
+      _.each(names, function(name) {
+        Settings.insert({
+          name: name,
+          geniusActive: false
+        });
+      });
     }
 
     if (Checkbox.find().count() === 0) {
@@ -238,5 +252,8 @@ Meteor.methods({
         //    console.log("Visual 1");
         //}
         //console.log(myjson.Visuals);
+    },
+    'genius': function(setting) {
+        Settings.update({name: "Genius"}, { $set: { geniusActive: setting }});
     }
 });

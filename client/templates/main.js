@@ -87,6 +87,11 @@
 
   Template.header.rendered = function (){
 
+
+      //var elem = document.querySelector('.genius');
+      //var init = new Switchery(elem, { color: '#6f47a8', jackColor: '#ffffff' });
+
+
     //$('body').append("<script type='text/javascript' src='tinycolorpicker.js'></script>");
 
     //var $picker = document.getElementById('colorPicker');
@@ -96,7 +101,7 @@
 
 
 
-    elem.onchange = function() {
+    /*elem.onchange = function() {
       console.log("clicked button");
 
 
@@ -112,15 +117,13 @@
               console.dir(object);
             }
           });
-    };
+    };*/
 
   }
 
   Template.settingsList.rendered = function(){
     console.log("test");
 
-    //var elem = document.querySelector('.js-switch');
-    //var init = new Switchery(elem);
 
   };
 
@@ -131,6 +134,14 @@
     selectedSetting: function () {
       var setting = Settings.findOne(Session.get("selectedSetting"));
       return setting && setting.name;
+    },
+    display: function() {
+      console.log(this.name);
+      if(this.name == "Brightness" || this.name == "Contrast") {
+          return true;
+      }else{
+          return false;
+      }
     }
   });
 
@@ -157,12 +168,75 @@
     incompleteCount: function() {
       return Visuals.find({ checked: { $ne: false } }).count();
     },
+      geniusActive: function () {
+      //return "checked";
+      console.log("called");
+      console.log(Settings.findOne({name: "Genius"}));
+      //if(Settings.findOne({name: "Genius"})!=undefined) {
+          if (Settings.findOne({name: "Genius"}).geniusActive) {
+              console.log("genius true");
+              return "unchecked";
+          } else {
+              return "unchecked";
+          }
+      //};
+
+      //return "unchecked";
+    }
   });
 
+
   Template.leaderboard.rendered = function() {
-    var elem = document.querySelector('.genius');
-    var init = new Switchery(elem, { color: '#6f47a8', jackColor: '#ffffff' });
-  }
+    console.log("Render leaderboard");
+
+      var template = this;
+      template.autorun(function () {
+          var setting = Settings.findOne({name: "Genius"});
+          if(setting != undefined) {
+              //console.log(document.getElementsByClassName('switchery').parentNode);
+              var list = document.getElementsByClassName("switchery");
+              for(var i = list.length - 1; 0 <= i; i--)
+                  if(list[i] && list[i].parentElement)
+                      list[i].parentElement.removeChild(list[i]);
+              var elem = document.querySelector('.genius');
+              if (setting.geniusActive) {
+
+                  elem.setAttribute("checked", "checked");
+                  elem.removeAttribute("unchecked");
+              } else {
+                  elem.setAttribute("unchecked", "unchecked");
+                  elem.removeAttribute("checked");
+              }
+              var init = new Switchery(elem, { color: '#6f47a8', jackColor: '#ffffff' });
+
+          }
+
+      });
+      /*if (Settings.findOne({name: "Genius"}).geniusActive) {
+          console.log("genius true");
+          elem.setAttribute("checked","");
+          elem.removeAttribute("unchecked");
+      } else {
+          elem.setAttribute("unchecked","");
+          elem.removeAttribute("checked");
+      }*/
+
+  };
+
+  Template.leaderboard.events({
+      'click .switchery.switchery-default': function() {
+          console.log("test");
+      },
+      'click .switchery.switchery-default': function() {
+          // Set the checked property to the opposite of its current value
+          console.log("genius events");
+          console.log(this._id);
+          console.log(this.notification);
+
+          var setting = Settings.findOne({name: "Genius"}).geniusActive;
+          Meteor.call('genius', !setting);
+      }
+  });
 
   Template.visual.helpers({
     selected: function () {
@@ -257,6 +331,8 @@
     counter = 0;
     console.log("call visual");
     visualBol = true;
+      //var elem = document.querySelector('.js-switch.notification');
+      //var init = new Switchery(elem, { color: '#969696', jackColor: '#ffffff' });
     //console.log(currentID);
   }
 
@@ -397,8 +473,8 @@
   })
 
   Template.notification.rendered = function() {
-      var elem = document.querySelector('.js-switch.notification');
-      var init = new Switchery(elem, { color: '#969696', jackColor: '#ffffff' });
+     var elem = document.querySelector('.js-switch.notification');
+     var init = new Switchery(elem, { color: '#969696', jackColor: '#ffffff' });
   }
 
   Template.listPage.helpers({
