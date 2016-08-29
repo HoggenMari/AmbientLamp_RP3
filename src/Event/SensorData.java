@@ -325,7 +325,7 @@ public class SensorData {
 		return visuals;
 	}
 	
-	public void setVisual() {
+	public void setVisual(int id) {
 		Object[] listeners = listenerList.getListenerList();
 		System.out.println("Set Visual");
 		
@@ -335,7 +335,7 @@ public class SensorData {
 			if (listeners[i] == VisualListener.class) {
 				((VisualListener) listeners[i + 1])
 						.visualsChanged(new VisualEvent(this,
-								VisualEvent.VISUAL_CHANGED, visuals));
+								id, visuals));
 			}
 		}
 	}

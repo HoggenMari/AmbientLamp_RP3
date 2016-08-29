@@ -38,7 +38,7 @@ public class Voltage implements VisualListener, SolarListener {
 	float producedCur;
 	float consumedCur;
 	public boolean valueChanged = false;
-	public boolean fake = true;
+	public boolean fake = false;
 
 	float produced, consumed;
 	private float change_consumption;

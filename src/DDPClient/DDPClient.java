@@ -18,6 +18,7 @@ public class DDPClient {
 	
 	private String meteorIp;
 	private int meteorPort;
+	DdpClient ddp = null;
 
 	public DDPClient(String meteorIp, int meteorPort){
 		
@@ -32,7 +33,7 @@ public class DDPClient {
 		
 		System.out.println("Test");
 
-		DdpClient ddp = null;
+		ddp = null;
 		
 		try {
 			
@@ -53,6 +54,7 @@ public class DDPClient {
 		do {
 		ddp.connect();
 		} while(ddp.getReadyState()==3);
+		return false;
 			
 		    /*while(true) {
 				try {
@@ -61,19 +63,20 @@ public class DDPClient {
 					System.out.println("calling remote method...");
 					
 					Object[] methodArgs = new Object[1];
-					methodArgs[0] = new Date().toString();
-					ddp.call("update_time", methodArgs);
+					methodArgs[0] = new String("{\"name\":\"peter andersson\", \"phone\":\"12345678\"}");
+					ddp.call("update", methodArgs);
 
 				} catch (InterruptedException e) {
 					
 					e.printStackTrace();
 				}
-			}*/
-		 
-		
-		return true;
+		    }*/
 	}
 
-	
+	public void call(String s) {
+		Object[] methodArgs = new Object[1];
+		methodArgs[0] = s;
+		ddp.call("update", methodArgs);
+	}
 	
 }

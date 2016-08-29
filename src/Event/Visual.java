@@ -10,19 +10,21 @@ public class Visual {
 	String[] colors;
 	boolean checked;
 	boolean active;
+	boolean geniusActive;
 	boolean notification;
 
-	public Visual(String id, String name, int index, String[] colors, boolean checked, boolean active, boolean notification ){
+	public Visual(String id, String name, int index, String[] colors, boolean checked, boolean active, boolean geniusActive, boolean notification ){
 		this.id = id;
 		this.name = name;
 		this.index = index;
 		this.colors = colors;
 		this.checked = checked;
 		this.active = active;
+		this.geniusActive = geniusActive;
 		this.notification = notification;
 	}
 	
-	public Visual(String id, String name, int index, String[] colors, boolean checked, boolean active ){
+	public Visual(String id, String name, int index, String[] colors, boolean checked, boolean active, boolean geniusActive ){
 		this.id = id;
 		this.name = name;
 		this.index = index;
@@ -31,7 +33,7 @@ public class Visual {
 		this.active = active;
 	}
 
-	public Visual(String name, String[] colors, boolean checked, boolean active ){
+	public Visual(String name, String[] colors, boolean checked, boolean active, boolean geniusActive ){
 		this.name = name;
 		this.colors = colors;
 		this.checked = checked;
@@ -93,6 +95,14 @@ public class Visual {
 
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+	
+	public boolean isGeniusActive() {
+		return geniusActive;
+	}
+
+	public void setGeniusActive(boolean geniusActive) {
+		this.geniusActive = geniusActive;
 	}
 	
 	public int getIndex() {

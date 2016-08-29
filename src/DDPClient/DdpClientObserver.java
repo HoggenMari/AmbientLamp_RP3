@@ -12,6 +12,7 @@ import com.google.gson.JsonParser;
 
 import Event.SensorData;
 import Event.Visual;
+import Event.VisualEvent;
 
 /**
  * Sample observer class that simply prints any responses from the Meteor server to the console
@@ -35,7 +36,7 @@ public class DdpClientObserver implements Observer {
 			
 			String property = "";
 			
-			if(jsonObject.has("msg")){
+			if(jsonObject.has("msg") && jsonObject.has("collection")){
 				
 				String collection = jsonObject.get("collection").getAsString();
 						
@@ -62,6 +63,9 @@ public class DdpClientObserver implements Observer {
 						boolean active = fields.get("active").getAsBoolean();
 						//System.out.println(active);
 						
+						boolean geniusActive = fields.get("geniusActive").getAsBoolean();
+						//System.out.println(geniusActive);
+						
 						JsonArray colors = fields.get("colors").getAsJsonArray();
 						//System.out.println(colors.size());
 						
@@ -74,14 +78,14 @@ public class DdpClientObserver implements Observer {
 						Visual visual;
 						if(fields.has("notification")){
 							boolean notification = fields.get("notification").getAsBoolean();
-							visual = new Visual(id, name, index, colorsAsString, checked, active, notification);
+							visual = new Visual(id, name, index, colorsAsString, checked, active, geniusActive, notification);
 						}else{
-							visual = new Visual(id, name, index, colorsAsString, checked, active);
+							visual = new Visual(id, name, index, colorsAsString, checked, active, geniusActive);
 						}
 						
 						sensorData.getVisualList().put(id, visual);
 
-						sensorData.setVisual();
+						sensorData.setVisual(VisualEvent.VISUAL_CHANGED);
 						System.out.println("VISUAL"+sensorData.getVisualList().size());
 						
 					}else if(message.equals("changed")){
@@ -102,27 +106,38 @@ public class DdpClientObserver implements Observer {
 						
 							//Visual visual = new Visual("test", "Visual 5", colorsAsString, true, true);
 							sensorData.getVisualList().get(id).setColors(colorsAsString);
+							sensorData.setVisual(VisualEvent.VISUAL_COLORS);
 						}else if(fields.has("checked")){
 							boolean checked = fields.get("checked").getAsBoolean();
 							//System.out.println(checked);
 							
-							sensorData.getVisualList().get(id).setActive(checked);
+							sensorData.getVisualList().get(id).setChecked(checked);
+							sensorData.setVisual(VisualEvent.VISUAL_CHECKED);
 						}else if(fields.has("active")){
 							boolean active = fields.get("active").getAsBoolean();
 							//System.out.println(active);
 							
 							sensorData.getVisualList().get(id).setActive(active);
-						}else if(fields.has("notification")){
+							sensorData.setVisual(VisualEvent.VISUAL_ACTIVE);
+
+						}else if(fields.has("geniusActive")){
+							boolean geniusActive = fields.get("geniusActive").getAsBoolean();
+							//System.out.println(active);
+							
+							sensorData.getVisualList().get(id).setGeniusActive(geniusActive);
+							sensorData.setVisual(VisualEvent.VISUAL_GENIUSACTIVE);
+
+						} else if(fields.has("notification")){
 							boolean notification = fields.get("notification").getAsBoolean();
 							sensorData.getVisualList().get(id).setNotification(notification);
+							sensorData.setVisual(VisualEvent.VISUAL_NOTIFICATION);
 						}
 						
-						sensorData.setVisual();
 						//System.out.println("VISUAL"+sensorData.getVisualList().size());
 
 					}
 										
-				}else if(collection.equals("settings")){
+				}else if(collection.equals("settings") && jsonObject.has("collection")){
 				
 					property = jsonObject.get("msg").getAsString();
 				
@@ -136,8 +151,13 @@ public class DdpClientObserver implements Observer {
 								System.out.println(fields.get("score").getAsFloat());
 								sensorData.setBrightness((float)(fields.get("score").getAsFloat()/100.0));
 							}else if(id.equals(sensorData.getGeniusID())){
+								if(fields.has("geniusActive")){
 								System.out.println(fields.get("geniusActive").getAsBoolean());
 								sensorData.setGenius(fields.get("geniusActive").getAsBoolean());
+								}else if(fields.has("geniusPaused")){
+								//System.out.println(fields.get("geniusPaused").getAsBoolean());
+								//sensorData.setGenius(fields.get("geniusPaused").getAsBoolean());	
+								}
 							}
 							
 						}else if(property.equals("added")){
