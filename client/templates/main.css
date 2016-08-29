@@ -330,6 +330,18 @@ li.active {
   background-color: #e6e6e6;
 }
 
+li.geniusActive .name{
+  color: #6f47a8;
+  font-weight: 900;
+}
+
+.geniusPaused {
+  opacity: 0.5;
+}
+
+.geniusActiveText {
+  opacity: 0.5;
+}
 li.checked .text {
   text-decoration: line-through;
 }

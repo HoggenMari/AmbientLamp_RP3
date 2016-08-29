@@ -137,7 +137,9 @@ Meteor.startup(function () {
       _.each(names, function(name) {
         Settings.insert({
           name: name,
-          geniusActive: false
+          geniusActive: false,
+          geniusPaused: false,
+          geniusPauseTime: 5000
         });
       });
     }
@@ -220,6 +222,9 @@ Meteor.methods({
         const visual = Visuals.findOne(visualId);
         Visuals.update({}, { $set: { active: false } }, { multi: true })
         Visuals.update(visualId, { $set: { active: setActive } });
+        if(Settings.findOne({name: "Genius"}).geniusActive==true){
+            Settings.update({name: "Genius"}, { $set: { geniusPaused: true }});
+        }
     },
     'notification.setChecked': function(visualId, setChecked) {
         console.log("notification setChecked");
@@ -255,5 +260,32 @@ Meteor.methods({
     },
     'genius': function(setting) {
         Settings.update({name: "Genius"}, { $set: { geniusActive: setting }});
+        if(setting==false){
+            Visuals.update({}, { $set: { geniusActive: false } }, { multi: true })
+        }
+    },
+    'update': function(options) {
+        var ret = JSON.parse(options);
+        console.log("call from java");
+        //console.log(ret.msg);
+        if(Settings.findOne({name: "Genius"}).geniusActive==true) {
+            if (ret.collection == "visuals") {
+                if (ret.msg == "changed") {
+                    console.log(ret.fields.geniusActive);
+                    //Visuals.update(ret.id, {})
+                    Visuals.update({_id: ret.id}, {$set: {"geniusActive": ret.fields.geniusActive}});
+                }
+            }
+            if (ret.collection == "settings") {
+                if (ret.msg == "changed") {
+                    console.log("geniusPaused");
+                    console.log(ret.fields.geniusPaused);
+                    console.log(ret.id);
+                    //Visuals.update(ret.id, {})
+                    Settings.update({_id: ret.id}, {$set: {"geniusPaused": ret.fields.geniusPaused}});
+                }
+            }
+        }
+        //Visuals.update(ret);
     }
 });

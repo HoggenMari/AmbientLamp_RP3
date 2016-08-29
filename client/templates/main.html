@@ -54,8 +54,14 @@
         Visualisation
     </div>-->
     <ol>
-        <li class="genius_tab">
-            <span style="vertical-align: middle; font-size: 18px; float: left;">Genius-Mode ({{incompleteCount}})</span>
+        <li class="genius_tab {{#if isGeniusPaused}}geniusPaused{{/if}}">
+            {{#unless isGeniusPaused}}
+            {{#if checkedVisuals}}<span class="{{#unless isGeniusActive}}geniusActiveText{{/unless}}" style="vertical-align: middle; font-size: 18px; float: left;">Genius-Mode ({{incompleteCount}})</span>{{/if}}
+            {{#unless checkedVisuals}}<span style="vertical-align: middle; font-size: 18px; float: left; color: red;">Select Visuals</span>{{/unless}}
+            {{/unless}}
+            {{#if isGeniusPaused}}
+            {{#if checkedVisuals}}<span style="vertical-align: middle; font-size: 18px; float: left;">Genius Paused for {{getCountdown}} sec.</span>{{/if}}
+            {{/if}}
             <input type="checkbox" class="js-switch genius"/>
         </li>
         {{#each visuals}}
@@ -68,7 +74,7 @@
     <li style="width: 15%; text-align: center;" class="vList">
         <input type="checkbox" checked="{{checked}}" class="toggle-checked" />
     </li>
-    <li class="vList vListName {{#if active}}active{{/if}}" style="width: 70%; text-align: left; border-right: #eee solid 1px;">
+    <li class="vList vListName {{#if active}}active{{/if}} {{#if geniusActive}}geniusActive{{/if}}" style="width: 70%; text-align: left; border-right: #eee solid 1px;">
         <span class="name">{{name}}</span>
     </li>
     <a href="{{pathFor route='listPage'}}"><li class="vList" style="width: 15%; text-align: center;">

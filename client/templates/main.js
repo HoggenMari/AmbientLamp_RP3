@@ -7,6 +7,7 @@
   var visualBol = false;
   var resultElement = document.getElementById('result'),
       sliders = document.getElementsByClassName('sliders');
+  var countdown = new ReactiveCountdown(10);
 
   Router.configure({
     layoutTemplate: 'mainPage'
@@ -168,7 +169,14 @@
     incompleteCount: function() {
       return Visuals.find({ checked: { $ne: false } }).count();
     },
-      geniusActive: function () {
+    checkedVisuals: function() {
+      if(Visuals.find({ checked: { $ne: false } }).count()>0){
+          return true;
+      }else{
+          return false;
+      }
+    },
+    geniusActive: function () {
       //return "checked";
       console.log("called");
       console.log(Settings.findOne({name: "Genius"}));
@@ -182,6 +190,15 @@
       //};
 
       //return "unchecked";
+    },
+    isGeniusPaused: function() {
+      return Settings.findOne({name: "Genius"}).geniusPaused;
+    },
+    isGeniusActive: function() {
+      return Settings.findOne({name: "Genius"}).geniusActive;
+    },
+    getCountdown: function() {
+          return countdown.get();
     }
   });
 
@@ -254,8 +271,17 @@
     },
     'click .vListName': function() {
       console.log("tester");
+      countdown.start();
       Meteor.call('visual.setActive', this._id, true);
+
     }
+  });
+
+  countdown.start(function() {
+
+      // do something when this is completed
+    countdown.stop();
+    console.log("finished countdown");
   });
 
   function increase(setting) {

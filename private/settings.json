@@ -12,7 +12,8 @@
         { "color" : "#FFFFFF", "index" : 3 }
       ],
       "checked" : false,
-      "active" : false,
+      "active" : true,
+      "geniusActive" : false,
       "notification" : true
     },
     {
@@ -27,7 +28,8 @@
         { "color" : "#000000", "index" : 4 }
       ],
       "checked" : false,
-      "active" : false
+      "active" : false,
+      "geniusActive" : false
     },
     {
       "_id" : "hDPiBv93PtjtMRGyQ",
@@ -38,7 +40,8 @@
         { "color" : "#843820", "index" : 1 }
       ],
       "checked" : false,
-      "active" : false
+      "active" : false,
+      "geniusActive" : false
     },
     {
       "_id" : "Zb8FDDLizNFNzBtaL",
@@ -46,11 +49,12 @@
       "index" : 3,
       "colors" : [
         { "color" : "#040725", "index" : 0 },
-        { "color" : "#8f6cb6", "index" : 1 },
-        { "color" : "#ffca6b", "index" : 2 }
+        { "color" : "#ffca6b", "index" : 1 },
+        { "color" : "#8f6cb6", "index" : 2 }
       ],
       "checked" : false,
-      "active" : false
+      "active" : false,
+      "geniusActive" : false
     }
 
   ]
