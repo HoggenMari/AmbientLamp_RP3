@@ -50,6 +50,7 @@
         ,   $colorInner   = $container.querySelectorAll(".colorInner")[0]
         ,   $canvas       = null
         ,   $colorInput   = $container.querySelectorAll(".colorInput")[0]
+        ,   $slider       = $container.querySelectorAll(".pContainer")[0]
 
         ,   context      = null
         ,   mouseIsDown  = false
@@ -83,11 +84,36 @@
          * @private
          */
         function _initialize() {
+
+            console.log("init");
+
             if(hasCanvas) {
                 $canvas = document.createElement("canvas");
                 $track.appendChild($canvas);
+                console.log($('.pContainer'));
+                //var $t = document.createElement("div");
+                //$($t).attr("id","colorpicker");
+                $($slider).append('<div id="colorpicker"><div class="sliders" id="red"></div> <div class="result"></div></div>');
+
+                console.log($($slider).find(".sliders"));
+
+                noUiSlider.create($($slider).find(".sliders")[0], {
+                    start: 0,
+                    connect: "lower",
+                    orientation: "vertical",
+                    range: {
+                        'min': 0,
+                        'max': 255
+                    }
+                });
+
+                $($slider).find(".sliders")[0].noUiSlider.on('change', setColor);
+                $($slider).find(".sliders")[0].noUiSlider.on('slide', setColor);
+
 
                 context = $canvas.getContext("2d");
+
+                //document.find(".overlayBg").style.visibility = true;
 
                 _setImage();
             }
@@ -95,6 +121,43 @@
             _setEvents();
 
             return self;
+        }
+
+        function setColor() {
+            console.log("test");
+            console.log($($slider).find(".sliders")[0].noUiSlider.get());
+
+            var colorPicker   = new Image()
+                ,   style         = $track.currentStyle || window.getComputedStyle($track, false)
+                ,   backgroundUrl = style.backgroundImage.replace(/"/g, "").replace(/url\(|\)$/ig, "")
+                ;
+
+            colorPicker.crossOrigin = "Anonymous";
+            //$track.style.backgroundImage = "none";
+
+
+            console.log(colorPicker);
+
+            var image = document.getElementById("source");
+            context.clearRect(0,0,150,150);
+            context.drawImage(image, 0, 0, 150, 150);
+
+            var sliderValue = $($slider).find(".sliders")[0].noUiSlider.get();
+
+            context.beginPath();
+            context.fillStyle = "rgba(0, 0, 0, "+sliderValue/255.0+")";
+            context.arc(75, 75, 75, 0, 2 * Math.PI, false);
+            context.fill();
+
+
+            //colorPicker.src = self.options.backgroundUrl || backgroundUrl;
+
+            /*context.beginPath();
+            context.lineWidth = "6";
+            context.strokeStyle = "red";
+            context.fillStyle = "rgba(0, 0, 0, 0.1)";
+            context.fillRect(0,0,150,150)
+            context.stroke();*/
         }
 
         /**
@@ -109,6 +172,8 @@
 
             colorPicker.crossOrigin = "Anonymous";
             $track.style.backgroundImage = "none";
+
+            console.log(colorPicker);
 
             colorPicker.onload = function() {
                 $canvas.width = this.width;
@@ -133,17 +198,18 @@
                     event.stopPropagation();
 
                     $track.style.display = 'block';
+                    $track.parentElement.style.display = 'block';
 
-                    // Red rectangle
-                    context.beginPath();
-                    context.lineWidth = "6";
-                    context.strokeStyle = "red";
-                    context.fillStyle = "rgba(0, 0, 0, 0.1)";
-                    context.fillRect(0,0,150,150)
-                    context.stroke();
+                    console.log("test");
+                    console.log(document.querySelectorAll(".overlayBG").style);
+                    document.querySelectorAll(".overlayBG")[0].style.visibility = 'visible';
+                    $($color).css('z-index',11);
 
                     document.onmousedown = function(event) {
                         document.onmousedown = null;
+
+                        document.querySelectorAll(".overlayBG")[0].style.visibility = 'hidden';
+                        $($color).css('z-index',1);
 
                         self.close();
                     };
@@ -160,6 +226,9 @@
 
                         document.onmouseup = function(event) {
                             document.onmouseup = null;
+
+                            document.querySelectorAll(".overlayBG")[0].style.visibility = 'hidden';
+                            $($color).css('z-index',1);
 
                             self.close();
 
@@ -185,6 +254,10 @@
                     };
 
                     $canvas.ontouchend = function(event) {
+
+                        document.querySelectorAll(".overlayBG")[0].style.visibility = 'hidden';
+                        $($color).css('z-index',1);
+
                         self.close();
 
                         return false;
@@ -241,6 +314,8 @@
             mouseIsDown = false;
 
             $track.style.display = 'none';
+            $track.parentElement.style.display = 'none';
+
         };
 
         /**

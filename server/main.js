@@ -36,7 +36,10 @@ Meteor.startup(function () {
     Object.keys(ifaces).forEach(function(ifname) {
         var alias = 0;
 
-        ifaces[ifname].forEach(function(iface) {
+        ifaces[ifname].forEach(function(iface){
+
+            console.log(iface);
+
             if ('IPv4' !== iface.family || iface.internal !== false) {
                 // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
                 return;
@@ -49,6 +52,7 @@ Meteor.startup(function () {
             } else {
                 // this interface has only one ipv4 adress
                 localIP = iface.address;
+                console.log(localIP);
 
                 fs.writeFile("ipaddress", iface.address, function(err) {
                     if (err) {
@@ -107,13 +111,35 @@ Meteor.startup(function () {
 
 
     if (Settings.find().count() === 0) {
-      var names = ["Brightness", "Saturation"];
+      var names = ["Brightness"];
       _.each(names, function (name) {
         Settings.insert({
           name: name,
-          score: 0
+          score: 100
         });
-      });	
+      });
+      var names = ["Contrast"];
+      _.each(names, function (name) {
+          Settings.insert({
+              name: name,
+              score: 100
+          });
+      });
+      var names = ["Settings"];
+      _.each(names, function(name) {
+        Settings.insert({
+          name: name,
+          index: 0,
+          isActive: false
+        });
+      });
+      var names = ["Genius"];
+      _.each(names, function(name) {
+        Settings.insert({
+          name: name,
+          geniusActive: false
+        });
+      });
     }
 
     if (Checkbox.find().count() === 0) {
@@ -126,31 +152,62 @@ Meteor.startup(function () {
       });
     }
 
+
+
+
+
     if(Visuals.find().count() == 0) {
-        var names = ["Visual 1", "Visual 2"];
+
+
+        var myjson = {};
+        myjson = JSON.parse(Assets.getText("settings.json"));
+        console.log(myjson.Visuals[0]);
+
+        _.each(myjson.Visuals, function(visual) {
+            Visuals.insert(visual)
+        });
+
+
+        /*var names = ["Visual 1"];
+        var index = 0;
         _.each(names, function (name) {
             Visuals.insert({
                 name: name,
-                colors: [ { color: "#FFFFAF", index: 0},
-                          { color: "#FF00EF", index: 1},
-                          { color: "#3693FF", index: 2},
-                          { color: "#6FF063", index: 3} ],
+                index: index,
+                colors: [ { color: "#FFFFFF", index: 0},
+                          { color: "#FFFFFF", index: 1},
+                          { color: "#FFFFFF", index: 2},
+                          { color: "#FFFFFF", index: 3}],
                 checked: false,
                 active: false
             });
+            index++;
+        });
+        var names = ["Visual 2"];
+        _.each(names, function (name) {
+            Visuals.insert({
+                name: name,
+                index: index,
+                colors: [ { color: "#FFFFAF", index: 0},
+                    { color: "#FFFFFF", index: 1}],
+                checked: false,
+                active: false
+            });
+            index++;
         });
         var names = ["Visual 3", "Visual 4"];
         _.each(names, function (name) {
             Visuals.insert({
                 name: name,
+                index: index,
                 colors: [ { color: "#FFFFAF", index: 0},
-                    { color: "#FF00EF", index: 1 },
-                    { color: "#3693FF", index: 2 },
-                    { color: "#6FF063", index: 3 } ],
+                          { color: "#FFFFFF", index: 1},
+                          { color: "#FFFFFF", index: 2}],
                 checked: false,
                 active: false
             });
-        });
+            index++;
+        });*/
     }
   });
 
@@ -164,7 +221,39 @@ Meteor.methods({
         Visuals.update({}, { $set: { active: false } }, { multi: true })
         Visuals.update(visualId, { $set: { active: setActive } });
     },
+    'notification.setChecked': function(visualId, setChecked) {
+        console.log("notification setChecked");
+        const visual = Visuals.findOne(visualId);
+        Visuals.update(visualId, { $set: { notification: setChecked } });
+    },
     'update': function(id, index, color) {
         Visuals.update({_id: id, "colors.index": index}, { $set: { "colors.$.color": color}});
+    },
+    'reset': function(id) {
+        console.log("RESET");
+        var myjson = {};
+        myjson = JSON.parse(Assets.getText("settings.json"));
+        //console.log(myjson.Visuals[0]);
+        console.log(Visuals.findOne(id).name);
+        var visual = null;
+        for(var i=0; i<myjson.Visuals.length; i++){
+            if(myjson.Visuals[i].name==Visuals.findOne(id).name){
+                console.log("test");
+                visual = myjson.Visuals[i];
+                break;
+            }
+        }
+        console.log(visual.colors);
+        const visual_db = Visuals.findOne(id);
+        visual_db.colors = visual.colors;
+        Visuals.update(id, visual_db);
+
+        //if(Visuals.findOne(id).name=="Visual 1"){
+        //    console.log("Visual 1");
+        //}
+        //console.log(myjson.Visuals);
+    },
+    'genius': function(setting) {
+        Settings.update({name: "Genius"}, { $set: { geniusActive: setting }});
     }
 });

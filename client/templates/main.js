@@ -5,6 +5,8 @@
   var currentID = 0;
   var cols, colsOld = 0;
   var visualBol = false;
+  var resultElement = document.getElementById('result'),
+      sliders = document.getElementsByClassName('sliders');
 
   Router.configure({
     layoutTemplate: 'mainPage'
@@ -43,6 +45,22 @@
 
       visualBol = true;
 
+      /*for ( var i = 0; i < sliders.length; i++ ) {
+
+          noUiSlider.create(sliders[i], {
+              start: 127,
+              connect: "lower",
+              orientation: "vertical",
+              range: {
+                  'min': 0,
+                  'max': 255
+              }
+          });
+
+          // Bind the color changing function
+          // to the slide event.
+          sliders[i].noUiSlider.on('slide', setColor);
+      }*/
       //var $picker = document.getElementById('colorPicker');
       //picker = tinycolorpicker($picker);
 
@@ -51,7 +69,28 @@
       //}
   }
 
+
+  function setColor(){
+
+
+      // Get the slider values,
+      // stick them together.
+      var color = 'rgb(' +
+          sliders[0].noUiSlider.get() + ',' +
+          sliders[1].noUiSlider.get() + ',' +
+          sliders[2].noUiSlider.get() + ')';
+
+      // Fill the color box.
+      resultElement.style.background = color;
+      resultElement.style.color = color;
+  }
+
   Template.header.rendered = function (){
+
+
+      //var elem = document.querySelector('.genius');
+      //var init = new Switchery(elem, { color: '#6f47a8', jackColor: '#ffffff' });
+
 
     //$('body').append("<script type='text/javascript' src='tinycolorpicker.js'></script>");
 
@@ -60,7 +99,9 @@
 
     //$('body').append("<script type='text/javascript'>window.onload = function(){var $picker = document.getElementById('colorPicker'),picker  = tinycolorpicker($picker);var $picker = document.getElementById('colorPicker2'),picker  = tinycolorpicker($picker);}</script>");
 
-    elem.onchange = function() {
+
+
+    /*elem.onchange = function() {
       console.log("clicked button");
 
 
@@ -76,15 +117,13 @@
               console.dir(object);
             }
           });
-    };
+    };*/
 
   }
 
   Template.settingsList.rendered = function(){
     console.log("test");
 
-    //var elem = document.querySelector('.js-switch');
-    //var init = new Switchery(elem);
 
   };
 
@@ -95,6 +134,14 @@
     selectedSetting: function () {
       var setting = Settings.findOne(Session.get("selectedSetting"));
       return setting && setting.name;
+    },
+    display: function() {
+      console.log(this.name);
+      if(this.name == "Brightness" || this.name == "Contrast") {
+          return true;
+      }else{
+          return false;
+      }
     }
   });
 
@@ -121,12 +168,75 @@
     incompleteCount: function() {
       return Visuals.find({ checked: { $ne: false } }).count();
     },
+      geniusActive: function () {
+      //return "checked";
+      console.log("called");
+      console.log(Settings.findOne({name: "Genius"}));
+      //if(Settings.findOne({name: "Genius"})!=undefined) {
+          if (Settings.findOne({name: "Genius"}).geniusActive) {
+              console.log("genius true");
+              return "unchecked";
+          } else {
+              return "unchecked";
+          }
+      //};
+
+      //return "unchecked";
+    }
   });
 
+
   Template.leaderboard.rendered = function() {
-    var elem = document.querySelector('.genius');
-    var init = new Switchery(elem);
-  }
+    console.log("Render leaderboard");
+
+      var template = this;
+      template.autorun(function () {
+          var setting = Settings.findOne({name: "Genius"});
+          if(setting != undefined) {
+              //console.log(document.getElementsByClassName('switchery').parentNode);
+              var list = document.getElementsByClassName("switchery");
+              for(var i = list.length - 1; 0 <= i; i--)
+                  if(list[i] && list[i].parentElement)
+                      list[i].parentElement.removeChild(list[i]);
+              var elem = document.querySelector('.genius');
+              if (setting.geniusActive) {
+
+                  elem.setAttribute("checked", "checked");
+                  elem.removeAttribute("unchecked");
+              } else {
+                  elem.setAttribute("unchecked", "unchecked");
+                  elem.removeAttribute("checked");
+              }
+              var init = new Switchery(elem, { color: '#6f47a8', jackColor: '#ffffff' });
+
+          }
+
+      });
+      /*if (Settings.findOne({name: "Genius"}).geniusActive) {
+          console.log("genius true");
+          elem.setAttribute("checked","");
+          elem.removeAttribute("unchecked");
+      } else {
+          elem.setAttribute("unchecked","");
+          elem.removeAttribute("checked");
+      }*/
+
+  };
+
+  Template.leaderboard.events({
+      'click .switchery.switchery-default': function() {
+          console.log("test");
+      },
+      'click .switchery.switchery-default': function() {
+          // Set the checked property to the opposite of its current value
+          console.log("genius events");
+          console.log(this._id);
+          console.log(this.notification);
+
+          var setting = Settings.findOne({name: "Genius"}).geniusActive;
+          Meteor.call('genius', !setting);
+      }
+  });
 
   Template.visual.helpers({
     selected: function () {
@@ -137,11 +247,12 @@
   Template.visual.events({
     'click .toggle-checked': function() {
       // Set the checked property to the opposite of its current value
+      console.log("visual events");
       console.log(this._id);
       console.log(this.checked);
       Meteor.call('visual.setChecked', this._id, !this.checked);
     },
-    'click .name': function() {
+    'click .vListName': function() {
       console.log("tester");
       Meteor.call('visual.setActive', this._id, true);
     }
@@ -220,17 +331,19 @@
     counter = 0;
     console.log("call visual");
     visualBol = true;
+      //var elem = document.querySelector('.js-switch.notification');
+      //var init = new Switchery(elem, { color: '#969696', jackColor: '#ffffff' });
     //console.log(currentID);
   }
 
   Template.color.rendered = function () {
 
 
-          console.log("CALLLLED");
-      console.log(this.connection);
-      console.log(colsOld);
+      console.log("CALLLLED");
+      //console.log(this.connection);
+      //console.log(colsOld);
       cols = Visuals.findOne(currentID, {fields: {"colors": 1}});
-      console.log(cols.colors[2].color);
+      //console.log(cols.colors[2].color);
 
 
           for (i = 0; i < cols.length; i++) {
@@ -290,7 +403,9 @@
       //var i = 0;
       //while( (this.firstnode = this.firstnode.previousSibling) != null )
       //    i++;
+      console.log("Update Colors");
       console.log(this.firstnode);
+      console.log(index);
 
       for (i = 0; i < $('.colorInput').length; i++) {
           console.log($('input').get(i).getAttribute('value'));
@@ -329,11 +444,68 @@
           //var i = 0;
           //while((event.target.parentElement.parentElement == event.target.parentElement.parentElement.previousElementSibling) != null)
           //      i++;
-          console.log(prevAll(event.target.parentElement.parentElement).length);
-          updateColors(prevAll(event.target.parentElement.parentElement).length);
+          console.log(prevAll(event.target.parentElement.parentElement.parentElement.parentElement).length);
+          updateColors(prevAll(event.target.parentElement.parentElement.parentElement.parentElement).length);
       },
       'touchend .track': function() {
-          console.log(prevAll(event.target.parentElement.parentElement).length);
-          updateColors(prevAll(event.target.parentElement.parentElement).length);
+          console.log(prevAll(event.target.parentElement.parentElement.parentElement.parentElement).length);
+          updateColors(prevAll(event.target.parentElement.parentElement.parentElement.parentElement).length);
+      },
+      'touchmove .track': function() {
+          console.log(prevAll(event.target.parentElement.parentElement.parentElement.parentElement).length);
+          updateColors(prevAll(event.target.parentElement.parentElement.parentElement.parentElement).length);
+      },
+      'click .reset_tab': function() {
+          console.log("reset");
+          reset();
       }
   });
+
+  Template.notification.events({
+      'click .switchery.switchery-default': function() {
+      // Set the checked property to the opposite of its current value
+      console.log("notification events");
+      console.log(this._id);
+      console.log(this.notification);
+
+      Meteor.call('notification.setChecked', this._id, !this.notification);
+      }
+  })
+
+  Template.notification.rendered = function() {
+     var elem = document.querySelector('.js-switch.notification');
+     var init = new Switchery(elem, { color: '#969696', jackColor: '#ffffff' });
+  }
+
+  Template.listPage.helpers({
+      checkIfNotificationExists: function () {
+          var visual = Visuals.findOne(currentID);
+          if(typeof visual.notification === "undefined"){
+              return false;
+          }else {
+              return true;
+          }
+      }/*,
+      notificationState: function () {
+          var visual = Visuals.findOne(currentID);
+          console.log("notificationstate");
+          console.log(visual.notification);
+          return visual.notification;
+      }*/
+  });
+
+  function sleep(milliseconds) {
+      var start = new Date().getTime();
+      for (var i = 0; i < 1e7; i++) {
+          if ((new Date().getTime() - start) > milliseconds){
+              break;
+          }
+      }
+  }
+
+  function reset(){
+      Meteor.call('reset', currentID, function(){
+          sleep(500);
+          location.reload();
+      });
+  }

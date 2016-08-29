@@ -1,0 +1,57 @@
+{
+  "Visuals": [
+
+    {
+      "_id" : "rD9jTubopu4xztdSa",
+      "name" : "Visual 1",
+      "index" : 0,
+      "colors" : [
+        { "color" : "#2d2f30", "index" : 0 },
+        { "color" : "#ded46f", "index" : 1 },
+        { "color" : "#8760be", "index" : 2 },
+        { "color" : "#FFFFFF", "index" : 3 }
+      ],
+      "checked" : false,
+      "active" : false,
+      "notification" : true
+    },
+    {
+      "_id" : "RH8TD6zpG3p4ZgdcQ",
+      "name" : "Visual 2",
+      "index" : 1,
+      "colors" : [
+        { "color" : "#7a4eb7", "index" : 0 },
+        { "color" : "#FFFFFF", "index" : 1 },
+        { "color" : "#fec533", "index" : 2 },
+        { "color" : "#FFFFFF", "index" : 3 },
+        { "color" : "#000000", "index" : 4 }
+      ],
+      "checked" : false,
+      "active" : false
+    },
+    {
+      "_id" : "hDPiBv93PtjtMRGyQ",
+      "name" : "Visual 3",
+      "index" : 2,
+      "colors" : [
+        { "color" : "#71889b", "index" : 0 },
+        { "color" : "#843820", "index" : 1 }
+      ],
+      "checked" : false,
+      "active" : false
+    },
+    {
+      "_id" : "Zb8FDDLizNFNzBtaL",
+      "name" : "Visual 4",
+      "index" : 3,
+      "colors" : [
+        { "color" : "#040725", "index" : 0 },
+        { "color" : "#8f6cb6", "index" : 1 },
+        { "color" : "#ffca6b", "index" : 2 }
+      ],
+      "checked" : false,
+      "active" : false
+    }
+
+  ]
+}
