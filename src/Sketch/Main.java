@@ -60,6 +60,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 
 	//GENIUS
 	boolean geniusMode = false;
+	private boolean geniusPaused = false;
 	int geniusModeTimer = 0;
 	boolean geniusModeTimerCalled = false;
 	int GENIUS_TIME = 10000;
@@ -178,37 +179,46 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		}
 		screen.send(9,8,0,0,0);
 		
-		if(frameCount % 300 == 0){			
+		if(frameCount % 500 == 0){			
 			//{"msg":"changed","collection":"visuals","id":"RH8TD6zpG3p4ZgdcQ","fields":{"active":true}}
 			
-			for (Visual value : sensorData.getVisualList().values()) {
-				String id = value.getId();
-				if(value.getIndex()==geniusCounter){
-					String s = "{\"msg\":\"changed\", \"collection\":\"visuals\", \"id\":\""+id+"\", \"fields\":{\"geniusActive\":true}}";
-					client.call(s);
-				}else{
-					String s = "{\"msg\":\"changed\", \"collection\":\"visuals\", \"id\":\""+id+"\", \"fields\":{\"geniusActive\":false}}";
-					client.call(s);
+			if(geniusMode && !geniusPaused){
+				for (Visual value : sensorData.getVisualList().values()) {
+					String id = value.getId();
+					if(value.getIndex()==geniusCounter){
+						String s = "{\"msg\":\"changed\", \"collection\":\"visuals\", \"id\":\""+id+"\", \"fields\":{\"geniusActive\":true}}";
+						client.call(s);
+					}else{
+						String s = "{\"msg\":\"changed\", \"collection\":\"visuals\", \"id\":\""+id+"\", \"fields\":{\"geniusActive\":false}}";
+						client.call(s);
+					}
 				}
-			}
 			
 			//String s = new String("{\"msg\":\"changed\", \"collection\":\"visuals\", \"id\":\"RH8TD6zpG3p4ZgdcQ\", \"fields\":{\"geniusActive\":\"false\"}}");
 			//String s = new String("{\"id\":\"RH8TD6zpG3p4ZgdcQ\", \"fields\":{\"geniusActive\":\"false\"}}");
 			//client.call(s);
-			if(geniusCounter<3){
-				geniusCounter++;
-			}else{
-				geniusCounter = 0;
+				activeVisual = geniusCounter;
+				next = geniusCounter;
+				fade = 0;
+				
+				if(geniusCounter<3){
+					geniusCounter++;
+				}else{
+					geniusCounter = 0;
+				}
+
 			}
 		}
 		
-		if(millis()-geniusModeTimer>GENIUS_TIME && !geniusModeTimerCalled){
+		
+		
+		/*if(millis()-geniusModeTimer>GENIUS_TIME && !geniusModeTimerCalled){
     		System.out.println("TIME_Over");
     		geniusModeTimerCalled = true;
     		String id = sensorData.getGeniusID();
     		String s = "{\"msg\":\"changed\", \"collection\":\"settings\", \"id\":\""+id+"\", \"fields\":{\"geniusPaused\":false}}";
 			client.call(s);
-		}
+		}*/
 		
 		if(frameCount%100==0){
 			System.out.println(frameRate);
@@ -315,8 +325,8 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		}
 		if(geniusMode){
 			System.out.println("GeniusMode");
-			geniusModeTimer = millis();
-			geniusModeTimerCalled = false;
+			//geniusModeTimer = millis();
+			//geniusModeTimerCalled = false;
 		}
 		}
 		System.out.print(activeVisual);
@@ -326,7 +336,23 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	public void geniusModeChanged(GeniusEvent e) {
 		// TODO Auto-generated method stub
 		geniusMode = e.getGenius();
-		System.out.println(e.getGenius());
+		geniusPaused = e.getGeniusPaused();
+		if(geniusPaused==false){
+			for (Visual value : sensorData.getVisualList().values()) {
+				String id = value.getId();
+				if(value.getIndex()==geniusCounter){
+					String s = "{\"msg\":\"changed\", \"collection\":\"visuals\", \"id\":\""+id+"\", \"fields\":{\"geniusActive\":true}}";
+					client.call(s);
+				}else{
+					String s = "{\"msg\":\"changed\", \"collection\":\"visuals\", \"id\":\""+id+"\", \"fields\":{\"geniusActive\":false}}";
+					client.call(s);
+				}
+			}
+			activeVisual = geniusCounter;
+			next = geniusCounter;
+			fade = 0;
+		}
+		System.out.println("Genius"+e.getGenius()+"GeniusPaused"+e.getGeniusPaused());
 	}
 
 	@Override

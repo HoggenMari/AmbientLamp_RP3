@@ -10,14 +10,20 @@ public class GeniusEvent extends EventObject {
     public final static int GENIUS_MODE_CHANGED = 1001;
 
     protected boolean genius;
-  
-    public GeniusEvent(Object source, boolean genius) {
+    protected boolean geniusPaused;
+
+    public GeniusEvent(Object source, boolean genius, boolean geniusPaused) {
       super(source);
       this.genius = genius;
+      this.geniusPaused = geniusPaused;
     }
     
     public boolean getGenius() {
         return genius;
+    }
+    
+    public boolean getGeniusPaused() {
+    	return geniusPaused;
     }
     
   }

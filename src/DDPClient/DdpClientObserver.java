@@ -27,7 +27,7 @@ public class DdpClientObserver implements Observer {
 		SensorData sensorData = SensorData.getInstance();
 		
 		if (msg instanceof String) {
-			System.out.println("Test: "+msg);
+			//System.out.println("Test: "+msg);
 			
 			JsonObject jsonObject;
 			JsonParser jejpl = new JsonParser();
@@ -158,8 +158,8 @@ public class DdpClientObserver implements Observer {
 								System.out.println(fields.get("geniusActive").getAsBoolean());
 								sensorData.setGenius(fields.get("geniusActive").getAsBoolean());
 								}else if(fields.has("geniusPaused")){
-								//System.out.println(fields.get("geniusPaused").getAsBoolean());
-								//sensorData.setGenius(fields.get("geniusPaused").getAsBoolean());	
+								System.out.println(fields.get("geniusPaused").getAsBoolean());
+								sensorData.setGeniusPaused(fields.get("geniusPaused").getAsBoolean());	
 								}
 							}
 							
@@ -179,6 +179,7 @@ public class DdpClientObserver implements Observer {
 							}else if(name.equals("Genius")){
 								sensorData.setGeniusID(id);
 								sensorData.setGenius(fields.get("geniusActive").getAsBoolean());
+								sensorData.setGeniusPaused(fields.get("geniusPaused").getAsBoolean());	
 							}
 						}
 					}
