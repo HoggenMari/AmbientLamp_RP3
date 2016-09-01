@@ -3,6 +3,27 @@ var fs        = require('fs');
 var net       = require('net');
 var JSFtp     = require("jsftp");
 
+var countdown = new ReactiveCountdown(10, {
+
+    // Value substracted every tick from the current countdown value
+    steps: 1,
+
+    // Specify the countdown's interval in milliseconds
+    interval: 1000,
+
+    // Callback: Tick, called on every interval
+    tick: function() {
+        console.log("tick");
+        Settings.update({name: "Genius"}, { $set: { geniusPausedRemain: countdown.get() }});
+    },
+
+    // Callback: Complete, called when the countdown has reached 0
+    completed: function() {
+        console.log("finished");
+        Settings.update({name: "Genius"}, { $set: { geniusPausedRemain: 10 }});
+    },
+
+});
 
 Meteor.startup(function () {
     /*if (Players.find().count() === 0) {
@@ -118,7 +139,7 @@ Meteor.startup(function () {
           score: 100
         });
       });
-      var names = ["Contrast"];
+      var names = ["Saturation"];
       _.each(names, function (name) {
           Settings.insert({
               name: name,
@@ -139,7 +160,8 @@ Meteor.startup(function () {
           name: name,
           geniusActive: false,
           geniusPaused: false,
-          geniusPauseTime: 5000
+          geniusPauseTime: 5000,
+          geniusPausedRemain: 10
         });
       });
     }
@@ -213,6 +235,13 @@ Meteor.startup(function () {
     }
   });
 
+countdown.start(function() {
+
+    // do something when this is completed
+    countdown.stop();
+    console.log("finished countdown");
+});
+
 Meteor.methods({
     'visual.setChecked': function(visualId, setChecked) {
         const visual = Visuals.findOne(visualId);
@@ -231,7 +260,7 @@ Meteor.methods({
         const visual = Visuals.findOne(visualId);
         Visuals.update(visualId, { $set: { notification: setChecked } });
     },
-    'update': function(id, index, color) {
+    'updateColor': function(id, index, color) {
         Visuals.update({_id: id, "colors.index": index}, { $set: { "colors.$.color": color}});
     },
     'reset': function(id) {
@@ -287,5 +316,13 @@ Meteor.methods({
             }
         }
         //Visuals.update(ret);
+    },
+    'startCountdown': function(option) {
+        if(countdown.get()==0) {
+            countdown.start();
+        }
+    },
+    'getCountdownMethod': function(argument) {
+        return countdown.get();
     }
 });

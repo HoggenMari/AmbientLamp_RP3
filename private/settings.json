@@ -4,12 +4,14 @@
     {
       "_id" : "rD9jTubopu4xztdSa",
       "name" : "Visual 1",
+      "description" : "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+      "img" : "/lamp11.png",
       "index" : 0,
       "colors" : [
-        { "color" : "#2d2f30", "index" : 0 },
-        { "color" : "#ded46f", "index" : 1 },
-        { "color" : "#8760be", "index" : 2 },
-        { "color" : "#FFFFFF", "index" : 3 }
+        { "color" : "#2d2f30", "index" : 0, "annotation" : "" },
+        { "color" : "#ded46f", "index" : 1, "annotation" : "Solar Production" },
+        { "color" : "#8760be", "index" : 2, "annotation" : "Energy Consumption" },
+        { "color" : "#FFFFFF", "index" : 3, "annotation" : "Notification high current Consumption" }
       ],
       "checked" : false,
       "active" : true,
@@ -19,13 +21,15 @@
     {
       "_id" : "RH8TD6zpG3p4ZgdcQ",
       "name" : "Visual 2",
+      "description" : "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+      "img" : "/lamp12.png",
       "index" : 1,
       "colors" : [
-        { "color" : "#7a4eb7", "index" : 0 },
-        { "color" : "#FFFFFF", "index" : 1 },
-        { "color" : "#fec533", "index" : 2 },
-        { "color" : "#FFFFFF", "index" : 3 },
-        { "color" : "#000000", "index" : 4 }
+        { "color" : "#7a4eb7", "index" : 0, "annotation" : "" },
+        { "color" : "#FFFFFF", "index" : 1, "annotation" : "" },
+        { "color" : "#fec533", "index" : 2, "annotation" : "" },
+        { "color" : "#FFFFFF", "index" : 3, "annotation" : "" },
+        { "color" : "#000000", "index" : 4, "annotation" : "" }
       ],
       "checked" : false,
       "active" : false,
@@ -34,10 +38,12 @@
     {
       "_id" : "hDPiBv93PtjtMRGyQ",
       "name" : "Visual 3",
+      "description" : "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+      "img" : "/lamp13.png",
       "index" : 2,
       "colors" : [
-        { "color" : "#71889b", "index" : 0 },
-        { "color" : "#843820", "index" : 1 }
+        { "color" : "#71889b", "index" : 0, "annotation" : "" },
+        { "color" : "#843820", "index" : 1, "annotation" : "" }
       ],
       "checked" : false,
       "active" : false,
@@ -46,11 +52,13 @@
     {
       "_id" : "Zb8FDDLizNFNzBtaL",
       "name" : "Visual 4",
+      "description" : "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+      "img" : "/lamp14.png",
       "index" : 3,
       "colors" : [
-        { "color" : "#040725", "index" : 0 },
-        { "color" : "#ffca6b", "index" : 1 },
-        { "color" : "#8f6cb6", "index" : 2 }
+        { "color" : "#040725", "index" : 0, "annotation" : "" },
+        { "color" : "#ffca6b", "index" : 1, "annotation" : "" },
+        { "color" : "#8f6cb6", "index" : 2, "annotation" : "" }
       ],
       "checked" : false,
       "active" : false,
