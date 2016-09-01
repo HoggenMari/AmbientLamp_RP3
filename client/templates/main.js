@@ -7,7 +7,6 @@
   var visualBol = false;
   var resultElement = document.getElementById('result'),
       sliders = document.getElementsByClassName('sliders');
-  var countdown = new ReactiveCountdown(10);
   var settingsUp = false;
 
   Meteor.call('getCountdownMethod', "foo", function(error, result){
@@ -339,19 +338,14 @@
     },
     'click .vActive': function() {
       console.log("tester");
-      countdown.start();
-      Meteor.call('startCountdown');
+      if(Settings.findOne({name: "Genius"}).geniusActive==true){
+          Meteor.call('startCountdown');
+      }
       Meteor.call('visual.setActive', this._id, true);
 
     }
   });
 
-  countdown.start(function() {
-
-      // do something when this is completed
-    countdown.stop();
-    console.log("finished countdown");
-  });
 
   function increase(setting) {
     var count = Settings.findOne(setting, {fields: {score: 1} });

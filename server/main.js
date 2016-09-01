@@ -3,7 +3,7 @@ var fs        = require('fs');
 var net       = require('net');
 var JSFtp     = require("jsftp");
 
-var countdown = new ReactiveCountdown(10, {
+var countdown = new ReactiveCountdown(30, {
 
     // Value substracted every tick from the current countdown value
     steps: 1,
@@ -20,7 +20,7 @@ var countdown = new ReactiveCountdown(10, {
     // Callback: Complete, called when the countdown has reached 0
     completed: function() {
         console.log("finished");
-        Settings.update({name: "Genius"}, { $set: { geniusPausedRemain: 10 }});
+        //Settings.update({name: "Genius"}, { $set: { geniusPausedRemain: 10 }});
     },
 
 });
@@ -160,8 +160,8 @@ Meteor.startup(function () {
           name: name,
           geniusActive: false,
           geniusPaused: false,
-          geniusPauseTime: 5000,
-          geniusPausedRemain: 10
+          geniusPauseTime: 30,
+          geniusPausedRemain: 30
         });
       });
     }
@@ -239,6 +239,8 @@ countdown.start(function() {
 
     // do something when this is completed
     countdown.stop();
+    Settings.update({name: "Genius"}, {$set: {"geniusPaused": false}});
+    Visuals.update({}, { $set: { active: false } }, { multi: true });
     console.log("finished countdown");
 });
 
@@ -290,7 +292,17 @@ Meteor.methods({
     'genius': function(setting) {
         Settings.update({name: "Genius"}, { $set: { geniusActive: setting }});
         if(setting==false){
-            Visuals.update({}, { $set: { geniusActive: false } }, { multi: true })
+            countdown.stop();
+            countdown.add(-countdown.get());
+            countdown.remove();
+            Settings.update({name: "Genius"}, { $set: { geniusPaused: false }});
+            var visualActive = Visuals.findOne({ geniusActive: true });
+            console.log("visualActive");
+            console.log(visualActive._id);
+            Visuals.update({}, { $set: { geniusActive: false } }, { multi: true });
+            Visuals.update(visualActive._id, { $set: { active: true } })
+        }else{
+            Visuals.update({}, { $set: { active: false } }, { multi: true });
         }
     },
     'update': function(options) {
@@ -305,7 +317,7 @@ Meteor.methods({
                     Visuals.update({_id: ret.id}, {$set: {"geniusActive": ret.fields.geniusActive}});
                 }
             }
-            if (ret.collection == "settings") {
+            /*if (ret.collection == "settings") {
                 if (ret.msg == "changed") {
                     console.log("geniusPaused");
                     console.log(ret.fields.geniusPaused);
@@ -313,13 +325,16 @@ Meteor.methods({
                     //Visuals.update(ret.id, {})
                     Settings.update({_id: ret.id}, {$set: {"geniusPaused": ret.fields.geniusPaused}});
                 }
-            }
+            }*/
         }
         //Visuals.update(ret);
     },
     'startCountdown': function(option) {
+        Visuals.update({}, { $set: { geniusActive: false } }, { multi: true });
         if(countdown.get()==0) {
             countdown.start();
+        }else{
+            countdown.add(Settings.findOne({name: "Genius"}).geniusPauseTime-countdown.get());
         }
     },
     'getCountdownMethod': function(argument) {

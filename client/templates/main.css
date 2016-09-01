@@ -86,7 +86,7 @@ body {
     padding: 0px 10px;
     margin-top: 0px;
     margin-bottom: 0px;
-    background-color: #fdfbff;
+    background-color: #f4f6f7;
 }
 
 .settings {
@@ -403,7 +403,7 @@ li.checked {
 }
 
 li.active {
-  background-color: #dfe8ec;
+  background-color: #d2e3ea;
 }
 
 .visualName {
@@ -418,9 +418,11 @@ li.active {
   color: #1a3443;
 }
 
-li.geniusActive .name{
-  color: #6f47a8;
-  font-weight: 900;
+li.geniusActive {
+}
+
+li.geniusActive .visualNameText {
+  color: #8545e2;
 }
 
 .geniusPaused {
@@ -494,6 +496,7 @@ a:hover {
 @media (max-width: 500px) {
    .settings {
        width: 100%;
+     box-shadow: 0px 0px 8px 4px rgba(0, 0, 0, 0.05), 4px 2px 2px 0 rgba(0, 0, 0, 0.05);
    }
     
   .details, .message {
