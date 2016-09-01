@@ -150,6 +150,9 @@ public class DdpClientObserver implements Observer {
 							if(id.equals(sensorData.getBrightnessID())){
 								System.out.println(fields.get("score").getAsFloat());
 								sensorData.setBrightness((float)(fields.get("score").getAsFloat()/100.0));
+							}else if(id.equals(sensorData.getSaturationID())){
+								System.out.println(fields.get("score").getAsFloat());
+								sensorData.setSaturation((float)(fields.get("score").getAsFloat()/100.0));
 							}else if(id.equals(sensorData.getGeniusID())){
 								if(fields.has("geniusActive")){
 								System.out.println(fields.get("geniusActive").getAsBoolean());
@@ -169,6 +172,10 @@ public class DdpClientObserver implements Observer {
 								System.out.println("Brightness: "+id);
 								sensorData.setBrightnessID(id);
 								sensorData.setBrightness((float)(fields.get("score").getAsFloat()/100.0));
+							}else if(name.equals("Saturation")){
+								System.out.println("Brightness: "+id);
+								sensorData.setSaturationID(id);
+								sensorData.setSaturation((float)(fields.get("score").getAsFloat()/100.0));
 							}else if(name.equals("Genius")){
 								sensorData.setGeniusID(id);
 								sensorData.setGenius(fields.get("geniusActive").getAsBoolean());

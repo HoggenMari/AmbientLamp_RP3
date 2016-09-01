@@ -9,8 +9,8 @@ public class SensorData {
 	private static SensorData instance;
 
 	// private SensorEventMulticaster multicaster;
-	private float brightness, particles, speed;
-	private String brightnessID;
+	private float brightness, saturation, particles, speed;
+	private String brightnessID, saturationID;
 	private boolean genius;
 	private String geniusID;
 	private int speedZ;
@@ -125,7 +125,7 @@ public class SensorData {
 			if (listeners[i] == SensorListener.class) {
 				((SensorListener) listeners[i + 1])
 						.brightnessChanged(new SensorEvent(this,
-								SensorEvent.BRIGHTNESS_CHANGED, brightness,
+								SensorEvent.BRIGHTNESS_CHANGED, brightness, saturation,
 								particles, speed));
 			}
 		}
@@ -139,7 +139,7 @@ public class SensorData {
 			if (listeners[i] == SensorListener.class) {
 				((SensorListener) listeners[i + 1])
 						.particlesChanged(new SensorEvent(this,
-								SensorEvent.PARTICLES_CHANGED, brightness,
+								SensorEvent.PARTICLES_CHANGED, brightness, saturation,
 								particles, speed));
 			}
 		}
@@ -153,7 +153,7 @@ public class SensorData {
 			if (listeners[i] == SensorListener.class) {
 				((SensorListener) listeners[i + 1])
 						.speedChanged(new SensorEvent(this,
-								SensorEvent.SPEED_CHANGED, brightness,
+								SensorEvent.SPEED_CHANGED, brightness, saturation,
 								particles, speed));
 			}
 		}
@@ -366,6 +366,34 @@ public class SensorData {
 
 	public void setGeniusID(String geniusID) {
 		this.geniusID = geniusID;
+	}
+
+	public String getSaturationID() {
+		return saturationID;
+	}
+
+	public void setSaturationID(String saturationID) {
+		this.saturationID = saturationID;
+	}
+
+	public float getSaturation() {
+		return saturation;
+	}
+
+	public void setSaturation(float saturation) {
+		this.saturation = saturation;
+		Object[] listeners = listenerList.getListenerList();
+
+		// System.out.println("Brightness"+listeners.length);
+
+		for (int i = 0; i < listeners.length; i++) {
+			if (listeners[i] == SensorListener.class) {
+				((SensorListener) listeners[i + 1])
+						.saturationChanged(new SensorEvent(this,
+								SensorEvent.SATURATION_CHANGED, brightness, saturation,
+								particles, speed));
+			}
+		}
 	}
 	
 }

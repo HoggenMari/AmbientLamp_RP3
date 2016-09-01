@@ -1,5 +1,6 @@
 package Sketch;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -41,8 +42,8 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	Screen screen;
 	PGraphics pSend, canvasFade;
 	DDPClient client;
-	int brightness;
-	int currentBrightness;
+	int brightness, saturation;
+	int currentBrightness, currentSaturation;
 	SolarAnalyticsAPI api;
 	
 	private Voltage voltage;
@@ -139,6 +140,23 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		pSend.fill(0,currentBrightness);
 		pSend.rect(0,0,pSend.width,pSend.height);
 		
+		for(int ix=0; ix<pSend.width; ix++){
+			for(int iy=0; iy<pSend.height; iy++){
+				int c = pSend.get(ix, iy);
+				float[] hsv = new float[3];
+				int r = c >> 16 & 0xFF;
+				int g = c >> 8 & 0xFF;
+				int b = c & 0xFF;
+				Color.RGBtoHSB(r,g,b,hsv);
+					//pSend.fill(saturation(c));
+					if(ix==5 && iy==5){
+						//System.out.println("Color: "+hsv[0]+" "+hsv[1]+" "+hsv[2]);
+					}
+					pSend.colorMode(HSB,255,255,255);
+					pSend.fill(hsv[0]*255, (hsv[1]*(float)(currentSaturation/255.0))*255, hsv[2]*255);
+					pSend.rect(ix, iy, 1, 1);
+			}
+		}
 		pSend.endDraw();
 		
 		if(currentBrightness<brightness){
@@ -147,14 +165,20 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 			currentBrightness--;
 		}
 		
+		if(currentSaturation<saturation){
+			currentSaturation++;
+		}else if(currentSaturation>saturation){
+			currentSaturation--;
+		}
+		
 		
 		screen.addLayer(pSend);
 		if (frameCount % 1 == 0) {
 			screen.drawOnGui();
 		}
-		//screen.send(9,8,0,0,0);
+		screen.send(9,8,0,0,0);
 		
-		if(frameCount % 200000000 == 0){			
+		if(frameCount % 300 == 0){			
 			//{"msg":"changed","collection":"visuals","id":"RH8TD6zpG3p4ZgdcQ","fields":{"active":true}}
 			
 			for (Visual value : sensorData.getVisualList().values()) {
@@ -186,8 +210,18 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 			client.call(s);
 		}
 		
+		if(frameCount%100==0){
+			System.out.println(frameRate);
+			System.out.println(saturation);
+		}
+		
 	}
 
+	
+	
+
+	
+	
 	// -------FADE
 	public PGraphics drawMode(int mode) {
 		switch (mode) {
@@ -293,5 +327,12 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		// TODO Auto-generated method stub
 		geniusMode = e.getGenius();
 		System.out.println(e.getGenius());
+	}
+
+	@Override
+	public void saturationChanged(SensorEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println("Saturation Changed");
+		saturation = (int)(e.getSaturation()*255);
 	}
 }
