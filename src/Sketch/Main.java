@@ -244,13 +244,13 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	public PGraphics drawMode(int mode) {
 		switch (mode) {
 		case 0:
-			return downscale(voltage.draw(), 3);
+			return downscale(voltage.draw(), 1);
 		case 1:
 			return text.draw();
 		case 2:
 			return downscale(bargraph.draw(), 0);
 		case 3:
-			return downscale(bargraph_gencons.draw(), 3);
+			return downscale(bargraph_gencons.draw(), 1);
 		default:
 			return voltage.draw();
 		}
