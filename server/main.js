@@ -3,6 +3,27 @@ var fs        = require('fs');
 var net       = require('net');
 var JSFtp     = require("jsftp");
 
+var countdown = new ReactiveCountdown(30, {
+
+    // Value substracted every tick from the current countdown value
+    steps: 1,
+
+    // Specify the countdown's interval in milliseconds
+    interval: 1000,
+
+    // Callback: Tick, called on every interval
+    tick: function() {
+        //console.log("tick");
+        Settings.update({name: "Genius"}, { $set: { geniusPausedRemain: countdown.get() }});
+    },
+
+    // Callback: Complete, called when the countdown has reached 0
+    completed: function() {
+        //console.log("finished");
+        //Settings.update({name: "Genius"}, { $set: { geniusPausedRemain: 10 }});
+    },
+
+});
 
 Meteor.startup(function () {
     /*if (Players.find().count() === 0) {
@@ -118,7 +139,7 @@ Meteor.startup(function () {
           score: 100
         });
       });
-      var names = ["Contrast"];
+      var names = ["Saturation"];
       _.each(names, function (name) {
           Settings.insert({
               name: name,
@@ -137,7 +158,10 @@ Meteor.startup(function () {
       _.each(names, function(name) {
         Settings.insert({
           name: name,
-          geniusActive: false
+          geniusActive: false,
+          geniusPaused: false,
+          geniusPauseTime: 30,
+          geniusPausedRemain: 30
         });
       });
     }
@@ -211,6 +235,15 @@ Meteor.startup(function () {
     }
   });
 
+countdown.start(function() {
+
+    // do something when this is completed
+    countdown.stop();
+    Settings.update({name: "Genius"}, {$set: {"geniusPaused": false}});
+    Visuals.update({}, { $set: { active: false } }, { multi: true });
+    console.log("finished countdown");
+});
+
 Meteor.methods({
     'visual.setChecked': function(visualId, setChecked) {
         const visual = Visuals.findOne(visualId);
@@ -218,15 +251,43 @@ Meteor.methods({
     },
     'visual.setActive': function(visualId, setActive) {
         const visual = Visuals.findOne(visualId);
+        if(Settings.findOne({name: "Genius"}).geniusActive==true){
+            Settings.update({name: "Genius"}, { $set: { geniusPaused: true }});
+        }
         Visuals.update({}, { $set: { active: false } }, { multi: true })
+        Visuals.update({}, { $set: { geniusActive: false } }, { multi: true });
         Visuals.update(visualId, { $set: { active: setActive } });
+    },
+    'visual.setPaused': function(visualId, setActive) {
+        console.log("setpaused");
+        if(Settings.findOne({name: "Genius"}).geniusActive==true){
+          Settings.update({name: "Genius"}, { $set: { geniusPaused: true }});
+          Visuals.update(visualId, { $set: { pausedActive: true } });
+        }
+    },
+    'visual.finishPaused': function(visualId, setActive) {
+        console.log("finishPaused");
+        if(Settings.findOne({name: "Genius"}).geniusActive==true){
+          Visuals.update(visualId, { $set: { pausedActive: false } });
+          Settings.update({name: "Genius"}, { $set: { geniusPaused: false }});
+        }
+    },
+    'visual.setSetting': function(visualId, setActive) {
+        const visual = Visuals.findOne(visualId);
+        //Visuals.update({}, { $set: { active: false } }, { multi: true })
+        //Visuals.update({}, { $set: { settingActive: false } }, { multi: true });
+        Visuals.update(visualId, { $set: { settingActive: setActive } });
+    },
+    'visual.finished': function() {
+        Visuals.update({}, { $set: { settingActive: false } }, { multi: true });
+        //Settings.update({name: "Genius"}, {$set: {"geniusPaused": false}});
     },
     'notification.setChecked': function(visualId, setChecked) {
         console.log("notification setChecked");
         const visual = Visuals.findOne(visualId);
         Visuals.update(visualId, { $set: { notification: setChecked } });
     },
-    'update': function(id, index, color) {
+    'updateColor': function(id, index, color) {
         Visuals.update({_id: id, "colors.index": index}, { $set: { "colors.$.color": color}});
     },
     'reset': function(id) {
@@ -255,5 +316,52 @@ Meteor.methods({
     },
     'genius': function(setting) {
         Settings.update({name: "Genius"}, { $set: { geniusActive: setting }});
+        if(setting==false){
+            countdown.stop();
+            countdown.add(-countdown.get());
+            countdown.remove();
+            Settings.update({name: "Genius"}, { $set: { geniusPaused: false }});
+            var visualActive = Visuals.findOne({ geniusActive: true });
+            console.log("visualActive");
+            console.log(visualActive._id);
+            Visuals.update({}, { $set: { geniusActive: false } }, { multi: true });
+            Visuals.update(visualActive._id, { $set: { active: true } })
+        }else{
+            Visuals.update({}, { $set: { active: false } }, { multi: true });
+        }
+    },
+    'update': function(options) {
+        var ret = JSON.parse(options);
+        console.log("call from java");
+        //console.log(ret.msg);
+        if(Settings.findOne({name: "Genius"}).geniusActive==true) {
+            if (ret.collection == "visuals") {
+                if (ret.msg == "changed") {
+                    console.log(ret.fields.geniusActive);
+                    //Visuals.update(ret.id, {})
+                    Visuals.update({_id: ret.id}, {$set: {"geniusActive": ret.fields.geniusActive}});
+                }
+            }
+            /*if (ret.collection == "settings") {
+                if (ret.msg == "changed") {
+                    console.log("geniusPaused");
+                    console.log(ret.fields.geniusPaused);
+                    console.log(ret.id);
+                    //Visuals.update(ret.id, {})
+                    Settings.update({_id: ret.id}, {$set: {"geniusPaused": ret.fields.geniusPaused}});
+                }
+            }*/
+        }
+        //Visuals.update(ret);
+    },
+    'startCountdown': function(option) {
+        if(countdown.get()==0) {
+            countdown.start();
+        }else{
+            countdown.add(Settings.findOne({name: "Genius"}).geniusPauseTime-countdown.get());
+        }
+    },
+    'getCountdownMethod': function(argument) {
+        return countdown.get();
     }
 });

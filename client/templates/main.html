@@ -3,7 +3,8 @@
   <meta name="viewport" content="width=device-width, user-scalable=no">
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600' rel='stylesheet' type='text/css'>
   <link href='nouislider.css' rel='stylesheet' type='text/css'>
-
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="/font-awesome-4.6.3/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -11,6 +12,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script type='text/javascript' src='/tinycolorpicker.js'></script>
 <script type='text/javascript' src='/nouislider.js'></script>
+<script type='text/javascript' src='/jquery.touchSwipe.min.js'></script>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
 </body>
 
@@ -26,9 +30,9 @@
 
 <template name="settingsList">
   <ol class="settings">
-    <!--<li class="snap">
-        <span><img class="arrow" src="/right-arrow.png"></span>
-    </li>-->
+    <li class="snap">
+        <span class="swipe"><img class="arrow" src="/swipe-arrow.png"></span>
+    </li>
     {{#each settings}}
         {{#if display}}{{> setting}}{{/if}}
     {{/each}}
@@ -53,9 +57,18 @@
         <img class="icon" src="/power-button.png">
         Visualisation
     </div>-->
-    <ol>
-        <li class="genius_tab">
-            <span style="vertical-align: middle; font-size: 18px; float: left;">Genius-Mode ({{incompleteCount}})</span>
+    <ol style="margin-top: 0px;">
+        <li class="genius_tab {{#if isGeniusPaused}}geniusPaused{{/if}}">
+            {{#unless isGeniusActive}}<span style="vertical-align: middle; font-size: 18px; float: left;">Manual</span>{{else}}
+                {{#if isGeniusPaused}}
+                    {{#if checkedVisuals}}<span style="vertical-align: middle; font-size: 18px; float: left; color: #1a3443">Genius Paused</span>{{/if}}
+                {{else}}
+                {{#if checkedVisuals}}<span class="" style="vertical-align: middle; font-size: 18px; float: left;">Genius-Mode ({{incompleteCount}})</span>
+            {{else}}<span class="" style="vertical-align: middle; font-size: 18px; float: left; color: red;">Select Visuals</span>{{/if}}
+                {{/if}}
+
+            {{/unless}}
+
             <input type="checkbox" class="js-switch genius"/>
         </li>
         {{#each visuals}}
@@ -65,13 +78,18 @@
 </template>
 
 <template name="visual">
-    <li style="width: 15%; text-align: center;" class="vList">
-        <input type="checkbox" checked="{{checked}}" class="toggle-checked" />
+    {{#if isGeniusActive}}<li style="width: 15%; text-align: center; background-color: #FBFCFD;" class="vList">
+        <div class="checkbox_wrapper {{#unless isGeniusActive}}checkboxOpacity{{/unless}}">
+            <input class="toggle-checked" type="checkbox" checked="{{checked}}"/>
+            <label></label>
+        </div>
+    </li>{{/if}}
+    <li class="vActive vList {{#if isGeniusActive}}vListNameActive{{else}}vListName{{/if}} {{#if geniusActive}}geniusActive{{/if}} {{#if pausedActive}}active{{/if}}  {{#if active}}active{{/if}} visualName" style="text-align: left; border-right: #eee solid 1px;;">
+        <img style="height: 2.6em; margin: -15px 0px -10px 0px; border-radius: 27px; opacity: 1.0; margin-left: 10px;" src="{{img}}">
+        {{#if geniusActive}}<i class="fa fa-play" style="color: #8545e2;" aria-hidden="true"></i>{{/if}}
+        <span class="visualNameText">{{name}}</span>
     </li>
-    <li class="vList vListName {{#if active}}active{{/if}}" style="width: 70%; text-align: left; border-right: #eee solid 1px;">
-        <span class="name">{{name}}</span>
-    </li>
-    <a href="{{pathFor route='listPage'}}"><li class="vList" style="width: 15%; text-align: center;">
+    <a href="{{pathFor route='listPage'}}"><li class="vActive vList" style="width: 15%; text-align: center; background-color: #FBFCFD;">
         <img src="/right-arrow.png" class="arrow"/>
     </li></a>
 </template>
@@ -86,10 +104,10 @@
 
 <template name="listPage">
     <div>
-        <ol>
+        <ol style="margin-top: 0px;">
             <li class="genius_tab">
-                <a href="{{pathFor route='leaderboard'}}"><span style="float: left;"><img class="back" src="/back2.png"></span></a>
-                <a href="{{pathFor route='leaderboard'}}"><span style="vertical-align: middle; font-size: 18px; font-weight: 400; float: left;">Back</span></a>
+                <a class="backlink" href="{{pathFor route='leaderboard'}}"><span style="float: left;"><img class="back" src="/back2.png"></span></a>
+                <a class="backlink" href="{{pathFor route='leaderboard'}}"><span style="vertical-align: middle; font-size: 18px; font-weight: 400; float: left;">Back</span></a>
                 <span style="font-size: 18px; font-weight: 600; margin-left: -25px;">{{name}}</span>
                 <span style="float: right;"><img class="info" src="/info.png"></span>
             </li>
@@ -109,6 +127,20 @@
             </li>
 
         </ol>
+        <div class="infoOverlay">
+            <span style="font-size: 20px; font-weight: 300; float: left; padding-left: 10px; padding-top: 10px;">{{name}}</span>
+            <img class="close" src="/close.png">
+            <span style="font-size: 16px; font-weight: 300; float: left; padding-left: 10px; padding-right: 10px; padding-top: 10px; text-align: left;">{{description}}</span>
+            <ol class="colorNotation" style="padding-left: 5px; float: left; margin-bottom: 20px;">
+                {{#each colors}}
+                    <li style="border-bottom: none; padding: 0px 0px 2px 5px;">
+                        <div style="margin: 0px; width: 18px; height: 18px; -webkit-border-radius: 27px; -moz-border-radius: 27px; float: left; border-radius: 27px; box-shadow: 0px 0px 0px 1px #ccc;"></div>
+                        <span style="font-size: 14px; font-weight: 400; float: left; padding-left: 10px; text-align: left;">{{annotation}}</span>
+                        <br>
+                    </li>
+                {{/each}}
+            </ol>
+        </div>
         <div class="overlayBG" style="visibility: hidden;"></div>
     </div>
 </template>

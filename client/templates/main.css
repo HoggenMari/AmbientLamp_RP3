@@ -16,11 +16,16 @@ body {
   position: relative;
   text-align: center;
   padding-top: 1em;
+  height: 60px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  text-align: center;
+  z-index: 5;
 }
 
 .snap{
-  height:5px;
+  height:1px;
   font-size: 5px;
+  text-align: center;
 }
 
 .table_header {
@@ -30,7 +35,7 @@ body {
 .outer {
   margin: 0 auto;
   max-width: 480px;
-  background-color: #ebebeb;
+  background-color: #1a3443;
 }
 
 .logo {
@@ -51,6 +56,7 @@ body {
   text-indent: .3em;
   text-transform: uppercase;
   display: inline-block;
+  color: #ffffff;
 }
 
 .subtitle {
@@ -80,7 +86,7 @@ body {
     padding: 0px 10px;
     margin-top: 0px;
     margin-bottom: 0px;
-    background-color: #fdfbff;
+    background-color: #f4f6f7;
 }
 
 .settings {
@@ -95,7 +101,7 @@ body {
   padding: 0px 10px;
   margin-top: 0px;
   margin-bottom: -60px;
-  background-color: #fafafe;
+  background-color: #f4f6f7;
 }
 
 .visualList {
@@ -168,6 +174,7 @@ body {
   padding-left: 10px;
   font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 400;
+  color: #1a3443;
 }
 
 .icon {
@@ -184,11 +191,15 @@ body {
 }
 
 .genius_tab {
-  background-color: #f5f5f5;
+  background-color: #f4f6f7;
   height: 60px;
   padding: 15px;
   width: 100%;
   text-align: center;
+  color: #1a3443;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05), 0 4px 10px 0 rgba(0, 0, 0, 0.05);
+  border-bottom: none;
+  z-index: 4;
 }
 #over {
   background-color: Black;
@@ -309,13 +320,78 @@ li {
   padding:15px;
 }
 
+.settings li:first-child {
+  position: relative;
+  list-style: none;
+  border-bottom: none;
+  padding:0px;
+
+}
+
+
+
+
+.checkbox_wrapper{
+  position: relative;
+  height: 18px;
+  width: 18px;
+  margin-left: 15px;
+  padding-top: 15px;
+  padding-bottom: 7px;
+}
+
+input[type="checkbox"] {
+  opacity:0;
+  height: 18px;
+  width: 18px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+input[type="checkbox"] + label{
+  background:url('/checkbox.png') no-repeat;
+  background-size:contain;
+  height: 18px;
+  width: 18px;
+  display:inline-block;
+  padding: 0 0 0 0px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+input[type="checkbox"]:checked + label{
+  background:url('/checkbox_check.png') no-repeat;
+  background-size:contain;
+  height: 18px;
+  width: 18px;
+  display:inline-block;
+  padding: 0 0 0 0px;
+}
+
+.vListNameActive {
+  width: 70%;
+}
+
+.vListName{
+  width: 85%;
+}
+
+.snap{
+  font-size: 10px;
+  opacity: 0.5;
+}
+
 .vList {
   position: relative;
   list-style: none;
   border-bottom: #eee solid 1px;
   padding: 15px 0px 15px 0px;
   float: left;
-  width: 33%;
+
 }
 
 li .text {
@@ -327,9 +403,36 @@ li.checked {
 }
 
 li.active {
-  background-color: #e6e6e6;
+  background-color: #d2e3ea;
 }
 
+.visualName {
+  background-color: #f5f6f7;
+}
+
+.visualNameText {
+  font-size: 1em;
+  padding-left: 10px;
+  font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 900;
+  color: #1a3443;
+}
+
+li.geniusActive {
+}
+
+li.geniusActive .visualNameText {
+  color: #8545e2;
+  padding-left: 0px;
+}
+
+.geniusPaused .switchery {
+  opacity: 0.5;
+}
+
+.geniusActiveText {
+  opacity: 0.5;
+}
 li.checked .text {
   text-decoration: line-through;
 }
@@ -339,6 +442,9 @@ li.private {
   border-color: #ddd;
 }
 
+.checkboxOpacity {
+  opacity: 0.5;
+}
 
 .message {
   color: #aaa;
@@ -368,14 +474,30 @@ a:hover {
   margin:auto;
   background-color: #000;
   opacity:0.5;
-  z-index:2;
+  z-index:5;
   top:0;
   left:0;
+}
+
+.infoOverlay {
+  position: fixed;
+  z-index: 9999;
+  background-color: #ffffff;
+  top: 60px;
+  width: 450px;
+  margin-left: 15px;
+  box-shadow: 2px 2px 2px grey;
+  border-radius: 10px 10px 10px 10px;
+  -moz-border-radius: 10px 10px 10px 10px;
+  -webkit-border-radius: 10px 10px 10px 10px;
+  border: 0px solid #000000;
+  display: none;
 }
 
 @media (max-width: 500px) {
    .settings {
        width: 100%;
+     box-shadow: 0px 0px 8px 4px rgba(0, 0, 0, 0.05), 4px 2px 2px 0 rgba(0, 0, 0, 0.05);
    }
     
   .details, .message {
@@ -408,8 +530,22 @@ a:hover {
     z-index: 9999;
   }
 
-}
+  .infoOverlay {
+    position: fixed;
+    z-index: 9999;
+    background-color: #ffffff;
+    top: 20px;
+    width: 90%;
+    margin-left: 15px;
+    box-shadow: 2px 2px 2px grey;
+    border-radius: 10px 10px 10px 10px;
+    -moz-border-radius: 10px 10px 10px 10px;
+    -webkit-border-radius: 10px 10px 10px 10px;
+    border: 0px solid #000000;
+    display: none;
+  }
 
+}
 
 
 
@@ -462,4 +598,14 @@ a:hover {
   /* margin-right: 0.5em; */
   height: 1.25em;
   vertical-align: middle;
+}
+
+.close{
+  display: inline-block;
+  font-size: 1.25em;
+  font-weight: 300;
+  height: 1.25em;
+  vertical-align: middle;
+  font-size: 2em;
+  float: right;
 }

@@ -7,6 +7,11 @@
   var visualBol = false;
   var resultElement = document.getElementById('result'),
       sliders = document.getElementsByClassName('sliders');
+  var settingsUp = false;
+
+  Meteor.call('getCountdownMethod', "foo", function(error, result){
+      Session.set('myMethodResult', result);
+  });
 
   Router.configure({
     layoutTemplate: 'mainPage'
@@ -123,7 +128,18 @@
 
   Template.settingsList.rendered = function(){
     console.log("test");
-
+      /*$(".settings").swipe( {
+          //Generic swipe handler for all directions
+          swipe:function(event, direction, distance, duration, fingerCount, fingerData) {
+            //console.log("swipe test"+direction);
+              if(direction == "up"){
+                  console.log("swipe test"+direction);
+                  moveSettings();
+              }
+          },
+          //Default is 75px, set to 0 for demo so any distance triggers swipe
+          threshold:0
+      });*/
 
   };
 
@@ -137,7 +153,7 @@
     },
     display: function() {
       console.log(this.name);
-      if(this.name == "Brightness" || this.name == "Contrast") {
+      if(this.name == "Brightness" || this.name == "Saturation") {
           return true;
       }else{
           return false;
@@ -145,10 +161,51 @@
     }
   });
 
+  function moveSettings() {
+      var myElement = document.querySelector(".settings");
+      settingsUp = !settingsUp;
+      if(settingsUp) {
+          $(".settings").animate({
+              'marginBottom': '+=60px'
+          }, 250);
+      }else{
+          //myElement.style.marginBottom = "-60px";
+          $(".settings").animate({
+              'marginBottom': '-=60px'
+          }, 250);
+      }
+  }
+
   Template.settingsList.events({
     'click .inc': function () {
       Settings.update(Session.get("selectedSetting"), {$inc: {score: 5}});
-    }
+    },
+    'mousedown': function() {
+          //console.log("click snap");
+          moveSettings();
+      }
+
+
+      /*$("#test").swipe( {
+      //Generic swipe handler for all directions
+      swipe:function(event, direction, distance, duration, fingerCount, fingerData) {
+          $(this).text("You swiped " + direction );
+      },
+      //Default is 75px, set to 0 for demo so any distance triggers swipe
+      threshold:0
+      });*/
+
+      /*,
+      'touchend': function() {
+          console.log("click snap");
+          var myElement = document.querySelector(".settings");
+          if(settingsUp) {
+              myElement.style.marginBottom = "0px";
+          }else{
+              myElement.style.marginBottom = "-60px";
+          }
+          settingsUp = !settingsUp;
+      }*/
   });
 
   Template.setting.helpers({
@@ -168,7 +225,14 @@
     incompleteCount: function() {
       return Visuals.find({ checked: { $ne: false } }).count();
     },
-      geniusActive: function () {
+    checkedVisuals: function() {
+      if(Visuals.find({ checked: { $ne: false } }).count()>0){
+          return true;
+      }else{
+          return false;
+      }
+    },
+    geniusActive: function () {
       //return "checked";
       console.log("called");
       console.log(Settings.findOne({name: "Genius"}));
@@ -182,7 +246,24 @@
       //};
 
       //return "unchecked";
-    }
+    },
+    isGeniusPaused: function() {
+      return Settings.findOne({name: "Genius"}).geniusPaused;
+    },
+    isGeniusActive: function() {
+      return Settings.findOne({name: "Genius"}).geniusActive;
+    },
+    getCountdown: function() {
+        var cnt = Settings.findOne({name: "Genius"}).geniusPausedRemain;
+        if(cnt>0) {
+            return Settings.findOne({name: "Genius"}).geniusPausedRemain;
+        }else {
+            return "";
+        }
+    },
+      myHelper: function(){
+          return Session.get('myMethodResult'); // "bar"
+      }
   });
 
 
@@ -241,6 +322,9 @@
   Template.visual.helpers({
     selected: function () {
       return Session.equals("selectedSetting", this._id) ? "selected" : '';
+    },
+    isGeniusActive: function() {
+      return Settings.findOne({name: "Genius"}).geniusActive;
     }
   });
 
@@ -252,11 +336,47 @@
       console.log(this.checked);
       Meteor.call('visual.setChecked', this._id, !this.checked);
     },
-    'click .vListName': function() {
-      console.log("tester");
-      Meteor.call('visual.setActive', this._id, true);
+    'click .vActive': function() {
+      if(Settings.findOne({name: "Genius"}).geniusActive==false){
+        Meteor.call('visual.setActive', this._id, true);
+      }
+    },
+    'click a .vActive': function() {
+        //console.log("set setting");
+        //if(Settings.findOne({name: "Genius"}).geniusActive==true) {
+            Meteor.call('visual.setSetting', this._id, true);
+        //}
+    },
+    'touchstart .visualName': function () {
+      //alert("touchstart");
+      if(Settings.findOne({name: "Genius"}).geniusActive==true){
+          //Meteor.call('startCountdown');
+          //Meteor.call('visual.setActive', this._id, true);
+          Meteor.call('visual.setPaused', this._id, true);
+      }
+    },
+    'touchend .visualName': function () {
+      //alert("touchend");
+        if(Settings.findOne({name: "Genius"}).geniusActive==true){
+          //Meteor.call('startCountdown');
+          //Meteor.call('visual.finished', this._id, true);
+          Meteor.call('visual.finishPaused', this._id, true);
+        }
+    },
+    'mousedown .visualName': function () {
+        if(Settings.findOne({name: "Genius"}).geniusActive==true){
+                //Meteor.call('startCountdown');
+            Meteor.call('visual.setPaused', this._id, true);
+        }
+    },
+    'mouseup .visualName': function () {
+        if(Settings.findOne({name: "Genius"}).geniusActive==true){
+                //Meteor.call('startCountdown');
+            Meteor.call('visual.finishPaused', this._id, true);
+        }
     }
   });
+
 
   function increase(setting) {
     var count = Settings.findOne(setting, {fields: {score: 1} });
@@ -374,7 +494,8 @@
           picker = tinycolorpicker(this.firstNode);
           console.log("COL " + i + " " + counter + " " + cols.colors[counter].color);
           //var col1 = col.color;
-
+          console.log($(".colorNotation").children().get(counter));
+      $($($(".colorNotation").children().get(counter)).children().first()).css({"backgroundColor":col});
           picker.setColor(col);
       counter++;
 
@@ -417,7 +538,7 @@
       //console.log(sel);
 
       var color = $('input').get(index).getAttribute('value');
-      Meteor.call('update', currentID, index, color);
+      Meteor.call('updateColor', currentID, index, color);
       //Visuals.update({_id: currentID, "colors.index": index}, { $set: { "color.$.color": "#000000"}});
 
       /*var colsOldBuf = cols;
@@ -458,6 +579,27 @@
       'click .reset_tab': function() {
           console.log("reset");
           reset();
+      },
+      'click .info': function() {
+          console.log("info");
+          var myElement = document.querySelector(".infoOverlay");
+          myElement.style.display = "block";
+          var myElement2 = document.querySelector(".overlayBG");
+          myElement2.style.visibility = "visible";
+      },
+      'click .close': function() {
+          console.log("info");
+          var myElement = document.querySelector(".infoOverlay");
+          myElement.style.display = "none";
+          var myElement2 = document.querySelector(".overlayBG");
+          myElement2.style.visibility = "hidden";
+      },
+      'click a.backlink': function() {
+          //console.log("backlink");
+          //if(Settings.findOne({name: "Genius"}).geniusActive==true){
+              //Meteor.call('startCountdown');
+              Meteor.call('visual.finished', this._id, false);
+          //}
       }
   });
 
