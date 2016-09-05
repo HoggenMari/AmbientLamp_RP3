@@ -59,8 +59,13 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	int activeVisual = 0;
 
 	//GENIUS
+	boolean first = false;
 	boolean geniusMode = false;
+	boolean geniusFirst = true;
 	private boolean geniusPaused = false;
+	private boolean geniusPausedActive = false;
+	private boolean settingActive = false;
+	private boolean settingPausedActive = false;
 	int geniusModeTimer = 0;
 	boolean geniusModeTimerCalled = false;
 	int GENIUS_TIME = 10000;
@@ -179,10 +184,13 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		}
 		screen.send(9,8,0,0,0);
 		
-		if(frameCount % 500 == 0){			
+		if(frameCount % 1000 == 0){			
 			//{"msg":"changed","collection":"visuals","id":"RH8TD6zpG3p4ZgdcQ","fields":{"active":true}}
 			
-			if(geniusMode && !geniusPaused){
+			//System.out.println("Genius: "+geniusPaused+" "+geniusPausedActive+" "+settingActive);
+			
+			if(geniusMode && !geniusPaused && !settingActive){
+			//if(geniusMode && !geniusPaused & !geniusPausedActive){
 				for (Visual value : sensorData.getVisualList().values()) {
 					String id = value.getId();
 					if(value.getIndex()==geniusCounter){
@@ -221,8 +229,8 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		}*/
 		
 		if(frameCount%100==0){
-			System.out.println(frameRate);
-			System.out.println(saturation);
+			//System.out.println(frameRate);
+			//System.out.println(saturation);
 		}
 		
 	}
@@ -253,18 +261,49 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		// -------FADE
 		public PGraphics fade(PGraphics a, PGraphics b, float fade) { // 0 < fade <
 																		// 1
-			PGraphics c = createGraphics(17, 12, P2D);
-			c.beginDraw();
-			c.background(0);
-			c.noStroke();
-			c.fill(0, 255 * fade);
-			c.image(a, 0 + (int) (17 * fade), 0);
-			c.rect(0 + (int) (17 * fade),0, 17, 12);
-		    c.fill(0, 255 - 255 * fade);
-			c.image(b, -17 + (int) (17 * fade), 0);
-			c.rect(-17 + (int) (17 * fade),0, 17, 12);
-			c.endDraw();
-			return c;
+			//System.out.println("Genius: "+geniusPaused+" "+geniusPausedActive);
+			if(geniusPaused || geniusPausedActive || settingActive || settingPausedActive){
+				PGraphics c = createGraphics(17, 12, P2D);
+				c.beginDraw();
+				c.background(0);
+				c.noStroke();
+				//c.fill(0, 255 * fade);
+				c.image(a, 0, 0);
+				//c.rect(0, 0, 17, 12);
+				//c.fill(0, 255 - 255 * fade);
+				//c.tint(255, 255 * fade);
+				//c.image(b, 0, 0);
+				//c.noStroke();
+				for(int ix=0; ix<c.width; ix++){
+					for(int iy=0; iy<c.height; iy++){
+						int color = b.get(ix, iy);
+						int red = color >> 16 & 0xFF;
+						int green = color >> 8 & 0xFF;
+						int blue = color & 0xFF;
+						c.fill(red, green, blue, 255*fade*5);
+						c.rect(ix, iy, 1, 1);
+					}
+				}
+				//c.rect(0, 0, 17, 12);
+				c.endDraw();
+				if(fade>0.95){
+					geniusPausedActive = false;
+				}
+				return c;
+			}else{
+				PGraphics c = createGraphics(17, 12, P2D);
+				c.beginDraw();
+				c.background(0);
+				c.noStroke();
+				c.fill(0, 255 * fade);
+				c.image(a, 0 + (int) (17 * fade), 0);
+				c.rect(0 + (int) (17 * fade),0, 17, 12);
+				c.fill(0, 255 - 255 * fade);
+				c.image(b, -17 + (int) (17 * fade), 0);
+				c.rect(-17 + (int) (17 * fade),0, 17, 12);
+				c.endDraw();
+				return c;
+			}
 		}
 
 		// -------FADE
@@ -282,7 +321,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	
 	@Override
 	public void brightnessChanged(SensorEvent e) {
-		System.out.println("Brightness Changed");
+		//System.out.println("Brightness Changed");
 		brightness = (int)(255.0-e.getBrightness()*255);
 	}
 
@@ -311,25 +350,62 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		// TODO Auto-generated method stub
 		HashMap<String,Visual> vList = e.getVisualList();
 		if(e.getID()==VisualEvent.VISUAL_ACTIVE){
-		int i=0;
-		for (Visual value : vList.values()) {
-			System.out.println("ACTIVE: "+value);
-			if(value.isActive()){
-				System.out.println(value.getName());
-				activeVisual = value.getIndex();
-				next = value.getIndex();
-				fade = 0;
-				break;
+			//System.out.println("VISUAL ACTIVE");
+			for (Visual value : vList.values()) {
+				//System.out.println("ACTIVE: "+value);
+				if(value.isActive()){
+					//System.out.println(value.getName());
+					activeVisual = value.getIndex();
+					next = value.getIndex();
+					fade = 0;
+					break;
+				}
 			}
-			i++;
+		}else if(e.getID()==VisualEvent.VISUAL_PAUSEDACTIVE){
+			//System.out.println("VISUAL PAUSED");
+			for (Visual value : vList.values()) {
+				//System.out.println("ACTIVE: "+value);
+				if(value.isPausedActive()){
+					//System.out.println(value.getName());
+					activeVisual = value.getIndex();
+					next = value.getIndex();
+					fade = 0;
+					break;
+				}
+			}
+		}else if(e.getID()==VisualEvent.VISUAL_SETTINGACTIVE){
+			//System.out.println("VISUAL SETTING");
+			settingActive = false;
+			for (Visual value : vList.values()) {
+				//System.out.println("ACTIVE: "+value);
+				if(value.isSettingActive()){
+					//System.out.println(value.getName());
+					settingActive = true;
+					activeVisual = value.getIndex();
+					next = value.getIndex();
+					fade = 0;
+					break;
+				}
+			}
+			if(!settingActive){
+				//System.out.println("called genius event: "+geniusFirst+" "+geniusPausedActive);
+				for (Visual value : sensorData.getVisualList().values()) {
+					String id = value.getId();
+					if(value.getIndex()==geniusCounter){
+						String s = "{\"msg\":\"changed\", \"collection\":\"visuals\", \"id\":\""+id+"\", \"fields\":{\"geniusActive\":true}}";
+						client.call(s);
+					}else{
+						String s = "{\"msg\":\"changed\", \"collection\":\"visuals\", \"id\":\""+id+"\", \"fields\":{\"geniusActive\":false}}";
+						client.call(s);
+					}
+				}
+				settingPausedActive = true;
+				activeVisual = geniusCounter;
+				next = geniusCounter;
+				fade = 0;
+			};
 		}
-		if(geniusMode){
-			System.out.println("GeniusMode");
-			//geniusModeTimer = millis();
-			//geniusModeTimerCalled = false;
-		}
-		}
-		System.out.print(activeVisual);
+		//System.out.print(activeVisual);
 	}
 
 	@Override
@@ -337,7 +413,48 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		// TODO Auto-generated method stub
 		geniusMode = e.getGenius();
 		geniusPaused = e.getGeniusPaused();
-		if(geniusPaused==false){
+		if(e.getID()==GeniusEvent.GENIUS_MODE_CHANGED){
+			if(geniusMode){
+				geniusPausedActive = true;
+				//System.out.println("called genius event: "+geniusFirst+" "+geniusPausedActive);
+				for (Visual value : sensorData.getVisualList().values()) {
+					String id = value.getId();
+					if(value.getIndex()==geniusCounter){
+						String s = "{\"msg\":\"changed\", \"collection\":\"visuals\", \"id\":\""+id+"\", \"fields\":{\"geniusActive\":true}}";
+						client.call(s);
+					}else{
+						String s = "{\"msg\":\"changed\", \"collection\":\"visuals\", \"id\":\""+id+"\", \"fields\":{\"geniusActive\":false}}";
+						client.call(s);
+					}
+				}
+				activeVisual = geniusCounter;
+				next = geniusCounter;
+				fade = 0;
+			}
+		}else if(e.getID()==GeniusEvent.GENIUS_PAUSED_CHANGED){
+			//System.out.println("called genius event: "+geniusFirst);
+			if(geniusPaused==false && !geniusFirst){
+				geniusPausedActive = true;
+				//System.out.println("called genius event: "+geniusFirst+" "+geniusPausedActive);
+				for (Visual value : sensorData.getVisualList().values()) {
+					String id = value.getId();
+					if(value.getIndex()==geniusCounter){
+						String s = "{\"msg\":\"changed\", \"collection\":\"visuals\", \"id\":\""+id+"\", \"fields\":{\"geniusActive\":true}}";
+						client.call(s);
+					}else{
+						String s = "{\"msg\":\"changed\", \"collection\":\"visuals\", \"id\":\""+id+"\", \"fields\":{\"geniusActive\":false}}";
+						client.call(s);
+					}
+				}
+				activeVisual = geniusCounter;
+				next = geniusCounter;
+				fade = 0;
+			}
+			geniusFirst = false;
+		}
+		
+		/*if(geniusPaused==false || first){
+			geniusPausedActive = true;
 			for (Visual value : sensorData.getVisualList().values()) {
 				String id = value.getId();
 				if(value.getIndex()==geniusCounter){
@@ -352,13 +469,17 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 			next = geniusCounter;
 			fade = 0;
 		}
-		System.out.println("Genius"+e.getGenius()+"GeniusPaused"+e.getGeniusPaused());
+		if(geniusMode==false){
+			geniusPausedActive = false;
+		}
+		first = true;*/
+		//System.out.println("Genius"+e.getGenius()+"GeniusPaused"+e.getGeniusPaused());
 	}
 
 	@Override
 	public void saturationChanged(SensorEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println("Saturation Changed");
+		//System.out.println("Saturation Changed");
 		saturation = (int)(e.getSaturation()*255);
 	}
 }

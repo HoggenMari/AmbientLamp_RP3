@@ -8,12 +8,15 @@ public class GeniusEvent extends EventObject {
 	 */
 	private static final long serialVersionUID = 1L;
     public final static int GENIUS_MODE_CHANGED = 1001;
+    public final static int GENIUS_PAUSED_CHANGED = 1002;
 
+    protected int id;
     protected boolean genius;
     protected boolean geniusPaused;
 
-    public GeniusEvent(Object source, boolean genius, boolean geniusPaused) {
+    public GeniusEvent(Object source, int id, boolean genius, boolean geniusPaused) {
       super(source);
+      this.id = id;
       this.genius = genius;
       this.geniusPaused = geniusPaused;
     }
@@ -24,6 +27,10 @@ public class GeniusEvent extends EventObject {
     
     public boolean getGeniusPaused() {
     	return geniusPaused;
+    }
+
+    public int getID() {
+    	return id;
     }
     
   }

@@ -11,7 +11,7 @@ public class SensorData {
 	// private SensorEventMulticaster multicaster;
 	private float brightness, saturation, particles, speed;
 	private String brightnessID, saturationID;
-	private boolean genius, geniusPaused;
+	private boolean genius, geniusPaused, settingActive;
 	private String geniusID;
 	private int speedZ;
 	private float accX, accY, accZ;
@@ -355,7 +355,7 @@ public class SensorData {
 			if (listeners[i] == GeniusListener.class) {
 				((GeniusListener) listeners[i + 1])
 						.geniusModeChanged(new GeniusEvent(this,
-								genius, geniusPaused));
+								GeniusEvent.GENIUS_MODE_CHANGED, genius, geniusPaused));
 			}
 		}
 	}
@@ -410,7 +410,7 @@ public class SensorData {
 		for (int i = 0; i < listeners.length; i++) {
 			if (listeners[i] == GeniusListener.class) {
 				((GeniusListener) listeners[i + 1])
-						.geniusModeChanged(new GeniusEvent(this,
+						.geniusModeChanged(new GeniusEvent(this, GeniusEvent.GENIUS_PAUSED_CHANGED,
 								genius, geniusPaused));
 			}
 		}

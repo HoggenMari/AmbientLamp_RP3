@@ -17,6 +17,8 @@ public class VisualEvent extends EventObject {
 	public final static int VISUAL_GENIUSACTIVE = 10005;
 	public final static int VISUAL_NOTIFICATION = 10006;
 	public final static int VISUAL_CHECKED = 10007;
+	public final static int VISUAL_PAUSEDACTIVE = 1008;
+	public final static int VISUAL_SETTINGACTIVE = 1009;
 
 	
 	HashMap<String,Visual> visuals = new HashMap<String,Visual>();

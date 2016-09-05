@@ -66,6 +66,12 @@ public class DdpClientObserver implements Observer {
 						boolean geniusActive = fields.get("geniusActive").getAsBoolean();
 						//System.out.println(geniusActive);
 						
+						boolean pausedActive = fields.get("pausedActive").getAsBoolean();
+						//System.out.println(pausedActive);
+						
+						boolean settingActive = fields.get("settingActive").getAsBoolean();
+						//System.out.println(settingActive);
+						
 						JsonArray colors = fields.get("colors").getAsJsonArray();
 						//System.out.println(colors.size());
 						
@@ -78,15 +84,15 @@ public class DdpClientObserver implements Observer {
 						Visual visual;
 						if(fields.has("notification")){
 							boolean notification = fields.get("notification").getAsBoolean();
-							visual = new Visual(id, name, index, colorsAsString, checked, active, geniusActive, notification);
+							visual = new Visual(id, name, index, colorsAsString, checked, active, geniusActive, pausedActive, settingActive, notification);
 						}else{
-							visual = new Visual(id, name, index, colorsAsString, checked, active, geniusActive);
+							visual = new Visual(id, name, index, colorsAsString, checked, active, geniusActive, pausedActive, settingActive);
 						}
 						
 						sensorData.getVisualList().put(id, visual);
 
 						sensorData.setVisual(VisualEvent.VISUAL_CHANGED);
-						System.out.println("VISUAL"+sensorData.getVisualList().size());
+						//System.out.println("VISUAL"+sensorData.getVisualList().size());
 						
 					}else if(message.equals("changed")){
 						//System.out.println("changed");
@@ -127,7 +133,21 @@ public class DdpClientObserver implements Observer {
 							sensorData.getVisualList().get(id).setGeniusActive(geniusActive);
 							sensorData.setVisual(VisualEvent.VISUAL_GENIUSACTIVE);
 
-						} else if(fields.has("notification")){
+						}else if(fields.has("pausedActive")){
+							boolean pausedActive = fields.get("pausedActive").getAsBoolean();
+							//System.out.println("pausedActive: "+pausedActive);
+							
+							sensorData.getVisualList().get(id).setPausedActive(pausedActive);
+							sensorData.setVisual(VisualEvent.VISUAL_PAUSEDACTIVE);
+
+						}else if(fields.has("settingActive")){
+							boolean settingActive = fields.get("settingActive").getAsBoolean();
+							//System.out.println("Setting Active: "+settingActive);
+							
+							sensorData.getVisualList().get(id).setSettingActive(settingActive);
+							sensorData.setVisual(VisualEvent.VISUAL_SETTINGACTIVE);
+
+						}else if(fields.has("notification")){
 							boolean notification = fields.get("notification").getAsBoolean();
 							sensorData.getVisualList().get(id).setNotification(notification);
 							sensorData.setVisual(VisualEvent.VISUAL_NOTIFICATION);
@@ -148,18 +168,20 @@ public class DdpClientObserver implements Observer {
 							JsonObject fields = jsonObject.getAsJsonObject("fields");
 					
 							if(id.equals(sensorData.getBrightnessID())){
-								System.out.println(fields.get("score").getAsFloat());
+								//System.out.println(fields.get("score").getAsFloat());
 								sensorData.setBrightness((float)(fields.get("score").getAsFloat()/100.0));
 							}else if(id.equals(sensorData.getSaturationID())){
-								System.out.println(fields.get("score").getAsFloat());
+								//System.out.println(fields.get("score").getAsFloat());
 								sensorData.setSaturation((float)(fields.get("score").getAsFloat()/100.0));
 							}else if(id.equals(sensorData.getGeniusID())){
 								if(fields.has("geniusActive")){
-								System.out.println(fields.get("geniusActive").getAsBoolean());
+								//System.out.println(fields.get("geniusActive").getAsBoolean());
 								sensorData.setGenius(fields.get("geniusActive").getAsBoolean());
 								}else if(fields.has("geniusPaused")){
-								System.out.println(fields.get("geniusPaused").getAsBoolean());
+								//System.out.println(fields.get("geniusPaused").getAsBoolean());
 								sensorData.setGeniusPaused(fields.get("geniusPaused").getAsBoolean());	
+								}else if(fields.has("settingActive")){
+								//System.out.println(fields.get("settingActive").getAsBoolean());
 								}
 							}
 							
@@ -169,17 +191,17 @@ public class DdpClientObserver implements Observer {
 							String name = fields.get("name").getAsString();
 						
 							if(name.equals("Brightness")){
-								System.out.println("Brightness: "+id);
+								//System.out.println("Brightness: "+id);
 								sensorData.setBrightnessID(id);
 								sensorData.setBrightness((float)(fields.get("score").getAsFloat()/100.0));
 							}else if(name.equals("Saturation")){
-								System.out.println("Brightness: "+id);
+								//System.out.println("Brightness: "+id);
 								sensorData.setSaturationID(id);
 								sensorData.setSaturation((float)(fields.get("score").getAsFloat()/100.0));
 							}else if(name.equals("Genius")){
 								sensorData.setGeniusID(id);
 								sensorData.setGenius(fields.get("geniusActive").getAsBoolean());
-								sensorData.setGeniusPaused(fields.get("geniusPaused").getAsBoolean());	
+								sensorData.setGeniusPaused(fields.get("geniusPaused").getAsBoolean());
 							}
 						}
 					}

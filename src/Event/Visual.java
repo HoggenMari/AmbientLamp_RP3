@@ -11,9 +11,11 @@ public class Visual {
 	boolean checked;
 	boolean active;
 	boolean geniusActive;
+	boolean pausedActive;
+	boolean settingActive;
 	boolean notification;
 
-	public Visual(String id, String name, int index, String[] colors, boolean checked, boolean active, boolean geniusActive, boolean notification ){
+	public Visual(String id, String name, int index, String[] colors, boolean checked, boolean active, boolean geniusActive, boolean pausedActive, boolean settingActive, boolean notification ){
 		this.id = id;
 		this.name = name;
 		this.index = index;
@@ -21,10 +23,12 @@ public class Visual {
 		this.checked = checked;
 		this.active = active;
 		this.geniusActive = geniusActive;
+		this.pausedActive = pausedActive;
+		this.settingActive = settingActive;
 		this.notification = notification;
 	}
 	
-	public Visual(String id, String name, int index, String[] colors, boolean checked, boolean active, boolean geniusActive ){
+	public Visual(String id, String name, int index, String[] colors, boolean checked, boolean active, boolean geniusActive, boolean pausedActive, boolean settingActive){
 		this.id = id;
 		this.name = name;
 		this.index = index;
@@ -95,6 +99,22 @@ public class Visual {
 
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+	
+	public boolean isPausedActive() {
+		return pausedActive;
+	}
+
+	public void setPausedActive(boolean pausedActive) {
+		this.pausedActive = pausedActive;
+	}
+	
+	public boolean isSettingActive() {
+		return settingActive;
+	}
+
+	public void setSettingActive(boolean settingActive) {
+		this.settingActive = settingActive;
 	}
 	
 	public boolean isGeniusActive() {
