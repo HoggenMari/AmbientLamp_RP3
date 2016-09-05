@@ -3,7 +3,7 @@ var fs        = require('fs');
 var net       = require('net');
 var JSFtp     = require("jsftp");
 
-var countdown = new ReactiveCountdown(30, {
+/*var countdown = new ReactiveCountdown(30, {
 
     // Value substracted every tick from the current countdown value
     steps: 1,
@@ -23,7 +23,7 @@ var countdown = new ReactiveCountdown(30, {
         //Settings.update({name: "Genius"}, { $set: { geniusPausedRemain: 10 }});
     },
 
-});
+});*/
 
 Meteor.startup(function () {
     /*if (Players.find().count() === 0) {
@@ -235,14 +235,14 @@ Meteor.startup(function () {
     }
   });
 
-countdown.start(function() {
+/*countdown.start(function() {
 
     // do something when this is completed
     countdown.stop();
     Settings.update({name: "Genius"}, {$set: {"geniusPaused": false}});
     Visuals.update({}, { $set: { active: false } }, { multi: true });
     console.log("finished countdown");
-});
+});*/
 
 Meteor.methods({
     'visual.setChecked': function(visualId, setChecked) {
@@ -317,9 +317,9 @@ Meteor.methods({
     'genius': function(setting) {
         Settings.update({name: "Genius"}, { $set: { geniusActive: setting }});
         if(setting==false){
-            countdown.stop();
-            countdown.add(-countdown.get());
-            countdown.remove();
+            //countdown.stop();
+            //countdown.add(-countdown.get());
+            //countdown.remove();
             Settings.update({name: "Genius"}, { $set: { geniusPaused: false }});
             var visualActive = Visuals.findOne({ geniusActive: true });
             console.log("visualActive");
@@ -355,13 +355,13 @@ Meteor.methods({
         //Visuals.update(ret);
     },
     'startCountdown': function(option) {
-        if(countdown.get()==0) {
+        /*if(countdown.get()==0) {
             countdown.start();
         }else{
             countdown.add(Settings.findOne({name: "Genius"}).geniusPauseTime-countdown.get());
-        }
+        }*/
     },
     'getCountdownMethod': function(argument) {
-        return countdown.get();
+        //return countdown.get();
     }
 });
