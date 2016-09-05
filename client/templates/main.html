@@ -4,7 +4,7 @@
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600' rel='stylesheet' type='text/css'>
   <link href='nouislider.css' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-
+    <link rel="stylesheet" href="/font-awesome-4.6.3/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -61,7 +61,7 @@
         <li class="genius_tab {{#if isGeniusPaused}}geniusPaused{{/if}}">
             {{#unless isGeniusActive}}<span style="vertical-align: middle; font-size: 18px; float: left;">Manual</span>{{else}}
                 {{#if isGeniusPaused}}
-                    {{#if checkedVisuals}}<span style="vertical-align: middle; font-size: 18px; float: left; color: #1a3443">Genius Paused for {{getCountdown}} sec.</span>{{/if}}
+                    {{#if checkedVisuals}}<span style="vertical-align: middle; font-size: 18px; float: left; color: #1a3443">Genius Paused</span>{{/if}}
                 {{else}}
                 {{#if checkedVisuals}}<span class="" style="vertical-align: middle; font-size: 18px; float: left;">Genius-Mode ({{incompleteCount}})</span>
             {{else}}<span class="" style="vertical-align: middle; font-size: 18px; float: left; color: red;">Select Visuals</span>{{/if}}
@@ -84,8 +84,9 @@
             <label></label>
         </div>
     </li>{{/if}}
-    <li class="vActive vList {{#if isGeniusActive}}vListNameActive{{else}}vListName{{/if}} {{#if geniusActive}}geniusActive{{/if}} {{#if active}}active{{/if}} visualName" style="text-align: left; border-right: #eee solid 1px;;">
+    <li class="vActive vList {{#if isGeniusActive}}vListNameActive{{else}}vListName{{/if}} {{#if geniusActive}}geniusActive{{/if}} {{#if pausedActive}}active{{/if}}  {{#if active}}active{{/if}} visualName" style="text-align: left; border-right: #eee solid 1px;;">
         <img style="height: 2.6em; margin: -15px 0px -10px 0px; border-radius: 27px; opacity: 1.0; margin-left: 10px;" src="{{img}}">
+        {{#if geniusActive}}<i class="fa fa-play" style="color: #8545e2;" aria-hidden="true"></i>{{/if}}
         <span class="visualNameText">{{name}}</span>
     </li>
     <a href="{{pathFor route='listPage'}}"><li class="vActive vList" style="width: 15%; text-align: center; background-color: #FBFCFD;">
@@ -105,8 +106,8 @@
     <div>
         <ol style="margin-top: 0px;">
             <li class="genius_tab">
-                <a href="{{pathFor route='leaderboard'}}"><span style="float: left;"><img class="back" src="/back2.png"></span></a>
-                <a href="{{pathFor route='leaderboard'}}"><span style="vertical-align: middle; font-size: 18px; font-weight: 400; float: left;">Back</span></a>
+                <a class="backlink" href="{{pathFor route='leaderboard'}}"><span style="float: left;"><img class="back" src="/back2.png"></span></a>
+                <a class="backlink" href="{{pathFor route='leaderboard'}}"><span style="vertical-align: middle; font-size: 18px; font-weight: 400; float: left;">Back</span></a>
                 <span style="font-size: 18px; font-weight: 600; margin-left: -25px;">{{name}}</span>
                 <span style="float: right;"><img class="info" src="/info.png"></span>
             </li>

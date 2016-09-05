@@ -13,13 +13,13 @@ var countdown = new ReactiveCountdown(30, {
 
     // Callback: Tick, called on every interval
     tick: function() {
-        console.log("tick");
+        //console.log("tick");
         Settings.update({name: "Genius"}, { $set: { geniusPausedRemain: countdown.get() }});
     },
 
     // Callback: Complete, called when the countdown has reached 0
     completed: function() {
-        console.log("finished");
+        //console.log("finished");
         //Settings.update({name: "Genius"}, { $set: { geniusPausedRemain: 10 }});
     },
 
@@ -251,11 +251,36 @@ Meteor.methods({
     },
     'visual.setActive': function(visualId, setActive) {
         const visual = Visuals.findOne(visualId);
-        Visuals.update({}, { $set: { active: false } }, { multi: true })
-        Visuals.update(visualId, { $set: { active: setActive } });
         if(Settings.findOne({name: "Genius"}).geniusActive==true){
             Settings.update({name: "Genius"}, { $set: { geniusPaused: true }});
         }
+        Visuals.update({}, { $set: { active: false } }, { multi: true })
+        Visuals.update({}, { $set: { geniusActive: false } }, { multi: true });
+        Visuals.update(visualId, { $set: { active: setActive } });
+    },
+    'visual.setPaused': function(visualId, setActive) {
+        console.log("setpaused");
+        if(Settings.findOne({name: "Genius"}).geniusActive==true){
+          Settings.update({name: "Genius"}, { $set: { geniusPaused: true }});
+          Visuals.update(visualId, { $set: { pausedActive: true } });
+        }
+    },
+    'visual.finishPaused': function(visualId, setActive) {
+        console.log("finishPaused");
+        if(Settings.findOne({name: "Genius"}).geniusActive==true){
+          Visuals.update(visualId, { $set: { pausedActive: false } });
+          Settings.update({name: "Genius"}, { $set: { geniusPaused: false }});
+        }
+    },
+    'visual.setSetting': function(visualId, setActive) {
+        const visual = Visuals.findOne(visualId);
+        //Visuals.update({}, { $set: { active: false } }, { multi: true })
+        //Visuals.update({}, { $set: { settingActive: false } }, { multi: true });
+        Visuals.update(visualId, { $set: { settingActive: setActive } });
+    },
+    'visual.finished': function() {
+        Visuals.update({}, { $set: { settingActive: false } }, { multi: true });
+        //Settings.update({name: "Genius"}, {$set: {"geniusPaused": false}});
     },
     'notification.setChecked': function(visualId, setChecked) {
         console.log("notification setChecked");
@@ -330,7 +355,6 @@ Meteor.methods({
         //Visuals.update(ret);
     },
     'startCountdown': function(option) {
-        Visuals.update({}, { $set: { geniusActive: false } }, { multi: true });
         if(countdown.get()==0) {
             countdown.start();
         }else{

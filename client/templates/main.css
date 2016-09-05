@@ -423,10 +423,11 @@ li.geniusActive {
 
 li.geniusActive .visualNameText {
   color: #8545e2;
+  padding-left: 0px;
 }
 
-.geniusPaused {
-  opacity: 1.0;
+.geniusPaused .switchery {
+  opacity: 0.5;
 }
 
 .geniusActiveText {

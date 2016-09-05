@@ -337,12 +337,43 @@
       Meteor.call('visual.setChecked', this._id, !this.checked);
     },
     'click .vActive': function() {
-      console.log("tester");
-      if(Settings.findOne({name: "Genius"}).geniusActive==true){
-          Meteor.call('startCountdown');
+      if(Settings.findOne({name: "Genius"}).geniusActive==false){
+        Meteor.call('visual.setActive', this._id, true);
       }
-      Meteor.call('visual.setActive', this._id, true);
-
+    },
+    'click a .vActive': function() {
+        //console.log("set setting");
+        //if(Settings.findOne({name: "Genius"}).geniusActive==true) {
+            Meteor.call('visual.setSetting', this._id, true);
+        //}
+    },
+    'touchstart .visualName': function () {
+      //alert("touchstart");
+      if(Settings.findOne({name: "Genius"}).geniusActive==true){
+          //Meteor.call('startCountdown');
+          //Meteor.call('visual.setActive', this._id, true);
+          Meteor.call('visual.setPaused', this._id, true);
+      }
+    },
+    'touchend .visualName': function () {
+      //alert("touchend");
+        if(Settings.findOne({name: "Genius"}).geniusActive==true){
+          //Meteor.call('startCountdown');
+          //Meteor.call('visual.finished', this._id, true);
+          Meteor.call('visual.finishPaused', this._id, true);
+        }
+    },
+    'mousedown .visualName': function () {
+        if(Settings.findOne({name: "Genius"}).geniusActive==true){
+                //Meteor.call('startCountdown');
+            Meteor.call('visual.setPaused', this._id, true);
+        }
+    },
+    'mouseup .visualName': function () {
+        if(Settings.findOne({name: "Genius"}).geniusActive==true){
+                //Meteor.call('startCountdown');
+            Meteor.call('visual.finishPaused', this._id, true);
+        }
     }
   });
 
@@ -562,6 +593,13 @@
           myElement.style.display = "none";
           var myElement2 = document.querySelector(".overlayBG");
           myElement2.style.visibility = "hidden";
+      },
+      'click a.backlink': function() {
+          //console.log("backlink");
+          //if(Settings.findOne({name: "Genius"}).geniusActive==true){
+              //Meteor.call('startCountdown');
+              Meteor.call('visual.finished', this._id, false);
+          //}
       }
   });
 

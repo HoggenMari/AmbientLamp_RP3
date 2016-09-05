@@ -16,6 +16,8 @@
       "checked" : false,
       "active" : true,
       "geniusActive" : false,
+      "pausedActive" : false,
+      "settingActive" : false,
       "notification" : true
     },
     {
@@ -33,7 +35,9 @@
       ],
       "checked" : false,
       "active" : false,
-      "geniusActive" : false
+      "geniusActive" : false,
+      "pausedActive" : false,
+      "settingActive" : false
     },
     {
       "_id" : "hDPiBv93PtjtMRGyQ",
@@ -47,7 +51,9 @@
       ],
       "checked" : false,
       "active" : false,
-      "geniusActive" : false
+      "geniusActive" : false,
+      "pausedActive" : false,
+      "settingActive" : false
     },
     {
       "_id" : "Zb8FDDLizNFNzBtaL",
@@ -62,7 +68,9 @@
       ],
       "checked" : false,
       "active" : false,
-      "geniusActive" : false
+      "geniusActive" : false,
+      "pausedActive" : false,
+      "settingActive" : false
     }
 
   ]
