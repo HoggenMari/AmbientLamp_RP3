@@ -327,7 +327,7 @@ public class SensorData {
 	
 	public void setVisual(int id) {
 		Object[] listeners = listenerList.getListenerList();
-		System.out.println("Set Visual");
+		//System.out.println("Set Visual");
 		
 		// System.out.println("Brightness"+listeners.length);
 

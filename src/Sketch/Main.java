@@ -70,12 +70,13 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	boolean geniusModeTimerCalled = false;
 	int GENIUS_TIME = 10000;
 	int geniusActiveVisual = 0;
-	int geniusCounter = 0;
+	private int geniusCtr = 0;
 	
 	// -------FADE
 	float fade = 1;
 	int next = 0;
 	int active = 0;
+	private int activeManual;
 	// -------FADE
 	
 	public static void main(final String... args){
@@ -124,9 +125,13 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	
 	public void draw() {
 		
+		if(frameCount%200==0){
+			System.out.println("active:"+active+" next:"+next+" geniusCtr:"+geniusCtr);
+		}
+		
 		// -------FADE
 		if (fade < 1 && next != active) {
-			fade += 0.01f;
+			fade += 0.02f;
 			canvasFade = fade(drawMode(active), drawMode(next), fade);
 			// System.out.println("Fade: " + fade);
 		} else {
@@ -184,16 +189,29 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		}
 		screen.send(9,8,0,0,0);
 		
-		if(frameCount % 1000 == 0){			
+		if(frameCount % 1000 == 0){	
+			
+			System.out.println("FRAMECOUNT: "+geniusCtr);
 			//{"msg":"changed","collection":"visuals","id":"RH8TD6zpG3p4ZgdcQ","fields":{"active":true}}
 			
 			//System.out.println("Genius: "+geniusPaused+" "+geniusPausedActive+" "+settingActive);
 			
 			if(geniusMode && !geniusPaused && !settingActive){
+				
+				if(geniusCtr<3){
+					geniusCtr++;
+				}else{
+					geniusCtr = 0;
+				}
+				
+				activeVisual = geniusCtr;
+				next = geniusCtr;
+				fade = 0;
+				
 			//if(geniusMode && !geniusPaused & !geniusPausedActive){
 				for (Visual value : sensorData.getVisualList().values()) {
 					String id = value.getId();
-					if(value.getIndex()==geniusCounter){
+					if(value.getIndex()==geniusCtr){
 						String s = "{\"msg\":\"changed\", \"collection\":\"visuals\", \"id\":\""+id+"\", \"fields\":{\"geniusActive\":true}}";
 						client.call(s);
 					}else{
@@ -205,15 +223,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 			//String s = new String("{\"msg\":\"changed\", \"collection\":\"visuals\", \"id\":\"RH8TD6zpG3p4ZgdcQ\", \"fields\":{\"geniusActive\":\"false\"}}");
 			//String s = new String("{\"id\":\"RH8TD6zpG3p4ZgdcQ\", \"fields\":{\"geniusActive\":\"false\"}}");
 			//client.call(s);
-				activeVisual = geniusCounter;
-				next = geniusCounter;
-				fade = 0;
 				
-				if(geniusCounter<3){
-					geniusCounter++;
-				}else{
-					geniusCounter = 0;
-				}
 
 			}
 		}
@@ -244,7 +254,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	public PGraphics drawMode(int mode) {
 		switch (mode) {
 		case 0:
-			return downscale(voltage.draw(), 1);
+			return downscale(voltage.draw(), 2);
 		case 1:
 			return text.draw();
 		case 2:
@@ -262,7 +272,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		public PGraphics fade(PGraphics a, PGraphics b, float fade) { // 0 < fade <
 																		// 1
 			//System.out.println("Genius: "+geniusPaused+" "+geniusPausedActive);
-			if(geniusPaused || geniusPausedActive || settingActive || settingPausedActive){
+			if(geniusPaused || settingActive || settingPausedActive){ //|| geniusPausedActive || settingActive || settingPausedActive){
 				PGraphics c = createGraphics(17, 12, P2D);
 				c.beginDraw();
 				c.background(0);
@@ -280,15 +290,15 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 						int red = color >> 16 & 0xFF;
 						int green = color >> 8 & 0xFF;
 						int blue = color & 0xFF;
-						c.fill(red, green, blue, 255*fade*5);
+						c.fill(red, green, blue, 255*fade);
 						c.rect(ix, iy, 1, 1);
 					}
 				}
 				//c.rect(0, 0, 17, 12);
 				c.endDraw();
-				if(fade>0.95){
-					geniusPausedActive = false;
-				}
+				//if(fade>0.95){
+				//	geniusPausedActive = false;
+				//}
 				return c;
 			}else{
 				PGraphics c = createGraphics(17, 12, P2D);
@@ -350,11 +360,12 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		// TODO Auto-generated method stub
 		HashMap<String,Visual> vList = e.getVisualList();
 		if(e.getID()==VisualEvent.VISUAL_ACTIVE){
-			//System.out.println("VISUAL ACTIVE");
+			System.out.println("VISUAL ACTIVE");
 			for (Visual value : vList.values()) {
-				//System.out.println("ACTIVE: "+value);
+				System.out.println("ACTIVE: "+value);
 				if(value.isActive()){
-					//System.out.println(value.getName());
+					System.out.println(value.getName());
+					activeManual = value.getIndex();
 					activeVisual = value.getIndex();
 					next = value.getIndex();
 					fade = 0;
@@ -362,24 +373,33 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 				}
 			}
 		}else if(e.getID()==VisualEvent.VISUAL_PAUSEDACTIVE){
-			//System.out.println("VISUAL PAUSED");
+			System.out.println("GeniusCtr: "+geniusCtr);
+			System.out.println("VISUAL PAUSED");
+			geniusPaused = false;
 			for (Visual value : vList.values()) {
-				//System.out.println("ACTIVE: "+value);
+				System.out.println("PAUSED: "+value);
 				if(value.isPausedActive()){
-					//System.out.println(value.getName());
+					System.out.println(value.getName());
+					geniusPaused = true;
 					activeVisual = value.getIndex();
 					next = value.getIndex();
 					fade = 0;
 					break;
 				}
 			}
+			if(!geniusPaused){
+				activeVisual = geniusCtr;
+				next = geniusCtr;
+				fade = 0;	
+				System.out.println("GeniusCtr: "+geniusCtr);
+			}
 		}else if(e.getID()==VisualEvent.VISUAL_SETTINGACTIVE){
-			//System.out.println("VISUAL SETTING");
+			System.out.println("VISUAL SETTING");
 			settingActive = false;
 			for (Visual value : vList.values()) {
-				//System.out.println("ACTIVE: "+value);
+				System.out.println("SETTINGACTIVE: "+value);
 				if(value.isSettingActive()){
-					//System.out.println(value.getName());
+					System.out.println(value.getName());
 					settingActive = true;
 					activeVisual = value.getIndex();
 					next = value.getIndex();
@@ -389,20 +409,27 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 			}
 			if(!settingActive){
 				//System.out.println("called genius event: "+geniusFirst+" "+geniusPausedActive);
-				for (Visual value : sensorData.getVisualList().values()) {
+				/*for (Visual value : sensorData.getVisualList().values()) {
 					String id = value.getId();
-					if(value.getIndex()==geniusCounter){
+					if(value.getIndex()==geniusCtr){
 						String s = "{\"msg\":\"changed\", \"collection\":\"visuals\", \"id\":\""+id+"\", \"fields\":{\"geniusActive\":true}}";
 						client.call(s);
 					}else{
 						String s = "{\"msg\":\"changed\", \"collection\":\"visuals\", \"id\":\""+id+"\", \"fields\":{\"geniusActive\":false}}";
 						client.call(s);
 					}
+				}*/
+				if(geniusMode){
+					settingPausedActive = true;
+					activeVisual = geniusCtr;
+					next = geniusCtr;
+					fade = 0;
+				}else{
+					settingPausedActive = true;
+					activeVisual = activeManual;
+					next = activeManual;
+					fade = 0;	
 				}
-				settingPausedActive = true;
-				activeVisual = geniusCounter;
-				next = geniusCounter;
-				fade = 0;
 			};
 		}
 		//System.out.print(activeVisual);
@@ -419,7 +446,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 				//System.out.println("called genius event: "+geniusFirst+" "+geniusPausedActive);
 				for (Visual value : sensorData.getVisualList().values()) {
 					String id = value.getId();
-					if(value.getIndex()==geniusCounter){
+					if(value.getIndex()==geniusCtr){
 						String s = "{\"msg\":\"changed\", \"collection\":\"visuals\", \"id\":\""+id+"\", \"fields\":{\"geniusActive\":true}}";
 						client.call(s);
 					}else{
@@ -427,13 +454,13 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 						client.call(s);
 					}
 				}
-				activeVisual = geniusCounter;
-				next = geniusCounter;
+				activeVisual = geniusCtr;
+				next = geniusCtr;
 				fade = 0;
 			}
 		}else if(e.getID()==GeniusEvent.GENIUS_PAUSED_CHANGED){
 			//System.out.println("called genius event: "+geniusFirst);
-			if(geniusPaused==false && !geniusFirst){
+			/*if(geniusPaused==false && !geniusFirst){
 				geniusPausedActive = true;
 				//System.out.println("called genius event: "+geniusFirst+" "+geniusPausedActive);
 				for (Visual value : sensorData.getVisualList().values()) {
@@ -446,11 +473,12 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 						client.call(s);
 					}
 				}
+				System.out.println("Genius-Counter: "+geniusCounter);
 				activeVisual = geniusCounter;
 				next = geniusCounter;
 				fade = 0;
 			}
-			geniusFirst = false;
+			geniusFirst = false;*/
 		}
 		
 		/*if(geniusPaused==false || first){
