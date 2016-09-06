@@ -59,16 +59,7 @@
     </div>-->
     <ol style="margin-top: 0px;">
         <li class="genius_tab {{#if isGeniusPaused}}geniusPaused{{/if}}">
-            {{#unless isGeniusActive}}<span style="vertical-align: middle; font-size: 18px; float: left;">Manual</span>{{else}}
-                {{#if isGeniusPaused}}
-                    {{#if checkedVisuals}}<span style="vertical-align: middle; font-size: 18px; float: left; color: #1a3443">Genius Paused</span>{{/if}}
-                {{else}}
-                {{#if checkedVisuals}}<span class="" style="vertical-align: middle; font-size: 18px; float: left;">Genius-Mode ({{incompleteCount}})</span>
-            {{else}}<span class="" style="vertical-align: middle; font-size: 18px; float: left; color: red;">Select Visuals</span>{{/if}}
-                {{/if}}
-
-            {{/unless}}
-
+            <span style="vertical-align: middle; font-size: 18px; float: left;">Autoplay</span>
             <input type="checkbox" class="js-switch genius"/>
         </li>
         {{#each visuals}}
@@ -78,12 +69,12 @@
 </template>
 
 <template name="visual">
-    {{#if isGeniusActive}}<li style="width: 15%; text-align: center; background-color: #FBFCFD;" class="vList">
+    <!--{{#if isGeniusActive}}<li style="width: 15%; text-align: center; background-color: #FBFCFD;" class="vList">
         <div class="checkbox_wrapper {{#unless isGeniusActive}}checkboxOpacity{{/unless}}">
             <input class="toggle-checked" type="checkbox" checked="{{checked}}"/>
             <label></label>
         </div>
-    </li>{{/if}}
+    </li>{{/if}}-->
     <li class="vActive vList {{#if isGeniusActive}}vListNameActive{{else}}vListName{{/if}} {{#if geniusActive}}geniusActive{{/if}} {{#if pausedActive}}active{{/if}}  {{#if active}}active{{/if}} visualName" style="text-align: left; border-right: #eee solid 1px;;">
         <img style="height: 2.6em; margin: -15px 0px -10px 0px; border-radius: 27px; opacity: 1.0; margin-left: 10px;" src="{{img}}">
         {{#if geniusActive}}<i class="fa fa-play" style="color: #8545e2;" aria-hidden="true"></i>{{/if}}

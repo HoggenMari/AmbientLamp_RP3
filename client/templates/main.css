@@ -373,7 +373,8 @@ input[type="checkbox"]:checked + label{
 }
 
 .vListNameActive {
-  width: 70%;
+  width: 85%;
+  opacity: 0.2;
 }
 
 .vListName{
@@ -419,6 +420,8 @@ li.active {
 }
 
 li.geniusActive {
+  opacity: 1.0;
+  background-color: rgba(48, 34, 168, 0.1);
 }
 
 li.geniusActive .visualNameText {
