@@ -26,7 +26,9 @@ public class DDPClient implements Observer {
 	
 	private String meteorIp;
 	private int meteorPort;
+	private boolean added;
 	DdpClient ddp = null;
+	
 
 	public DDPClient(String meteorIp, int meteorPort){
 		
@@ -123,6 +125,7 @@ public class DDPClient implements Observer {
 					
 					if(message.equals("added")){
 						//System.out.println("added");
+						setAdded(true);
 						
 						JsonObject fields = jsonObject.getAsJsonObject("fields");
 						//System.out.println(fields);
@@ -283,5 +286,15 @@ public class DDPClient implements Observer {
 				}
 			}
 		}	
+	}
+
+	
+
+	public void setAdded(boolean added) {
+		this.added = added;
+	}
+
+	public boolean isAdded() {
+		return added;
 	}
 }

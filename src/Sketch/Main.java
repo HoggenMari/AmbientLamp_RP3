@@ -79,6 +79,8 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	private int activeManual;
 	// -------FADE
 	
+	int load = 0;
+	
 	public static void main(final String... args){
     	
 		PApplet.main(new String[] { "--present", "Sketch.Main" });
@@ -124,7 +126,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	}
 	
 	public void draw() {
-		
+				
 		if(frameCount%200==0){
 			System.out.println("active:"+active+" next:"+next+" geniusCtr:"+geniusCtr);
 		}
@@ -182,6 +184,22 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 			currentSaturation--;
 		}
 		
+		if(!client.isAdded()){
+			pSend.beginDraw();
+			pSend.background(0);
+			pSend.fill(0,255,255);
+			pSend.noStroke();
+			pSend.rect(load, 11, 1, 1);
+			pSend.endDraw();
+			if(frameCount%10==0){
+				if(load<17){
+					load++;
+				}else{
+					load=0;
+				}
+			}	
+		}
+
 		
 		screen.addLayer(pSend);
 		if (frameCount % 1 == 0) {
