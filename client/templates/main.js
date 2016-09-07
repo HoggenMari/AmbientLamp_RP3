@@ -1,4 +1,5 @@
-  var timeout;
+
+var timeout;
   var clicker = 'mousedown';
   clicker = ('ontouchstart' in document.documentElement) ? 'touchstart' : 'mousedown';
   var counter = 0;
@@ -92,6 +93,12 @@
       resultElement.style.background = color;
       resultElement.style.color = color;
   }
+
+  Template.header.helpers({
+      connected: function () {
+          return Meteor.status().connected;
+      }
+  });
 
   Template.header.rendered = function (){
 

@@ -509,6 +509,20 @@ a:hover {
   display: none;
 }
 
+.notification {
+  position: fixed;
+  color: red;
+  display: block;
+  z-index: 10;
+  background-color: #efd0d0;
+  width: 480px;
+  padding: 10px;
+  opacity: 0.9;
+  margin-top: 5px;
+  border: #f00 solid 1px;
+}
+
+
 @media (max-width: 500px) {
    .settings {
        width: 100%;
@@ -559,6 +573,20 @@ a:hover {
     border: 0px solid #000000;
     display: none;
   }
+
+  .notification {
+    position: fixed;
+    color: red;
+    display: block;
+    z-index: 10;
+    background-color: #efd0d0;
+    width: 100%;
+    padding: 10px;
+    opacity: 0.9;
+    margin-top: -5px;
+    border: #f00 solid 1px;
+  }
+
 
 }
 
@@ -802,7 +830,6 @@ a:hover {
 [disabled] .noUi-handle {
   cursor: not-allowed;
 }
-
 
 
 

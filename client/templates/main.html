@@ -27,6 +27,16 @@
         <img id="source" src="/text-color4.png"
              width="150" height="150">
     </div>
+    {{#unless connected}}
+        <div class="notifications">
+            <div class="notification">
+                <span class="icon-sync"></span>
+                <div class="meta">
+                    <div class="description">There seems to be a connection issue. Please reload page and check if you are connected with your home wifi.</div>
+                </div>
+            </div>
+        </div>
+    {{/unless}}
 </template>
 
 <template name="settingsList">
