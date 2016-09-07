@@ -81,7 +81,7 @@
         {{#if geniusActive}}<i class="fa fa-play" style="color: #8545e2;" aria-hidden="true"></i>{{/if}}
         <span class="visualNameText">{{name}}</span>
     </li>
-    <a href="{{pathFor route='listPage'}}"><li class="vActive vList" style="width: 15%; text-align: center; background-color: #FBFCFD;">
+    <a href="{{pathFor route='listPage'}}"><li class="tab vActive vList" style="width: 15%; text-align: center;">
         <img src="/right-arrow.png" class="arrow"/>
     </li></a>
 </template>
@@ -115,7 +115,7 @@
                 {{> notification}}
             {{/if}}
             <li class="reset_tab">
-                <div style="font-size: 1.2em; font-weight: 400; float: left">Reset to default</div>
+                <div style="font-size: 1.2em; font-weight: 400; float: left; color: rgba(75, 151, 195, 0.77);">Reset to default</div>
             </li>
 
         </ol>

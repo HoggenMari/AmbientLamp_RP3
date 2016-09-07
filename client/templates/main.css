@@ -305,6 +305,18 @@ ol {
   height: 60px;
 }
 
+.reset_tab:active {
+  background-color: #f4f6f7;
+}
+
+.tab{
+  background-color: #FBFCFD;
+}
+
+.tab:active {
+  background-color: #f5f6f7;
+}
+
 .notification_tab {
   height: 60px;
 }
