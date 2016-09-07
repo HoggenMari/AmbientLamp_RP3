@@ -1087,72 +1087,70 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 			//System.out.println("Test Concurrent HashMap");
 			
 			JsonObject jsonObject = requestData("/live_site_data/"+Integer.toString(site_id)+"?last_hour=true&last_sync=false");
-			JsonArray getArray = jsonObject.getAsJsonArray("data");
+			
+			if(jsonObject != null){
+				JsonArray getArray = jsonObject.getAsJsonArray("data");
 		
-			Gson gson = new Gson();
-			live_site_data_map = new ConcurrentHashMap<String,LiveSiteDataEntry>();
+				Gson gson = new Gson();
+				live_site_data_map = new ConcurrentHashMap<String,LiveSiteDataEntry>();
         
-			for(int i=0; i<getArray.size(); i++){
-				live_site_data_map.put(gson.fromJson(getArray.get(i), LiveSiteDataEntry.class).t_stamp, gson.fromJson(getArray.get(i), LiveSiteDataEntry.class));
-			}
-			
-			Map<String, LiveSiteDataEntry> sortedMap = new TreeMap<String, LiveSiteDataEntry>(live_site_data_map);
-		    //System.out.println("SORTED MAP"+sortedMap);
-
-			/*Iterator<String> iterator = live_site_data_map.keySet().iterator();
-			while(iterator.hasNext()){
-				String key = iterator.next();
-				System.out.println(live_site_data_map.get(key));
-			}*/
-			
-			//update listeners
-			//System.out.println("update listeners");
-			Object[] listeners = listenerList.getListenerList();
-
-			for (int i = 0; i < listeners.length; i++) {
-				if (listeners[i] == SolarListener.class) {
-					((SolarListener) listeners[i + 1]).liveSiteDataChanged();
+				for(int i=0; i<getArray.size(); i++){
+					live_site_data_map.put(gson.fromJson(getArray.get(i), LiveSiteDataEntry.class).t_stamp, gson.fromJson(getArray.get(i), LiveSiteDataEntry.class));
 				}
+					    
+				Object[] listeners = listenerList.getListenerList();
+
+				for (int i = 0; i < listeners.length; i++) {
+					if (listeners[i] == SolarListener.class) {
+						((SolarListener) listeners[i + 1]).liveSiteDataChanged();
+					}
+				}
+			} else {
+				return new ArrayList<LiveSiteDataEntry>();
 			}
-			
 			
 		}else if(lastUpdateLiveSiteData < timeStamp-(timeStamp%30000)) {
 			
 			lastUpdateLiveSiteData = timeStamp;
 			
 			JsonObject jsonObject = requestData("/live_site_data/"+Integer.toString(site_id)+"?last_six=true"+"&last_sync=false");
-			JsonArray getArray = jsonObject.getAsJsonArray("data");
+			
+			if(jsonObject != null){
+				JsonArray getArray = jsonObject.getAsJsonArray("data");
 		
-			Gson gson = new Gson();
-			//live_site_data = new ArrayList<LiveSiteDataEntry>();
+				Gson gson = new Gson();
+				//live_site_data = new ArrayList<LiveSiteDataEntry>();
         
-			for(int i=0; i<getArray.size(); i++){
-				LiveSiteDataEntry entry = gson.fromJson(getArray.get(i), LiveSiteDataEntry.class);
-				//System.out.println(entry.t_stamp);
-				boolean contains = false;
+				for(int i=0; i<getArray.size(); i++){
+					LiveSiteDataEntry entry = gson.fromJson(getArray.get(i), LiveSiteDataEntry.class);
+					//System.out.println(entry.t_stamp);
+					boolean contains = false;
 
-				Iterator<String> iterator = live_site_data_map.keySet().iterator();
-				while(iterator.hasNext()){
-					String key = iterator.next();
-					if(live_site_data_map.get(key).t_stamp.equals(entry.t_stamp)){
-						contains = true;
+					Iterator<String> iterator = live_site_data_map.keySet().iterator();
+					while(iterator.hasNext()){
+						String key = iterator.next();
+						if(live_site_data_map.get(key).t_stamp.equals(entry.t_stamp)){
+							contains = true;
+						}
+					}
+					if(!contains){
+						live_site_data_map.put(entry.t_stamp, entry);
+					}
+				
+				
+				}
+			
+				//update listeners
+				//System.out.println("update listeners");
+				Object[] listeners = listenerList.getListenerList();
+
+				for (int i = 0; i < listeners.length; i++) {
+					if (listeners[i] == SolarListener.class) {
+						((SolarListener) listeners[i + 1]).liveSiteDataChanged();
 					}
 				}
-				if(!contains){
-					live_site_data_map.put(entry.t_stamp, entry);
-				}
-				
-				
-			}
-			
-			//update listeners
-			//System.out.println("update listeners");
-			Object[] listeners = listenerList.getListenerList();
-
-			for (int i = 0; i < listeners.length; i++) {
-				if (listeners[i] == SolarListener.class) {
-					((SolarListener) listeners[i + 1]).liveSiteDataChanged();
-				}
+			}else{
+				return new ArrayList<LiveSiteDataEntry>();
 			}
 		}
 		

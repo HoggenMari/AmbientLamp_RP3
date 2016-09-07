@@ -106,8 +106,8 @@ public class BarGraph implements VisualListener, SolarListener {
 	public void liveSiteDataChanged() {
 		// TODO Auto-generated method stub
 		
-		//live_site_data = api.getLiveSiteData();
-		//highestValue = api.getMaxCons(120);
+		live_site_data = api.getLiveSiteData();
+		highestValue = api.getMaxCons(120);
 		
 		//System.out.println(highestValue);
 	}
