@@ -5,8 +5,8 @@
   var currentID = 0;
   var cols, colsOld = 0;
   var visualBol = false;
-  var resultElement = document.getElementById('result'),
-      sliders = document.getElementsByClassName('sliders');
+  var resultElement;// = document.getElementById('result');
+  var sliders;// = document.getElementsByClassName('sliders');
   var settingsUp = false;
 
   Meteor.call('getCountdownMethod', "foo", function(error, result){
@@ -35,6 +35,9 @@
   });
 
   Template.listPage.rendered = function() {
+
+      resultElement = document.getElementById('result');
+      sliders = document.getElementsByClassName('sliders');
 
       console.log("COLOR COLOR");
 
@@ -513,6 +516,40 @@
       }*/
   }
 
+
+
+  function redrawColor() {
+      cols = Visuals.findOne(currentID, {fields: {"colors": 1}});
+
+      console.log(cols.colors);
+      console.log(cols.colors.length);
+
+      for (i = 0; i < cols.colors.length; i++) {
+          console.log("redraw");
+          var col = cols.colors[i].color;
+          console.log(col);
+          $($($(".colorNotation").children().get(i)).children().first()).css({"backgroundColor":col});
+
+      }
+
+
+      //console.log("COL " + i + " " + counter + " " + cols.colors[counter].color);
+      //var col1 = col.color;
+      //console.log($(".colorNotation").children().get(counter));
+      //$($($(".colorNotation").children().get(counter)).children().first()).css({"backgroundColor":col});
+      //picker.setColor(col);
+      //counter++;
+
+      //console.log(col);
+      // visualBol = false;
+
+      //colsOld = Visuals.findOne(currentID, {fields: {colors: 1}}).colors;
+
+
+
+  }
+
+
   function keyValue(key, value){
       this.Key = key;
       this.Value = value;
@@ -586,6 +623,7 @@
           myElement.style.display = "block";
           var myElement2 = document.querySelector(".overlayBG");
           myElement2.style.visibility = "visible";
+          redrawColor();
       },
       'click .close': function() {
           console.log("info");

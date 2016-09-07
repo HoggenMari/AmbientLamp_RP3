@@ -85,7 +85,7 @@
          */
         function _initialize() {
 
-            console.log("init");
+            console.log("init tiny color picker");
 
             if(hasCanvas) {
                 $canvas = document.createElement("canvas");
@@ -116,6 +116,8 @@
                 //document.find(".overlayBg").style.visibility = true;
 
                 _setImage();
+                //setColor();
+
             }
 
             _setEvents();
@@ -125,7 +127,7 @@
 
         function setColor() {
             console.log("test");
-            console.log($($slider).find(".sliders")[0].noUiSlider.get());
+            //console.log($($slider).find(".sliders")[0].noUiSlider.get());
 
             var colorPicker   = new Image()
                 ,   style         = $track.currentStyle || window.getComputedStyle($track, false)
