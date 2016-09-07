@@ -99,7 +99,7 @@ public class DDPClient implements Observer {
 		
 		if (msg instanceof String) {
 					
-			//System.out.println("Test: "+msg);
+			System.out.println("Test: "+msg);
 			
 			JsonObject jsonObject;
 			JsonParser jejpl = new JsonParser();
