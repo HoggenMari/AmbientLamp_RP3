@@ -24,7 +24,7 @@ public class DdpClientObserver implements Observer {
 	@Override
 	public void update(Observable client, Object msg) {
 
-		System.out.println("TEST: "+msg);
+		//System.out.println("TEST: "+msg);
 		
 		SensorData sensorData = SensorData.getInstance();
 		

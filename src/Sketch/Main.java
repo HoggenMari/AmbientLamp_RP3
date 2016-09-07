@@ -132,7 +132,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 				
 		//System.out.println("GENIUS: "+geniusMode);
 		if(frameCount%200==0){
-			System.out.println("active:"+active+" next:"+next+" geniusCtr:"+geniusCtr);
+			//System.out.println("active:"+active+" next:"+next+" geniusCtr:"+geniusCtr);
 		}
 		
 		// -------FADE
@@ -217,7 +217,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		
 		if(frameCount % 1000 == 0){	
 			
-			System.out.println("FRAMECOUNT: "+geniusCtr);
+			//System.out.println("FRAMECOUNT: "+geniusCtr);
 			//{"msg":"changed","collection":"visuals","id":"RH8TD6zpG3p4ZgdcQ","fields":{"active":true}}
 			
 			//System.out.println("Genius: "+geniusPaused+" "+geniusPausedActive+" "+settingActive);
@@ -265,14 +265,14 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		}*/
 		
 		if(frameCount%100==0){
-			System.out.println(frameRate);
+			//System.out.println(frameRate);
 			//System.out.println(saturation);
 		}
 		
 		if(settingActive){
-			System.out.println(millis() - settingActiveRemain);
+			//System.out.println(millis() - settingActiveRemain);
 			if(millis() - settingActiveRemain >= settingActiveWait){
-			    println("tick");//if it is, do something
+			    //println("tick");//if it is, do something
 			    if(geniusMode){
 					settingPausedActive = true;
 					activeVisual = geniusCtr;
@@ -407,11 +407,11 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		// TODO Auto-generated method stub
 		HashMap<String,Visual> vList = e.getVisualList();
 		if(e.getID()==VisualEvent.VISUAL_ACTIVE || e.getID()==VisualEvent.VISUAL_CHANGED){
-			System.out.println("VISUAL ACTIVE");
+			//System.out.println("VISUAL ACTIVE");
 			for (Visual value : vList.values()) {
-				System.out.println("ACTIVE: "+value);
+				//System.out.println("ACTIVE: "+value);
 				if(value.isActive()){
-					System.out.println(value.getName());
+					//System.out.println(value.getName());
 					activeManual = value.getIndex();
 					activeVisual = value.getIndex();
 					next = value.getIndex();
@@ -441,12 +441,12 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 				System.out.println("GeniusCtr: "+geniusCtr);
 			}
 		}*/else if(e.getID()==VisualEvent.VISUAL_SETTINGACTIVE){
-			System.out.println("VISUAL SETTING");
+			//System.out.println("VISUAL SETTING");
 			settingActive = false;
 			for (Visual value : vList.values()) {
-				System.out.println("SETTINGACTIVE: "+value);
+				//System.out.println("SETTINGACTIVE: "+value);
 				if(value.isSettingActive()){
-					System.out.println(value.getName());
+					//System.out.println(value.getName());
 					settingActive = true;
 					settingActiveName = value.getName();
 					activeVisual = value.getIndex();

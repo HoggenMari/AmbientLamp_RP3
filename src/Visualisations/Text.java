@@ -101,8 +101,9 @@ public class Text implements VisualListener, SolarListener {
 		NumberFormat numberFormat = new DecimalFormat("0");
 	    numberFormat.setRoundingMode(RoundingMode.DOWN);
 		
-		String consumedStr = numberFormat.format(consumed);
-		String producedStr = numberFormat.format(produced);
+	    
+		String consumedStr = numberFormat.format(Math.round(consumed*100)/100.0);
+		String producedStr = numberFormat.format(Math.round(produced*100)/100.0);
 		
 		canvas.beginDraw();
 		canvas.noStroke();

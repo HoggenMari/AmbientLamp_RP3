@@ -96,7 +96,7 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 	
 	private SolarAnalyticsAPI () {
 		token = requestSecureToken();
-		System.out.println(token);
+		//System.out.println(token);
 		//requestData("day");
 		siteData = new ArrayList<SiteData>();
 		siteDataRaw = new ArrayList<SiteDataRaw>();
@@ -142,7 +142,7 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 		
 		
 		if(currentTimeStamp-tokenTimeStamp>=duration*10){
-			System.out.println("Request Secure Token");
+			//System.out.println("Request Secure Token");
 			token = requestSecureToken();
 		}
 		String authString = token + ":x";
@@ -379,7 +379,7 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 	        JsonObject jsonObject = requestData("/site_data/"+Integer.toString(site_id)+"?tstart="+tStartS+"&tend="+tEndS+"&gran="+value);
 			
 	        if(jsonObject != null){
-	        	System.out.println("/site_data/"+Integer.toString(site_id)+"?tstart="+tStartS+"&tend="+tEndS+"&gran="+value);
+	        	//System.out.println("/site_data/"+Integer.toString(site_id)+"?tstart="+tStartS+"&tend="+tEndS+"&gran="+value);
 			
 	        	JsonArray getArray = jsonObject.getAsJsonArray("data");
 			
@@ -1084,7 +1084,7 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 		
 		if(live_site_data_map == null){
 		
-			System.out.println("Test Concurrent HashMap");
+			//System.out.println("Test Concurrent HashMap");
 			
 			JsonObject jsonObject = requestData("/live_site_data/"+Integer.toString(site_id)+"?last_hour=true&last_sync=false");
 			JsonArray getArray = jsonObject.getAsJsonArray("data");
@@ -1097,7 +1097,7 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 			}
 			
 			Map<String, LiveSiteDataEntry> sortedMap = new TreeMap<String, LiveSiteDataEntry>(live_site_data_map);
-		    System.out.println("SORTED MAP"+sortedMap);
+		    //System.out.println("SORTED MAP"+sortedMap);
 
 			/*Iterator<String> iterator = live_site_data_map.keySet().iterator();
 			while(iterator.hasNext()){
@@ -1106,7 +1106,7 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 			}*/
 			
 			//update listeners
-			System.out.println("update listeners");
+			//System.out.println("update listeners");
 			Object[] listeners = listenerList.getListenerList();
 
 			for (int i = 0; i < listeners.length; i++) {
@@ -1146,7 +1146,7 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 			}
 			
 			//update listeners
-			System.out.println("update listeners");
+			//System.out.println("update listeners");
 			Object[] listeners = listenerList.getListenerList();
 
 			for (int i = 0; i < listeners.length; i++) {
