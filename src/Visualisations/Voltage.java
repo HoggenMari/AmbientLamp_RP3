@@ -298,9 +298,10 @@ public class Voltage implements VisualListener, SolarListener {
 	public void liveSiteDataChanged() {
 		// TODO Auto-generated method stub
 		//System.out.println("DataChanged");
-		produced = api.getCurrentGen(); //api.getLastSiteDataEntry().energy_generated;
-		consumed = api.getCurrentCons();
-		change_consumption = api.getChangeCons();
-		max_consumption = api.getMaxCons();
+		
+		//produced = api.getCurrentGen(); //api.getLastSiteDataEntry().energy_generated;
+		//consumed = api.getCurrentCons();
+		//change_consumption = api.getChangeCons();
+		//max_consumption = api.getMaxCons();
 	}
 }

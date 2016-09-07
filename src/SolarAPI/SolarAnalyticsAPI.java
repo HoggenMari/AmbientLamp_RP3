@@ -12,13 +12,17 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.swing.event.EventListenerList;
 
@@ -85,7 +89,8 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 	int MAX_LIVE_DATA_SIZE = 200;
 	
 	//LiveSiteData
-	ArrayList<LiveSiteDataEntry> live_site_data;
+	//ArrayList<LiveSiteDataEntry> live_site_data;
+	ConcurrentHashMap<String,LiveSiteDataEntry> live_site_data_map;
 	long lastUpdateLiveSiteData;
 	EventListenerList listenerList = new EventListenerList();
 	
@@ -1069,23 +1074,36 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 		
 	}*/
 	
-	public ArrayList<LiveSiteDataEntry> getLiveSiteData() {
+	public List<LiveSiteDataEntry> getLiveSiteData() {
         
+		//System.out.println("Test Concurrent HashMap");
+		
 		//if(1==1){
 		Date date = new Date();
 		long timeStamp = date.getTime();
 		
-		if(live_site_data == null){
+		if(live_site_data_map == null){
 		
+			System.out.println("Test Concurrent HashMap");
+			
 			JsonObject jsonObject = requestData("/live_site_data/"+Integer.toString(site_id)+"?last_hour=true&last_sync=false");
 			JsonArray getArray = jsonObject.getAsJsonArray("data");
 		
 			Gson gson = new Gson();
-			live_site_data = new ArrayList<LiveSiteDataEntry>();
+			live_site_data_map = new ConcurrentHashMap<String,LiveSiteDataEntry>();
         
 			for(int i=0; i<getArray.size(); i++){
-				live_site_data.add(gson.fromJson(getArray.get(i), LiveSiteDataEntry.class));
+				live_site_data_map.put(gson.fromJson(getArray.get(i), LiveSiteDataEntry.class).t_stamp, gson.fromJson(getArray.get(i), LiveSiteDataEntry.class));
 			}
+			
+			Map<String, LiveSiteDataEntry> sortedMap = new TreeMap<String, LiveSiteDataEntry>(live_site_data_map);
+		    System.out.println("SORTED MAP"+sortedMap);
+
+			/*Iterator<String> iterator = live_site_data_map.keySet().iterator();
+			while(iterator.hasNext()){
+				String key = iterator.next();
+				System.out.println(live_site_data_map.get(key));
+			}*/
 			
 			//update listeners
 			System.out.println("update listeners");
@@ -1096,6 +1114,7 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 					((SolarListener) listeners[i + 1]).liveSiteDataChanged();
 				}
 			}
+			
 			
 		}else if(lastUpdateLiveSiteData < timeStamp-(timeStamp%30000)) {
 			
@@ -1111,15 +1130,18 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 				LiveSiteDataEntry entry = gson.fromJson(getArray.get(i), LiveSiteDataEntry.class);
 				//System.out.println(entry.t_stamp);
 				boolean contains = false;
-				for(int j=live_site_data.size()-1; j>0; j--){
-					if(live_site_data.get(j).t_stamp.equals(entry.t_stamp)){
-						//System.out.println("true");
+
+				Iterator<String> iterator = live_site_data_map.keySet().iterator();
+				while(iterator.hasNext()){
+					String key = iterator.next();
+					if(live_site_data_map.get(key).t_stamp.equals(entry.t_stamp)){
 						contains = true;
-					}	
+					}
 				}
 				if(!contains){
-					live_site_data.add(entry);
+					live_site_data_map.put(entry.t_stamp, entry);
 				}
+				
 				
 			}
 			
@@ -1134,11 +1156,21 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 			}
 		}
 		
-		return live_site_data;
+		Map<String, LiveSiteDataEntry> sortedMap = Collections.synchronizedMap(new TreeMap<String, LiveSiteDataEntry>(live_site_data_map));
+
+		List<LiveSiteDataEntry> syncal = Collections.synchronizedList(new ArrayList<LiveSiteDataEntry>());
+		
+		Iterator<String> iterator = sortedMap.keySet().iterator();
+		while(iterator.hasNext()){
+			String key = iterator.next();
+			syncal.add(sortedMap.get(key));
+		}
+		
+		return syncal;
 	}
 	
 	public float getCurrentCons(){
-		ArrayList<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
+		List<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
 		
 		if(live_site_data_list.size()>0){
 			return live_site_data_list.get(live_site_data_list.size()-1).cons;
@@ -1147,7 +1179,7 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 	}
 	
 	public float getCurrentGen(){
-		ArrayList<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
+		List<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
 		
 		if(live_site_data_list.size()>0){
 			return live_site_data_list.get(live_site_data_list.size()-1).gen;
@@ -1157,7 +1189,7 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 	
 	public float getMaxCons(){
 		
-		ArrayList<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
+		List<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
 		
 		float max_consumed = 0;
 		for(LiveSiteDataEntry entry : live_site_data_list){
@@ -1170,7 +1202,7 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 	
 	public float getMaxGen(){
 		
-		ArrayList<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
+		List<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
 		
 		float max_produced = 0;
 		for(LiveSiteDataEntry entry : live_site_data_list){
@@ -1183,7 +1215,7 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 	
 	public float getMaxGen(int sample_size){
 		
-		ArrayList<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
+		List<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
 		
 		int start = 0;
 		if(live_site_data_list.size()-sample_size>0){
@@ -1201,7 +1233,7 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 	
 	public float getMaxCons(int sample_size){
 		
-		ArrayList<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
+		List<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
 		
 		int start = 0;
 		if(live_site_data_list.size()-sample_size>0){
@@ -1231,7 +1263,7 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 	
 	public float getChangeCons(){
 		
-		ArrayList<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
+		List<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
 		
 		if(live_site_data_list.size()>=2){
 			return live_site_data_list.get(live_site_data_list.size()-1).cons-live_site_data_list.get(live_site_data_list.size()-2).cons;
@@ -1241,7 +1273,7 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 	
 	public float getChangeGen(){
 		
-		ArrayList<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
+		List<LiveSiteDataEntry> live_site_data_list = getLiveSiteData();
 		
 		if(live_site_data_list.size()>=2){
 			return live_site_data_list.get(live_site_data_list.size()-1).gen-live_site_data_list.get(live_site_data_list.size()-2).gen;

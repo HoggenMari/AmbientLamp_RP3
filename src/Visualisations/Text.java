@@ -53,8 +53,8 @@ public class Text implements VisualListener, SolarListener {
 		sensorData.addVisualListener(this);
 		api.addLiveDataListener(this);
 
-		//produced = api.getCurrentGen()/10; 
-		//consumed = api.getCurrentCons()/10;
+		produced = api.getCurrentGen()/10; 
+		consumed = api.getCurrentCons()/10;
 	}
 
 	public PGraphics draw() {
@@ -211,7 +211,9 @@ public class Text implements VisualListener, SolarListener {
 	public void liveSiteDataChanged() {
 		// TODO Auto-generated method stub
 		//System.out.println("Update For Text");
+		
 		produced = api.getCurrentGen()/10; 
 		consumed = api.getCurrentCons()/10;
+		//System.out.println("Changed: "+api.getChangeGen());
 	}
 }

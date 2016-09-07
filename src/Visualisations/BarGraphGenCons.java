@@ -3,6 +3,8 @@ package Visualisations;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import Event.SensorData;
 import Event.Visual;
@@ -23,7 +25,7 @@ public class BarGraphGenCons implements VisualListener, SolarListener {
 	int lerp_color;
 	
 	private SolarAnalyticsAPI api;
-	ArrayList<LiveSiteDataEntry> live_site_data;
+	List<LiveSiteDataEntry> live_site_data;
 	float highestValue;
 	
 	public BarGraphGenCons(PApplet a, SensorData sensorData, PGraphics c) {
@@ -100,9 +102,10 @@ public class BarGraphGenCons implements VisualListener, SolarListener {
 	@Override
 	public void liveSiteDataChanged() {
 		// TODO Auto-generated method stub
-		live_site_data = api.getLiveSiteData();
-		highestValue = api.getMaxGenCons(120);
-		System.out.println(highestValue);
+		
+		//live_site_data = api.getLiveSiteData();
+		//highestValue = api.getMaxGenCons(120);
+		//System.out.println(highestValue);
 	}
 
 	@Override
