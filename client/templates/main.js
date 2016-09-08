@@ -9,6 +9,7 @@ var timeout;
   var resultElement;// = document.getElementById('result');
   var sliders;// = document.getElementsByClassName('sliders');
   var settingsUp = false;
+  var ip_address;
 
   Meteor.call('getCountdownMethod', "foo", function(error, result){
       Session.set('myMethodResult', result);
@@ -33,6 +34,10 @@ var timeout;
       currentID = this.params._id;
       return Visuals.findOne({ _id: currentList });
     }
+  });
+
+  headers.ready(function() {
+    ip_address = headers.getClientIP();
   });
 
   Template.listPage.rendered = function() {
@@ -76,6 +81,8 @@ var timeout;
       //for (i = 0; i < cols.length; i++) {
       //    $('#colors').append("<div id='colorPicker" + i + "' class='colorPicker'><a class='color'><div class='colorInner'></div></a><div class='track'></div><ul class='dropdown'><li></li></ul> <input type='hidden' class='colorInput'/></div>");
       //}
+
+
   }
 
 
@@ -505,9 +512,9 @@ var timeout;
           console.log("COL " + i + " " + counter + " " + cols.colors[counter].color);
           //var col1 = col.color;
           console.log($(".colorNotation").children().get(counter));
-      $($($(".colorNotation").children().get(counter)).children().first()).css({"backgroundColor":col});
+          $($($(".colorNotation").children().get(counter)).children().first()).css({"backgroundColor":col});
           picker.setColor(col);
-      counter++;
+          counter++;
 
           //console.log(col);
           // visualBol = false;
@@ -622,6 +629,7 @@ var timeout;
       },
       'click .reset_tab': function() {
           console.log("reset");
+          Meteor.call('log', ip_address, currentID, "Reset");
           reset();
       },
       'click .info': function() {
@@ -631,6 +639,7 @@ var timeout;
           var myElement2 = document.querySelector(".overlayBG");
           myElement2.style.visibility = "visible";
           redrawColor();
+          Meteor.call('log', ip_address, currentID, "Open Info");
       },
       'click .close': function() {
           console.log("info");
@@ -638,6 +647,7 @@ var timeout;
           myElement.style.display = "none";
           var myElement2 = document.querySelector(".overlayBG");
           myElement2.style.visibility = "hidden";
+          Meteor.call('log', ip_address, currentID, "Close Info");
       },
       'click a.backlink': function() {
           //console.log("backlink");
@@ -668,11 +678,19 @@ var timeout;
       checkIfNotificationExists: function () {
           var visual = Visuals.findOne(currentID);
           if(typeof visual.notification === "undefined"){
-              return false;
-          }else {
               return true;
+          }else {
+              return false;
           }
-      }/*,
+      },
+      annotationIsEmpty: function (annotation) {
+          if(annotation=="") {
+              return true;
+          }else{
+              return false;
+          }
+      }
+      /*,
       notificationState: function () {
           var visual = Visuals.findOne(currentID);
           console.log("notificationstate");

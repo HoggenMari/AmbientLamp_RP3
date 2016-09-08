@@ -363,5 +363,10 @@ Meteor.methods({
     },
     'getCountdownMethod': function(argument) {
         //return countdown.get();
+    },
+    'log': function(ip, id, msg) {
+        var _time = (new Date).toTimeString();
+        console.log(_time, ip, id, msg);
+
     }
 });

@@ -3,6 +3,7 @@
     <properties>
       <sourceFilesUrls>
         <item url="file://$USER_HOME$/.meteor/packages/flyandi_reactive-countdown/0.0.3/web.browser/packages/flyandi_reactive-countdown.js" />
+        <item url="file://$USER_HOME$/.meteor/packages/meteorhacks_inject-initial/1.0.4/web.browser/lib/inject-client.js" />
         <item url="file://$USER_HOME$/.meteor/packages/twbs_bootstrap/3.3.6/web.browser/dist/js/bootstrap.js" />
         <item url="file://$USER_HOME$/.meteor/packages/twbs_bootstrap/3.3.6/web.browser/dist/css/bootstrap.css" />
         <item url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/autoform-events.js" />
@@ -261,6 +262,8 @@
         <item url="file://$USER_HOME$/.meteor/packages/ddp-client/1.2.7/web.browser/livedata_common.js" />
         <item url="file://$USER_HOME$/.meteor/packages/ddp-client/1.2.7/web.browser/client_convenience.js" />
         <item url="file://$USER_HOME$/.meteor/packages/ddp-client/1.2.7/web.browser/id_map.js" />
+        <item url="file://$USER_HOME$/.meteor/packages/gadicohen_headers/0.0.31/web.browser/lib/headers-common.js" />
+        <item url="file://$USER_HOME$/.meteor/packages/gadicohen_headers/0.0.31/web.browser/lib/headers-client.js" />
         <item url="file://$USER_HOME$/.meteor/packages/ddp-common/1.2.5/web.browser/random_stream.js" />
         <item url="file://$USER_HOME$/.meteor/packages/ddp-common/1.2.5/web.browser/method_invocation.js" />
         <item url="file://$USER_HOME$/.meteor/packages/ddp-common/1.2.5/web.browser/namespace.js" />
@@ -272,6 +275,7 @@
     </properties>
     <CLASSES>
       <root url="file://$USER_HOME$/.meteor/packages/flyandi_reactive-countdown/0.0.3/web.browser/packages/flyandi_reactive-countdown.js" />
+      <root url="file://$USER_HOME$/.meteor/packages/meteorhacks_inject-initial/1.0.4/web.browser/lib/inject-client.js" />
       <root url="file://$USER_HOME$/.meteor/packages/twbs_bootstrap/3.3.6/web.browser/dist/js/bootstrap.js" />
       <root url="file://$USER_HOME$/.meteor/packages/twbs_bootstrap/3.3.6/web.browser/dist/css/bootstrap.css" />
       <root url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/autoform-events.js" />
@@ -530,6 +534,8 @@
       <root url="file://$USER_HOME$/.meteor/packages/ddp-client/1.2.7/web.browser/livedata_common.js" />
       <root url="file://$USER_HOME$/.meteor/packages/ddp-client/1.2.7/web.browser/client_convenience.js" />
       <root url="file://$USER_HOME$/.meteor/packages/ddp-client/1.2.7/web.browser/id_map.js" />
+      <root url="file://$USER_HOME$/.meteor/packages/gadicohen_headers/0.0.31/web.browser/lib/headers-common.js" />
+      <root url="file://$USER_HOME$/.meteor/packages/gadicohen_headers/0.0.31/web.browser/lib/headers-client.js" />
       <root url="file://$USER_HOME$/.meteor/packages/ddp-common/1.2.5/web.browser/random_stream.js" />
       <root url="file://$USER_HOME$/.meteor/packages/ddp-common/1.2.5/web.browser/method_invocation.js" />
       <root url="file://$USER_HOME$/.meteor/packages/ddp-common/1.2.5/web.browser/namespace.js" />

@@ -89,7 +89,7 @@
     <li class="vActive vList {{#if isGeniusActive}}vListNameActive{{else}}vListName{{/if}} {{#if geniusActive}}geniusActive{{/if}} {{#if pausedActive}}active{{/if}}  {{#if active}}active{{/if}} visualName" style="text-align: left; border-right: #eee solid 1px;;">
         <img style="height: 2.6em; margin: -15px 0px -10px 0px; border-radius: 27px; opacity: 1.0; margin-left: 10px;" src="{{img}}">
         {{#if geniusActive}}<i class="fa fa-play" style="color: #8545e2;" aria-hidden="true"></i>{{/if}}
-        <span class="visualNameText">{{name}}</span>
+        <span class="visualNameText">{{pseudo}}</span>
     </li>
     <a href="{{pathFor route='listPage'}}"><li class="tab vActive vList" style="width: 15%; text-align: center;">
         <img src="/right-arrow.png" class="arrow"/>
@@ -110,7 +110,7 @@
             <li class="genius_tab">
                 <a class="backlink" href="{{pathFor route='leaderboard'}}"><span style="float: left;"><img class="back" src="/back2.png"></span></a>
                 <a class="backlink" href="{{pathFor route='leaderboard'}}"><span style="vertical-align: middle; font-size: 18px; font-weight: 400; float: left;">Back</span></a>
-                <span style="font-size: 18px; font-weight: 600; margin-left: -25px;">{{name}}</span>
+                <span style="font-size: 18px; font-weight: 600; margin-left: -25px;">{{pseudo}}</span>
                 <span style="float: right;"><img class="info" src="/info.png"></span>
             </li>
             <li class="colors_tab">
@@ -130,16 +130,18 @@
 
         </ol>
         <div class="infoOverlay">
-            <span style="font-size: 20px; font-weight: 300; float: left; padding-left: 10px; padding-top: 10px;">{{name}}</span>
+            <span style="font-size: 20px; font-weight: 300; float: left; padding-left: 10px; padding-top: 10px;">{{pseudo}}</span>
             <img class="close" src="/close.png">
-            <span style="font-size: 16px; font-weight: 300; float: left; padding-left: 10px; padding-right: 10px; padding-top: 10px; text-align: left;">{{description}}</span>
+            <span style="font-size: 16px; font-weight: 300; float: left; padding-left: 10px; padding-right: 10px; padding-top: 10px; text-align: left;"><img style="height: 4em; float: left; opacity: 1.0; padding-right: 5px; filter: grayscale(0.5)" src="{{img}}">{{description}}</span>
             <ol class="colorNotation" style="padding-left: 5px; float: left; margin-bottom: 20px;">
                 {{#each colors}}
+                    {{#unless annotationIsEmpty annotation}}
                     <li style="border-bottom: none; padding: 0px 0px 2px 5px;">
                         <div style="margin: 0px; width: 18px; height: 18px; -webkit-border-radius: 27px; -moz-border-radius: 27px; float: left; border-radius: 27px; box-shadow: 0px 0px 0px 1px #ccc;"></div>
                         <span style="font-size: 14px; font-weight: 400; float: left; padding-left: 10px; text-align: left;">{{annotation}}</span>
                         <br>
                     </li>
+                    {{/unless}}
                 {{/each}}
             </ol>
         </div>
