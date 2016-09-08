@@ -678,9 +678,9 @@ var timeout;
       checkIfNotificationExists: function () {
           var visual = Visuals.findOne(currentID);
           if(typeof visual.notification === "undefined"){
-              return true;
-          }else {
               return false;
+          }else {
+              return true;
           }
       },
       annotationIsEmpty: function (annotation) {
@@ -689,8 +689,8 @@ var timeout;
           }else{
               return false;
           }
-      }
-      /*,
+      }/*
+      ,
       notificationState: function () {
           var visual = Visuals.findOne(currentID);
           console.log("notificationstate");

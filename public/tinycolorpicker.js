@@ -203,15 +203,35 @@
                     $track.parentElement.style.display = 'block';
 
                     console.log("test");
+                    //console.log($color.parentNode.parentNode);
+
+                    var list = $("#colors").children();
+                    console.log(list);
+                    console.log(list.length);
+                    for(var i = list.length - 1; 0 <= i; i--) {
+                        console.log(list[i]);
+                        console.log($color.parentNode);
+                        if (list[i] == $color.parentNode) {
+                            console.log($($(".colorChoserOverlay").get(i)).css('display','block'));
+                            //$(".colorChoserOverlay").css('display','block');
+                        }
+                    }
+                        //if(list[i] && list[i].parentElement)
+
                     console.log(document.querySelectorAll(".overlayBG").style);
                     document.querySelectorAll(".overlayBG")[0].style.visibility = 'visible';
-                    $($color).css('z-index',11);
+                    $($color).css('z-index',100);
+                    console.log("display block");
+                    $(".pOuterContainer").css('display','block');
+                    //$(".colorChoserOverlay").css('display','block');
 
                     document.onmousedown = function(event) {
                         document.onmousedown = null;
 
                         document.querySelectorAll(".overlayBG")[0].style.visibility = 'hidden';
                         $($color).css('z-index',1);
+                        $(".pOuterContainer").css('display','none')
+                        $(".colorChoserOverlay").css('display','none');
 
                         self.close();
                     };
@@ -231,6 +251,8 @@
 
                             document.querySelectorAll(".overlayBG")[0].style.visibility = 'hidden';
                             $($color).css('z-index',1);
+                            $(".pOuterContainer").css('display','none')
+                            $(".colorChoserOverlay").css('display','none');
 
                             self.close();
 
@@ -259,6 +281,8 @@
 
                         document.querySelectorAll(".overlayBG")[0].style.visibility = 'hidden';
                         $($color).css('z-index',1);
+                        $(".pOuterContainer").css('display','none')
+                        $(".colorChoserOverlay").css('display','none');
 
                         self.close();
 

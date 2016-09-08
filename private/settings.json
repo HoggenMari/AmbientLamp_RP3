@@ -19,7 +19,7 @@
       "geniusActive" : false,
       "pausedActive" : false,
       "settingActive" : false,
-      "notification" : true
+      "notification" : false
     },
     {
       "_id" : "RH8TD6zpG3p4ZgdcQ",

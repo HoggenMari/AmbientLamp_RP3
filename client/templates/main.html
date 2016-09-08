@@ -121,6 +121,11 @@
                     {{/each}}
                 </div>
             </li>
+            {{#each colors}}
+                <div class="colorChoserOverlay">
+                    <span style="font-size: 15px; font-weight: 400; float: left; padding-left: 10px; padding-top: 10px; color: white;">{{annotation}}</span>
+                </div>
+            {{/each}}
             {{#if checkIfNotificationExists}}
                 {{> notification}}
             {{/if}}
