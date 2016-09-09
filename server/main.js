@@ -6,6 +6,9 @@ var JSFtp     = require("jsftp");
 // Initialize Logger
 this.log = new Logger();
 
+var ip;
+//var ip = getIp();
+
 // Initialize LoggerFile:
 var LogFile = new LoggerFile(log, {
     fileNameFormat: function(time) {
@@ -67,6 +70,7 @@ Meteor.startup(function () {
         pass: "mediaarch"
     });
 
+    ip = getIp();
 
     var os     = require('os');
     var ifaces = os.networkInterfaces();
@@ -387,26 +391,19 @@ Meteor.methods({
     'update': function(options) {
         var ret = JSON.parse(options);
         console.log("call from java");
-        //console.log(ret.msg);
         if(Settings.findOne({name: "Genius"}).geniusActive==true) {
             if (ret.collection == "visuals") {
                 if (ret.msg == "changed") {
                     console.log(ret.fields.geniusActive);
                     //Visuals.update(ret.id, {})
                     Visuals.update({_id: ret.id}, {$set: {"geniusActive": ret.fields.geniusActive}});
+                    if(ret.fields.geniusActive) {
+                        var message = Visuals.findOne(ret.id).name + " Activate";
+                        log.info("System", message, ip);
+                    }
                 }
             }
-            /*if (ret.collection == "settings") {
-                if (ret.msg == "changed") {
-                    console.log("geniusPaused");
-                    console.log(ret.fields.geniusPaused);
-                    console.log(ret.id);
-                    //Visuals.update(ret.id, {})
-                    Settings.update({_id: ret.id}, {$set: {"geniusPaused": ret.fields.geniusPaused}});
-                }
-            }*/
         }
-        //Visuals.update(ret);
     },
     'startCountdown': function(option) {
         /*if(countdown.get()==0) {
