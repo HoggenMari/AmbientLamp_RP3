@@ -3,7 +3,6 @@ var fs        = require('fs');
 var net       = require('net');
 var os = Npm.require('os');
 var JSFtp     = require("jsftp");
-var LoggerFile = require("logger");
 // Initialize Logger
 this.log = new Logger();
 
@@ -11,7 +10,7 @@ this.log = new Logger();
 var LogFile = new LoggerFile(log, {
     fileNameFormat: function(time) {
         /* Create log-files hourly */
-        return (time.getDate()) + "-" + (time.getMonth() + 1) + "-" + (time.getFullYear()) + "_" + (time.getHours()) + ".log";
+        return (time.getDate()) + "-" + (time.getMonth() + 1) + "-" + (time.getFullYear()) + ".log";
     },
     format: function(time, level, message, data, userId) {
         /* Omit Date and hours from messages */
