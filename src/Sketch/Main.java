@@ -264,8 +264,8 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 			client.call(s);
 		}*/
 		
-		if(frameCount%100==0){
-			//System.out.println(frameRate);
+		if(frameCount%200==0){
+			System.out.println(frameRate);
 			//System.out.println(saturation);
 		}
 		
