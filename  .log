@@ -1,0 +1,63 @@
+[INFO] | 9:18 | "Test" | User: TESt
+[INFO] | 9:27 | "Test" | User: TESt
+[INFO]  11:37 | "Test" | User: TESt
+[INFO]  12:10 | "Open Info" | User: 192.168.0.103
+[INFO]  12:14 | "Close Info" | User: 192.168.0.103
+[INFO] , 14:2 | "Test" | User: TESt
+[INFO],5 15:45 | "Test" | User: TESt
+[INFO],5 16:25 | "Test" | User: TESt
+[INFO],5 16:46 | "Test" | User: TESt
+[INFO],9 17:9 | "Test" | User: TESt
+[INFO],9 918:44 | "Test" | User: TESt
+[INFO],9 819:5 | "Test" | User: TESt
+[INFO],9 819:32 | "Test" | User: TESt
+[INFO],9 920:17 | "Test" | User: TESt
+[INFO],9/9/11621:2 | "Test" | User: TESt
+[INFO],9/9/116 21:36 | "Test" | User: TESt
+[INFO],9/9/116 21:58 | "Test" | User: TESt
+[INFO],9/9/116 22 22:25 | "Test" | User: TESt
+[INFO],9/9/116 14 22:44 | "Test" | User: TESt
+[INFO],9/9/116 14:23:54 | "Test" | User: TESt
+[INFO],9/9/116 14:24:31 | "Test" | User: TESt
+[INFO],9/8/116 14:25:7 | "Test" | User: TESt
+[INFO],9/8/2016 14:26:28 | "Test" | User: TESt
+[INFO],9/9/2016 14:26:38 | "Test" | User: TESt
+[INFO],9/9/2016 14:27:41,"Test",TESt
+[INFO],Test,9/9/2016 14:30:26,""TEst"",undefined
+[INFO],System,9/9/2016 14:30:48,""TEst"",undefined
+[INFO],System,9/9/2016 14:33:25,"undefined,""TEst"",undefined
+[INFO],System,9/9/2016 14:34:14,"undefined,""TEst"",undefined
+[INFO],System,9/9/2016 14:34:51,""TEst"",undefined
+[INFO],System,9/9/2016 14:35:33,""TEst"",TESt,undefined
+[INFO],System,9/9/2016 14:36:51,"TEst",TESt,undefined
+[INFO],System,9/9/2016 14:37:41,"bla",TESt,undefined
+[INFO],System,9/9/2016 14:39:25,"bla",TESt,undefined
+[INFO],System,9/9/2016 14:40:14,"bla",TESt,"bla"
+[INFO],System,9/9/2016 14:40:48,"bla",TESt,undefined
+[INFO],System,9/9/2016 14:41:24,"bla",TESt,undefined
+[INFO],System,9/9/2016 14:41:43,undefined,TESt,undefined
+[INFO],System,9/9/2016 14:41:57,undefined,TESt,"bla"
+[INFO],System,9/9/2016 14:42:57,undefined,192.168.0.100,"bla"
+[INFO],System,9/9/2016 14:43:18,undefined,"bla",192.168.0.100
+[INFO],System,9/9/2016 14:44:7,undefined,"192.168.0.100",data
+[INFO],System,9/9/2016 14:45:43,data,System,"192.168.0.100"
+[INFO],System,9/9/2016 14:46:26,"192.168.0.100",data
+[INFO],System,9/9/2016 14:46:55,"data",192.168.0.100
+[INFO],System,9/9/2016 14:47:30,192.168.0.100,"data"
+[INFO],System,9/9/2016 14:48:6,192.168.0.100,"data"
+[INFO],System,9/9/2016 14:48:44,192.168.0.100,"data"
+[INFO],Open Info,9/9/2016 14:49:10,192.168.0.103,"rD9jTubopu4xztdSa"
+[INFO],User,9/9/2016 14:49:10,192.168.0.103,"rD9jTubopu4xztdSa Open Info"
+[INFO],Close Info,9/9/2016 14:49:35,192.168.0.103,"rD9jTubopu4xztdSa"
+[INFO],User,9/9/2016 14:49:35,192.168.0.103,"rD9jTubopu4xztdSa Close Info"
+[INFO],System,9/9/2016 14:50:6,192.168.0.100,"data"
+[INFO],User,9/9/2016 14:50:18,192.168.0.103,"rD9jTubopu4xztdSa Open Info"
+[INFO],User,9/9/2016 14:50:22,192.168.0.103,"rD9jTubopu4xztdSa Close Info"
+[INFO],System,9/9/2016 14:50:33,192.168.0.100,"data"
+[INFO],User,9/9/2016 14:50:38,192.168.0.103,"rD9jTubopu4xztdSa Open Info"
+[INFO],User,9/9/2016 14:50:48,192.168.0.103,"rD9jTubopu4xztdSa Close Info"
+[INFO],System,9/9/2016 14:52:52,192.168.0.100,"data"
+[INFO],System,9/9/2016 14:53:21,192.168.0.100,"data"
+[INFO],User,9/9/2016 14:53:21,192.168.0.103,"Visual 1 Close Info"
+[INFO],User,9/9/2016 14:53:22,192.168.0.103,"Visual 1 Open Info"
+[INFO],User,9/9/2016 14:56:31,192.168.0.103,"Visual 1 Close Info"

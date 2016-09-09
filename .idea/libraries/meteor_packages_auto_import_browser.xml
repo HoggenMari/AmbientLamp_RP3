@@ -98,9 +98,11 @@
         <item url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/month/month.js" />
         <item url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/radio/radio.js" />
         <item url="file://$USER_HOME$/.meteor/packages/ejson/1.0.11/web.browser/stringify.js" />
+        <item url="file://$USER_HOME$/.meteor/packages/ostrio_logger/1.1.2/web.browser/logger.coffee" />
         <item url="file://$USER_HOME$/.meteor/packages/ejson/1.0.11/web.browser/ejson.js" />
         <item url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/range/range.js" />
         <item url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/reset/reset.js" />
+        <item url="file://$USER_HOME$/.meteor/packages/ostrio_loggerfile/1.1.2/web.browser/loggerfile.coffee" />
         <item url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/button/button.js" />
         <item url="file://$USER_HOME$/.meteor/packages/iron_url/1.0.11/web.browser/lib/compiler.js" />
         <item url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/hidden/hidden.js" />
@@ -370,9 +372,11 @@
       <root url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/month/month.js" />
       <root url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/radio/radio.js" />
       <root url="file://$USER_HOME$/.meteor/packages/ejson/1.0.11/web.browser/stringify.js" />
+      <root url="file://$USER_HOME$/.meteor/packages/ostrio_logger/1.1.2/web.browser/logger.coffee" />
       <root url="file://$USER_HOME$/.meteor/packages/ejson/1.0.11/web.browser/ejson.js" />
       <root url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/range/range.js" />
       <root url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/reset/reset.js" />
+      <root url="file://$USER_HOME$/.meteor/packages/ostrio_loggerfile/1.1.2/web.browser/loggerfile.coffee" />
       <root url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/button/button.js" />
       <root url="file://$USER_HOME$/.meteor/packages/iron_url/1.0.11/web.browser/lib/compiler.js" />
       <root url="file://$USER_HOME$/.meteor/packages/aldeed_autoform/5.8.1/web.browser/inputTypes/hidden/hidden.js" />

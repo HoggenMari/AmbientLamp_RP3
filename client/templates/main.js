@@ -38,7 +38,13 @@ var timeout;
 
   headers.ready(function() {
     ip_address = headers.getClientIP();
+    //console.log(ip_address);
+    //Meteor.call('log', ip_address, "Headers Ready");
   });
+
+  function test() {
+      console.log("test");
+  }
 
   Template.listPage.rendered = function() {
 
@@ -103,6 +109,7 @@ var timeout;
 
   Template.header.helpers({
       connected: function () {
+          console.log("connected");
           return Meteor.status().connected;
       }
   });
@@ -252,7 +259,7 @@ var timeout;
     geniusActive: function () {
       //return "checked";
       console.log("called");
-      console.log(Settings.findOne({name: "Genius"}));
+      //console.log(Settings.findOne({name: "Genius"}));
       //if(Settings.findOne({name: "Genius"})!=undefined) {
           if (Settings.findOne({name: "Genius"}).geniusActive) {
               console.log("genius true");
@@ -333,6 +340,8 @@ var timeout;
 
           var setting = Settings.findOne({name: "Genius"}).geniusActive;
           Meteor.call('genius', !setting);
+          Meteor.call('log', ip_address, "Autoplay "+!setting);
+
       }
   });
 
@@ -356,13 +365,16 @@ var timeout;
     'click .visualName': function() {
       if(Settings.findOne({name: "Genius"}).geniusActive==false){
         Meteor.call('visual.setActive', this._id, true);
+        Meteor.call('logID', ip_address, Visuals.findOne(this._id), "Activate");
       }
     },
     'click a .vActive': function() {
       //console.log("set setting");
       //if(Settings.findOne({name: "Genius"}).geniusActive==true) {
-          Meteor.call('visual.setSetting', this._id, true);
-      //}
+        Meteor.call('visual.setSetting', this._id, true);
+        Meteor.call('logID', ip_address, Visuals.findOne(this._id), "Open Settings");
+
+        //}
     },
     'touchstart .visualName': function () {
       //alert("touchstart");
@@ -399,6 +411,7 @@ var timeout;
     var count = Settings.findOne(setting, {fields: {score: 1} });
     if(count.score<100){
     	Settings.update(setting, {$inc: {score: 1}});
+        Meteor.call('logID', ip_address, Settings.findOne(setting), "Increase "+count.score);
     }
   }
 
@@ -406,6 +419,7 @@ var timeout;
     var count = Settings.findOne(setting, {fields: {score: 1} });
     if(count.score>0){
     	Settings.update(setting, {$inc: {score: -1}});
+        Meteor.call('logID', ip_address, Settings.findOne(setting), "Decrease "+count.score);
     }
   }
 
@@ -513,8 +527,11 @@ var timeout;
           //var col1 = col.color;
           console.log($(".colorNotation").children().get(counter));
           $($($(".colorNotation").children().get(counter)).children().first()).css({"backgroundColor":col});
-          picker.setColor(col);
-          counter++;
+
+      picker.setColor(col, currentID, ip_address, counter);
+
+
+      counter++;
 
           //console.log(col);
           // visualBol = false;
@@ -629,7 +646,7 @@ var timeout;
       },
       'click .reset_tab': function() {
           console.log("reset");
-          Meteor.call('log', ip_address, currentID, "Reset");
+          Meteor.call('logID', ip_address, Visuals.findOne(currentID), "Reset");
           reset();
       },
       'click .info': function() {
@@ -639,7 +656,7 @@ var timeout;
           var myElement2 = document.querySelector(".overlayBG");
           myElement2.style.visibility = "visible";
           redrawColor();
-          Meteor.call('log', ip_address, currentID, "Open Info");
+          Meteor.call('logID', ip_address, Visuals.findOne(currentID), "Open Info");
       },
       'click .close': function() {
           console.log("info");
@@ -647,13 +664,15 @@ var timeout;
           myElement.style.display = "none";
           var myElement2 = document.querySelector(".overlayBG");
           myElement2.style.visibility = "hidden";
-          Meteor.call('log', ip_address, currentID, "Close Info");
+          Meteor.call('logID', ip_address, Visuals.findOne(currentID), "Close Info");
       },
       'click a.backlink': function() {
           //console.log("backlink");
           //if(Settings.findOne({name: "Genius"}).geniusActive==true){
               //Meteor.call('startCountdown');
-              Meteor.call('visual.finished', this._id, false);
+          Meteor.call('visual.finished', this._id, false);
+          Meteor.call('logID', ip_address, Visuals.findOne(this._id), "Close Settings");
+
           //}
       }
   });

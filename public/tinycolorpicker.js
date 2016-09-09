@@ -58,6 +58,12 @@
         ,   touchEvents  = "ontouchstart" in document.documentElement
         ,   changeEvent  = document.createEvent("HTMLEvents")
         ;
+        var colval;
+        var currentIDVisual;
+        var visual_name;
+        var firstLoad = true;
+        var currentIP;
+        var currentCounter;
 
         changeEvent.initEvent("change", true, true);
 
@@ -244,7 +250,7 @@
 
                         mouseIsDown = true;
 
-                        _getColorCanvas(event);
+                        colval = _getColorCanvas(event);
 
                         document.onmouseup = function(event) {
                             document.onmouseup = null;
@@ -253,6 +259,9 @@
                             $($color).css('z-index',1);
                             $(".pOuterContainer").css('display','none')
                             $(".colorChoserOverlay").css('display','none');
+                            var vuis = Visuals.findOne(currentIDVisual);
+                            console.log(currentIDVisual.name);
+                            Meteor.call('logIDColor', currentIP, visual_name, "Set Color "+currentCounter+" to "+colval);
 
                             self.close();
 
@@ -266,13 +275,13 @@
                     $canvas.ontouchstart = function(event) {
                         mouseIsDown = true;
 
-                        _getColorCanvas(event.touches[0]);
+                        colval = _getColorCanvas(event.touches[0]);
 
                         return false;
                     };
 
                     $canvas.ontouchmove = function(event) {
-                        _getColorCanvas(event.touches[0]);
+                        colval = _getColorCanvas(event.touches[0]);
 
                         return false;
                     };
@@ -283,6 +292,7 @@
                         $($color).css('z-index',1);
                         $(".pOuterContainer").css('display','none')
                         $(".colorChoserOverlay").css('display','none');
+                        Meteor.call('logIDColor', currentIP, visual_name, "Set Color "+currentCounter+" to "+colval);
 
                         self.close();
 
@@ -305,6 +315,8 @@
                 self.setColor("rgb(" + colorData[0] + "," + colorData[1] + "," + colorData[2] + ")");
 
                 $container.dispatchEvent(changeEvent, [self.colorHex, self.colorRGB]);
+
+                return self.colorRGB;
             }
         }
 
@@ -314,9 +326,9 @@
          * @method setColor
          * @chainable
          */
-        this.setColor = function(color) {
+        this.setColor = function(color, id, ip, counter) {
 
-            console.log("CAAAAALL SET COLOR");
+            console.log("CAAAAALL SET COLOR: "+id);
             if(color.indexOf("#") >= 0) {
                 self.colorHex = color;
                 self.colorRGB = self.hexToRgb(self.colorHex);
@@ -328,6 +340,15 @@
 
             $colorInner.style.backgroundColor = self.colorHex;
             $colorInput.value = self.colorHex;
+
+            if(firstLoad) {
+                currentIDVisual = id;
+                currentIP = ip;
+                currentCounter = counter;
+                visual_name = Visuals.findOne(currentIDVisual).name;
+                console.log(visual_name);
+                firstLoad = false;
+            }
         };
 
         /**

@@ -1,7 +1,30 @@
 //var ftpClient = require('ftp-client');
 var fs        = require('fs');
 var net       = require('net');
+var os = Npm.require('os');
 var JSFtp     = require("jsftp");
+// Initialize Logger
+this.log = new Logger();
+
+// Initialize LoggerFile:
+var LogFile = new LoggerFile(log, {
+    fileNameFormat: function(time) {
+        /* Create log-files hourly */
+        return (time.getDate()) + "-" + (time.getMonth() + 1) + "-" + (time.getFullYear()) + "_" + (time.getHours()) + ".log";
+    },
+    format: function(time, level, message, data, userId) {
+        /* Omit Date and hours from messages */
+        var month = (time.getMonth()+1);
+        var time_converted=('0'  + time.getHours()).slice(-2)+':'+('0'  + time.getMinutes()).slice(-2)+':'+('0' + time.getSeconds()).slice(-2);
+        return "[" + level + "]," + message + "," + (time.getDate()) + "/" + (month) + "/" + (time.getYear()+1900) + " " + time_converted + "," + userId + "," + data + "\r\n";
+    },
+    path: '/' /* Use absolute storage path */
+});
+
+// Enable LoggerFile with default settings
+LogFile.enable();
+
+//log.info("System", "data", "192.168.0.100");
 
 /*var countdown = new ReactiveCountdown(30, {
 
@@ -36,8 +59,6 @@ Meteor.startup(function () {
         });
       });
     }*/
-
-
 
     var ftp = new JSFtp({
         host: "server47.webgo24.de",
@@ -244,6 +265,39 @@ Meteor.startup(function () {
     console.log("finished countdown");
 });*/
 
+Meteor.onConnection(function(conn){
+    //console.log(getIp());
+    if(conn.clientAddress != getIp()) {
+        //console.log("new Client connects" + conn.clientAddress);
+        log.info("User", "Client connected", conn.clientAddress);
+
+        conn.onClose(function() {
+            //console.log("new client disconnects"+conn.clientAddress);
+            log.info("User", "Client disconnected", conn.clientAddress);
+        });
+    }
+});
+
+var getIp = function() {
+    // Get interfaces
+    var netInterfaces = os.networkInterfaces();
+    // Result
+    var result;
+    for (var id in netInterfaces) {
+        var netFace = netInterfaces[id];
+
+        for (var i = 0; i < netFace.length; i++) {
+            var ip = netFace[i];
+            if (ip.internal === false && ip.family === 'IPv4') {
+                result = ip.address;
+            }
+        }
+    }
+    return result;
+};
+
+
+
 Meteor.methods({
     'visual.setChecked': function(visualId, setChecked) {
         const visual = Visuals.findOne(visualId);
@@ -364,9 +418,25 @@ Meteor.methods({
     'getCountdownMethod': function(argument) {
         //return countdown.get();
     },
-    'log': function(ip, id, msg) {
+    'logID': function(ip, id, msg) {
         var _time = (new Date).toTimeString();
+        // log.info(msg, id, ip);
+        //const visual = Visuals.findOne(id);
+        var message = id.name + " " +msg;
+        log.info("User", message, ip);
         console.log(_time, ip, id, msg);
-
+    },
+    'logIDColor': function(ip, id, msg) {
+        var _time = (new Date).toTimeString();
+        // log.info(msg, id, ip);
+        //const visual = Visuals.findOne(id);
+        var message = id + " " +msg;
+        log.info("User", message, ip);
+        console.log(_time, ip, id, msg);
+    },
+    'log': function(ip, msg) {
+        // log.info(msg, id, ip);
+        log.info("User", msg, ip);
+        //console.log(_time, ip, id, msg);
     }
 });
