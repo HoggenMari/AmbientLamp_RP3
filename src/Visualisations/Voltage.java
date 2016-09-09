@@ -116,9 +116,9 @@ public class Voltage implements VisualListener, SolarListener {
 		if(notification){
 			if(change_consumption>0.1*max_consumption || fake){
 				if (timer % 30 == 0){
-					float c1 = color[3] >> 16 & 0xFF;
-					float c2 = color[3] >> 8 & 0xFF;;
-					float c3 = color[3] & 0xFF;
+					float c1 = color[2] >> 16 & 0xFF;
+					float c2 = color[2] >> 8 & 0xFF;;
+					float c3 = color[2] & 0xFF;
 					fields.add(new Powerfield(applet, canvas, applet.color(c1,c2,c3,50)));
 				}
 			}
@@ -128,7 +128,7 @@ public class Voltage implements VisualListener, SolarListener {
 		int bc = applet.color(22 + 22 * applet.sin(0),
 				22 * applet.sin(0), 55);
 		
-		bc = color[0];
+		bc = color[3];
 		
 		canvas.background(bc);
 		canvas.fill(255);
@@ -192,9 +192,9 @@ public class Voltage implements VisualListener, SolarListener {
 		rad = ((applet.sin(0) + 1f) / 2f) * rad * 0.25f + rad * 0.75f;
 
 		
-		float c1 = color[1] >> 16 & 0xFF;
-		float c2 = color[1] >> 8 & 0xFF;;
-		float c3 = color[1] & 0xFF;
+		float c1 = color[0] >> 16 & 0xFF;
+		float c2 = color[0] >> 8 & 0xFF;;
+		float c3 = color[0] & 0xFF;
 		
 		canvas.fill(calcColor(60, applet.color(c1, c2, c3, 88), applet.color(c1, c2, c3, 150), applet.color(c1, c2, c3, 200)));
 		//canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(200, 31, 255, 150)));
@@ -214,9 +214,9 @@ public class Voltage implements VisualListener, SolarListener {
 			rad = ((applet.sin(step) + 1f) / 2f) * rad * 0.3f + rad * 0.8f;
 		}
 		
-		float c1 = color[2] >> 16 & 0xFF;
-		float c2 = color[2] >> 8 & 0xFF;;
-		float c3 = color[2] & 0xFF;
+		float c1 = color[1] >> 16 & 0xFF;
+		float c2 = color[1] >> 8 & 0xFF;;
+		float c3 = color[1] & 0xFF;
 		
 		canvas.fill(calcColor(100, applet.color(c1, c2, c3, 88), applet.color(c1, c2, c3, 88), applet.color(c1, c2, c3, 88)));
 

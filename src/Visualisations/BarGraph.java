@@ -81,10 +81,10 @@ public class BarGraph implements VisualListener, SolarListener {
 		
 		canvas.beginDraw();
 		canvas.background(0);
-		canvas.fill(color[0]);
+		canvas.fill(color[1]);
 		canvas.noStroke();
 		canvas.rect(0, 0, canvas.width, canvas.height);
-		canvas.fill(color[1]);
+		canvas.fill(color[0]);
 		int start = 0;
 		if(live_site_data.size()>17){
 			start = live_site_data.size()-17;

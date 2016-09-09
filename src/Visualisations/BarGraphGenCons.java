@@ -39,10 +39,14 @@ public class BarGraphGenCons implements VisualListener, SolarListener {
 		color = new int[]{ applet.color(45, 47, 48),
 			    applet.color(244, 99, 97),
 			    applet.color(244, 200, 97)};
-		lerp_color = applet.lerpColor(color[1], color[2], 0.5f);
+		lerp_color = applet.lerpColor(color[0], color[1], 0.5f);
 		
 		live_site_data  = api.getLiveSiteData();
-		highestValue = api.getMaxGenCons(120);
+		highestValue = api.getMaxGenCons(60);
+		//highestValue = api.getMaxCons();
+		System.out.println(highestValue);
+		//highestValue = api.getMaxGen();
+		//System.out.println(highestValue);
 	}
 	
 	public PGraphics draw() {
@@ -53,10 +57,10 @@ public class BarGraphGenCons implements VisualListener, SolarListener {
 		
 		canvas.beginDraw();
 		canvas.background(0);
-		canvas.fill(color[0]);
+		canvas.fill(color[2]);
 		canvas.noStroke();
 		canvas.rect(0, 0, canvas.width, canvas.height);
-		canvas.fill(color[1]);
+		canvas.fill(color[0]);
 		int start = 0;
 		if(live_site_data.size()>17){
 			start = live_site_data.size()-17;
@@ -69,12 +73,12 @@ public class BarGraphGenCons implements VisualListener, SolarListener {
 			float val_gen = PApplet.map(gen, 0, highestValue, 0, 120);
 
 			if(val_gen>=val_cons){
-				canvas.fill(color[1]);
+				canvas.fill(color[0]);
 				canvas.rect((17-(live_site_data.size()-i))*10, 120-val_gen, 10, 120);
 				canvas.fill(lerp_color);
 				canvas.rect((17-(live_site_data.size()-i))*10, 120-val_cons, 10, 120);
 			}else{
-				canvas.fill(color[2]);
+				canvas.fill(color[1]);
 				canvas.rect((17-(live_site_data.size()-i))*10, 120-val_cons, 10, 120);
 				canvas.fill(lerp_color);
 				canvas.rect((17-(live_site_data.size()-i))*10, 120-val_gen, 10, 120);
@@ -104,7 +108,8 @@ public class BarGraphGenCons implements VisualListener, SolarListener {
 		// TODO Auto-generated method stub
 		
 		live_site_data = api.getLiveSiteData();
-		highestValue = api.getMaxGenCons(120);
+		highestValue = api.getMaxGenCons(60);
+		//highestValue = api.getMaxCons();
 		//System.out.println(highestValue);
 	}
 
@@ -118,7 +123,7 @@ public class BarGraphGenCons implements VisualListener, SolarListener {
 				for(int i=0; i<value.getColorsAsRGB().size(); i++){
 					int[] col = value.getColorsAsRGB().get(i);
 					color[i] = applet.color(col[0], col[1], col[2]);
-					lerp_color = applet.lerpColor(color[1], color[2], 0.5f);
+					lerp_color = applet.lerpColor(color[0], color[1], 0.5f);
 				}
 			}
 		}
