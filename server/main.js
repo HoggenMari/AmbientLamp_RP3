@@ -3,6 +3,7 @@ var fs        = require('fs');
 var net       = require('net');
 var os = Npm.require('os');
 var JSFtp     = require("jsftp");
+var LoggerFile = require("logger");
 // Initialize Logger
 this.log = new Logger();
 
@@ -18,7 +19,7 @@ var LogFile = new LoggerFile(log, {
         var time_converted=('0'  + time.getHours()).slice(-2)+':'+('0'  + time.getMinutes()).slice(-2)+':'+('0' + time.getSeconds()).slice(-2);
         return "[" + level + "]," + message + "," + (time.getDate()) + "/" + (month) + "/" + (time.getYear()+1900) + " " + time_converted + "," + userId + "," + data + "\r\n";
     },
-    path: '/' /* Use absolute storage path */
+    path: '/logs' /* Use absolute storage path */
 });
 
 // Enable LoggerFile with default settings
