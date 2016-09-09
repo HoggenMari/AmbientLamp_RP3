@@ -1075,8 +1075,6 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 	}*/
 	
 	public List<LiveSiteDataEntry> getLiveSiteData() {
-        
-		//System.out.println("Test Concurrent HashMap");
 		
 		//if(1==1){
 		Date date = new Date();
@@ -1094,8 +1092,12 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 				Gson gson = new Gson();
 				live_site_data_map = new ConcurrentHashMap<String,LiveSiteDataEntry>();
         
-				for(int i=0; i<getArray.size(); i++){
-					live_site_data_map.put(gson.fromJson(getArray.get(i), LiveSiteDataEntry.class).t_stamp, gson.fromJson(getArray.get(i), LiveSiteDataEntry.class));
+				if(getArray != null){
+					for(int i=0; i<getArray.size(); i++){
+						live_site_data_map.put(gson.fromJson(getArray.get(i), LiveSiteDataEntry.class).t_stamp, gson.fromJson(getArray.get(i), LiveSiteDataEntry.class));
+					}
+				}else{
+					return new ArrayList<LiveSiteDataEntry>();
 				}
 					    
 				Object[] listeners = listenerList.getListenerList();
@@ -1111,6 +1113,10 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 			
 		}else if(lastUpdateLiveSiteData < timeStamp-(timeStamp%30000)) {
 			
+			if(live_site_data_map != null){
+				System.out.println("LiveSiteDataSize: "+live_site_data_map.size());
+			}
+			
 			lastUpdateLiveSiteData = timeStamp;
 			
 			JsonObject jsonObject = requestData("/live_site_data/"+Integer.toString(site_id)+"?last_six=true"+"&last_sync=false");
@@ -1121,25 +1127,26 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 				Gson gson = new Gson();
 				//live_site_data = new ArrayList<LiveSiteDataEntry>();
         
-				for(int i=0; i<getArray.size(); i++){
-					LiveSiteDataEntry entry = gson.fromJson(getArray.get(i), LiveSiteDataEntry.class);
-					//System.out.println(entry.t_stamp);
-					boolean contains = false;
+				if(getArray != null){
+					for(int i=0; i<getArray.size(); i++){
+						LiveSiteDataEntry entry = gson.fromJson(getArray.get(i), LiveSiteDataEntry.class);
+						//System.out.println(entry.t_stamp);
+						boolean contains = false;
 
-					Iterator<String> iterator = live_site_data_map.keySet().iterator();
-					while(iterator.hasNext()){
-						String key = iterator.next();
-						if(live_site_data_map.get(key).t_stamp.equals(entry.t_stamp)){
-							contains = true;
+						Iterator<String> iterator = live_site_data_map.keySet().iterator();
+						while(iterator.hasNext()){
+							String key = iterator.next();
+							if(live_site_data_map.get(key).t_stamp.equals(entry.t_stamp)){
+								contains = true;
+							}
+						}
+						if(!contains){
+							live_site_data_map.put(entry.t_stamp, entry);
 						}
 					}
-					if(!contains){
-						live_site_data_map.put(entry.t_stamp, entry);
-					}
-				
-				
+				}else{
+					return new ArrayList<LiveSiteDataEntry>(); 
 				}
-			
 				//update listeners
 				//System.out.println("update listeners");
 				Object[] listeners = listenerList.getListenerList();
