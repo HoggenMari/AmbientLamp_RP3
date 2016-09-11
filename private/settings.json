@@ -9,10 +9,10 @@
       "img" : "/lamp11.png",
       "index" : 0,
       "colors" : [
-        { "color" : "#ded46f", "index" : 0, "annotation" : "Solar Production" },
-        { "color" : "#8760be", "index" : 1, "annotation" : "Energy Consumption" },
-        { "color" : "#FFFFFF", "index" : 2, "annotation" : "Notification high current Consumption" },
-        { "color" : "#2d2f30", "index" : 3, "annotation" : "" }
+        { "color" : "#ded46f", "index" : 0, "annotation" : "Solar Production", "description" : "Solar Production", "colorlabel" : "Fill Color" },
+        { "color" : "#8760be", "index" : 1, "annotation" : "Energy Consumption", "description" : "Energy Production", "colorlabel" : "Fill Color" },
+        { "color" : "#FFFFFF", "index" : 2, "annotation" : "Notification high current Consumption", "description" : "Notification high current Consumption", "colorlabel" : "Fill Color" },
+        { "color" : "#2d2f30", "index" : 3, "annotation" : "", "description" : "Background", "colorlabel" : "Color" }
       ],
       "checked" : false,
       "active" : true,
@@ -29,11 +29,11 @@
       "img" : "/lamp12.png",
       "index" : 1,
       "colors" : [
-        { "color" : "#7a4eb7", "index" : 0, "annotation" : "Energy Consumption" },
-        { "color" : "#FFFFFF", "index" : 1, "annotation" : "Enegry Consumption" },
-        { "color" : "#fec533", "index" : 2, "annotation" : "Solar Production" },
-        { "color" : "#FFFFFF", "index" : 3, "annotation" : "Solar Production" },
-        { "color" : "#000000", "index" : 4, "annotation" : "" }
+        { "color" : "#7a4eb7", "index" : 0, "annotation" : "Energy Consumption", "description" : "Energy Consumption", "colorlabel" : "Dot Color" },
+        { "color" : "#FFFFFF", "index" : 1, "annotation" : "Energy Consumption", "description" : "Energy Consumption", "colorlabel" : "Text Color" },
+        { "color" : "#fec533", "index" : 2, "annotation" : "Solar Production", "description" : "Solar Production", "colorlabel" : "Dot Color" },
+        { "color" : "#FFFFFF", "index" : 3, "annotation" : "Solar Production", "description" : "Solar Production", "colorlabel" : "Text Color" },
+        { "color" : "#000000", "index" : 4, "annotation" : "", "description" : "Background", "colorlabel" : "Color"  }
       ],
       "checked" : false,
       "active" : false,
@@ -49,8 +49,8 @@
       "img" : "/lamp13.png",
       "index" : 2,
       "colors" : [
-        { "color" : "#843820", "index" : 0, "annotation" : "Energy Consumption" },
-        { "color" : "#71889b", "index" : 1, "annotation" : "" }
+        { "color" : "#843820", "index" : 0, "annotation" : "Energy Consumption", "description" : "Energy Consumption", "colorlabel" : "Fill Color" },
+        { "color" : "#71889b", "index" : 1, "annotation" : "", "description" : "Background", "colorlabel" : "Color"  }
       ],
       "checked" : false,
       "active" : false,
@@ -66,13 +66,14 @@
       "img" : "/lamp14.png",
       "index" : 3,
       "colors" : [
-        { "color" : "#ffca6b", "index" : 0, "annotation" : "Solar Production" },
-        { "color" : "#8f6cb6", "index" : 1, "annotation" : "Energy Consumption" },
-        { "color" : "#040725", "index" : 2, "annotation" : "" }
+        { "color" : "#ffca6b", "index" : 0, "annotation" : "Solar Production", "description" : "Solar Production", "colorlabel" : "Fill Color" },
+        { "color" : "#8f6cb6", "index" : 1, "annotation" : "Energy Consumption", "description" : "Energy Consumption", "colorlabel" : "Fill Color" },
+        { "color" : "#040725", "index" : 2, "annotation" : "", "description" : "Background", "colorlabel" : "Color" }
       ],
       "checked" : false,
       "active" : false,
       "geniusActive" : false,
+      "pausedActive" : false,
       "pausedActive" : false,
       "settingActive" : false
     }

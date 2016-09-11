@@ -504,14 +504,14 @@ a:hover {
   background-color: #000000;
   opacity: 0.7;
   width: 460px;
-  height: 250px;
+  height: 280px;
   margin-left: 10px;
   box-shadow: 2px 2px 2px grey;
   border-radius: 10px 10px 10px 10px;
   -moz-border-radius: 10px 10px 10px 10px;
   -webkit-border-radius: 10px 10px 10px 10px;
   border: 0px solid #000000;
-  margin-top: -50px;
+  margin-top: -90px;
   display: none;
 }
 
@@ -608,7 +608,7 @@ a:hover {
     -moz-border-radius: 10px 10px 10px 10px;
     -webkit-border-radius: 10px 10px 10px 10px;
     border: 0px solid #000000;
-    margin-top: -80px;
+    margin-top: -90px;
     display: none;
   }
 
