@@ -211,6 +211,8 @@
                     console.log("test");
                     //console.log($color.parentNode.parentNode);
 
+                    $(".noUi-base").css("background","linear-gradient(#FFFFFF,#000000)");
+
                     var list = $("#colors").children();
                     console.log(list);
                     console.log(list.length);
@@ -314,6 +316,9 @@
 
                 self.setColor("rgb(" + colorData[0] + "," + colorData[1] + "," + colorData[2] + ")");
 
+                console.log("getColor");
+
+                $(".noUi-base").css("background","linear-gradient("+self.colorHex+",#000000)")
                 $container.dispatchEvent(changeEvent, [self.colorHex, self.colorRGB]);
 
                 return self.colorRGB;
