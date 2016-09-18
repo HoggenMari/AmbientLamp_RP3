@@ -10,7 +10,7 @@
       "index" : 0,
       "colors" : [
         { "color" : "#ded46f", "index" : 0, "annotation" : "Solar Production", "description" : "Solar Production", "colorlabel" : "Fill Color" },
-        { "color" : "#8760be", "index" : 1, "annotation" : "Energy Consumption", "description" : "Energy Production", "colorlabel" : "Fill Color" },
+        { "color" : "#8760be", "index" : 1, "annotation" : "Energy Consumption", "description" : "Energy Consumption", "colorlabel" : "Fill Color" },
         { "color" : "#FFFFFF", "index" : 2, "annotation" : "Notification high current Consumption", "description" : "Notification high current Consumption", "colorlabel" : "Fill Color" },
         { "color" : "#2d2f30", "index" : 3, "annotation" : "", "description" : "Background", "colorlabel" : "Color" }
       ],
