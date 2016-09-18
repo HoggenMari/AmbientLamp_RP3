@@ -24,9 +24,11 @@ import FenoDMX.Screen;
 import SolarAPI.SolarAnalyticsAPI;
 import SolarAPI.SolarAnalyticsAPI.GRAN;
 import SolarAPI.SolarAnalyticsAPI.MONITORS;
+import SolarAPI.WeatherAPI;
 import Visualisations.BarGraph;
 import Visualisations.BarGraphGenCons;
 import Visualisations.Circle;
+import Visualisations.Cloud;
 import Visualisations.Text;
 import Visualisations.Voltage;
 import processing.core.PApplet;
@@ -45,6 +47,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	int brightness, saturation;
 	int currentBrightness, currentSaturation;
 	SolarAnalyticsAPI api;
+	WeatherAPI weather;
 	
 	private Voltage voltage;
 	private Circle circle;
@@ -57,6 +60,10 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	
 	ArrayList<Visual> visualList;
 	int activeVisual = 0;
+	
+	//Cloud
+	private Cloud cloud;
+	private int clIndex;
 
 	//GENIUS
 	boolean first = false;
@@ -109,13 +116,16 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
     	api = SolarAnalyticsAPI.getInstance();
     	api.start();
     	
+    	weather = WeatherAPI.getInstance();
+    	
 		voltage = new Voltage(this, sensorData, createGraphics(85, 60, P2D));
 		//circle = new Circle(this, sensorData, api, createGraphics(85, 60, P2D));
 
 		bargraph = new BarGraph(this, sensorData, createGraphics(170, 120, P2D));
 		bargraph_gencons = new BarGraphGenCons(this, sensorData, createGraphics(170, 120, P2D));
 		text = new Text(this, sensorData, createGraphics(17, 12, P2D));
-
+		cloud = new Cloud(this);
+		
 		visualList = new ArrayList<Visual>();
 		
 		//visualList.add(new Visual("Circle", new String[] { "#FFFFFF", "#FFFFFF", "#FFFFFF" }, false, false));
@@ -153,6 +163,15 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 
 		//pSend = downscale(canvasFade, 0);
 		
+		if(frameCount%100==0)
+		if (clIndex <= 8) {
+			clIndex++;
+		}else{
+			clIndex = 0;
+		}
+		cloud.changeCloud(clIndex);
+		
+		canvasFade = drawMode(4);
 			
 		//System.out.println("test");
 		pSend.beginDraw();
@@ -290,6 +309,12 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 			  }
 		}
 		
+		//Weather API Test
+		System.out.println("WEATHER");
+		for(String s : weather.getForecastArray()){
+			System.out.println(s);
+		}
+		
 	}
 
 	
@@ -308,6 +333,8 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 			return downscale(bargraph.draw(), 0);
 		case 3:
 			return downscale(bargraph_gencons.draw(), 1);
+		case 4:
+			return cloud.draw();
 		default:
 			return voltage.draw();
 		}
