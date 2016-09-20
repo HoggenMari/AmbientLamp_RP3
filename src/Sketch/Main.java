@@ -197,7 +197,17 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 					pSend.rect(ix, iy, 1, 1);
 			}
 		}
-		pSend.endDraw();
+		//LED TEST
+		/*pSend.beginDraw();
+		pSend.colorMode(RGB);
+		pSend.background(255);
+		pSend.fill(0,0,255);
+		pSend.rect(0, 0, 17, 1);
+		pSend.fill(255);
+		for(int i=0; i<12; i++){
+			pSend.rect(i, i, 1, 1);
+		}
+		pSend.endDraw();*/
 		
 		if(currentBrightness<brightness){
 			currentBrightness++;
@@ -310,9 +320,9 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		}
 		
 		//Weather API Test
-		System.out.println("WEATHER");
+		//System.out.println("WEATHER");
 		for(String s : weather.getForecastArray()){
-			System.out.println(s);
+			//System.out.println(s);
 		}
 		
 	}

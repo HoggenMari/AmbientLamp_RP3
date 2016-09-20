@@ -32,7 +32,7 @@ public class Screen extends Thread {
 
 	static byte[] sync_data = new byte[16];
 
-	static final String HOST = "192.168.0.99";
+	static final String HOST = "193.168.0.98";
 	static int PORT = 53280;
 	private static InetAddress INET_ADDR;
 	private static DatagramSocket SOCKET;
@@ -116,7 +116,7 @@ public class Screen extends Thread {
 		if(controller == 0){
 			sendFeno(nRow);
 		}else if(controller == 1){
-			//sendArtNet(nRow);
+			sendArtNet(nRow);
 			sendIpad(nRow);
 		}
 	}
