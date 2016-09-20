@@ -27,7 +27,7 @@ public class Cloud {
 		this.p = p;
 		this.imgArrayList = new ArrayList<ImageArray>();
 
-		dir = new File("/Users/hoggenmueller/Documents/MasterArbeit/Software/Eclipse/SolarAnalytics/src/cloud");
+		dir = new File("/home/pi/solarvisualisations/src/cloud");
 		list = dir.list();
 
 		for (String s : list) {
