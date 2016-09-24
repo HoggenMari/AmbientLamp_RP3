@@ -34,6 +34,7 @@ import Visualisations.Voltage;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
+import processing.serial.*;
 
 public class Main extends PApplet implements SensorListener, VisualListener, GeniusListener {
 
@@ -91,6 +92,10 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	
 	int load = 0;
 	
+	// Arduino Serial
+	Serial myPort;  // Create object from Serial class
+	String val;     // Data received from the serial port
+	
 	public static void main(final String... args){
     	
 		PApplet.main(new String[] { "--present", "Sketch.Main" });
@@ -134,12 +139,19 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		client = new DDPClient("localhost", 3000);
     	client.connect();
     	
+    	//Arduino Serial
+    	//String portName = Serial.list()[0]; //change the 0 to a 1 or 2 etc. to match your port
+    	for(int i=0; i<Serial.list().length; i++){
+    		System.out.println(Serial.list()[i]);
+    	}
+    	//myPort = new Serial(this, portName, 9600);
     	
     	delay(2000);
 	}
 	
 	public void draw() {
-				
+		
+		//frameRate(30);
 		//System.out.println("GENIUS: "+geniusMode);
 		if(frameCount%200==0){
 			//System.out.println("active:"+active+" next:"+next+" geniusCtr:"+geniusCtr);
@@ -163,15 +175,15 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 
 		//pSend = downscale(canvasFade, 0);
 		
-		/*if(frameCount%100==0)
+		if(frameCount%1000==0)
 		if (clIndex <= 8) {
 			clIndex++;
 		}else{
 			clIndex = 0;
 		}
-		cloud.changeCloud(clIndex);*/
+		cloud.changeCloud(clIndex);
 		
-		//canvasFade = drawMode(4);
+		canvasFade = drawMode(4);
 			
 		//System.out.println("test");
 		pSend.beginDraw();

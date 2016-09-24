@@ -31,7 +31,8 @@ public class ImageArray {
 
 					// System.out.println(s);
 					PImage img = p.loadImage(dir + "/" + s);
-					img.filter(p.BLUR, 1);
+					img.filter(p.BLUR, 2);
+					img.filter(p.BLUR, 2);
 					img.resize(17, 12);
 					imgList.add(img);
 				}
@@ -46,7 +47,7 @@ public class ImageArray {
 		if (index < imgList.size() - 1) {
 			index++;
 			smoothIndex = 0;
-		} else if (smoothIndex < 40) {
+		} else if (smoothIndex < 100) {
 			PGraphics pg = p.createGraphics(img.width, img.height, PConstants.P2D);
 			PImage img1 = imgList.get(imgList.size() - 1);
 			// img.filter(p.BLUR, 1);
@@ -57,7 +58,7 @@ public class ImageArray {
 			for (int x = 0; x < img.width; x++) {
 				for (int y = 0; y < img.height; y++) {
 					int c = p.lerpColor(img1.get(x, y), img2.get(x, y),
-							(float) (smoothIndex / 40.0));
+							(float) (smoothIndex / 100.0));
 					// color c = img2.get(x,y);
 					pg.noStroke();
 					pg.fill(c);

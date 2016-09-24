@@ -14,5 +14,12 @@
 	<classpathentry kind="lib" path="lib/httpcore-4.2.3.jar"/>
 	<classpathentry kind="lib" path="lib/artnet4j.jar"/>
 	<classpathentry kind="lib" path="lib/udp.jar"/>
+	<classpathentry kind="lib" path="lib/serial.jar"/>
+	<classpathentry kind="lib" path="lib/rxtx-2.1-7-bins-r2/Mac_OS_X/librxtxSerial.jnilib"/>
+	<classpathentry kind="lib" path="lib/rxtx-2.1-7-bins-r2/RXTXcomm.jar"/>
+	<classpathentry kind="lib" path="lib/rxtx-2.1-7-bins-r2/Linux/x86_64-unknown-linux-gnu/librxtxSerial.so"/>
+	<classpathentry kind="lib" path="lib/rxtx-2.1-7-bins-r2/Linux/i686-unknown-linux-gnu/librxtxParallel.so"/>
+	<classpathentry kind="lib" path="lib/rxtx-2.1-7-bins-r2/Linux/i686-unknown-linux-gnu/librxtxSerial.so"/>
+	<classpathentry kind="lib" path="lib/rxtx-2.1-7-bins-r2/Linux/ia64-unkown-linux-gnu/librxtxSerial.so"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -27,7 +27,7 @@ public class Cloud {
 		this.p = p;
 		this.imgArrayList = new ArrayList<ImageArray>();
 
-		dir = new File("/home/pi/solarvisualisations/src/cloud");
+		dir = new File("/Users/hoggenmueller/Documents/MasterArbeit/Software/Eclipse/SolarAnalytics/src/cloud");
 		list = dir.list();
 
 		for (String s : list) {
@@ -38,7 +38,7 @@ public class Cloud {
 		}
 
 		init = true;
-		System.out.println("Finished");
+		//System.out.println("Finished");
 	}
 
 	public boolean isInit() {
@@ -54,21 +54,21 @@ public class Cloud {
 	public PImage getCloudImage() {
 		// System.out.println("GO");
 		PImage img = imgArrayList.get(index).nextFrame();
-		p.image(img, 0, 200);
+		//p.image(img, 0, 200);
 		PImage img2 = imgArrayList.get(cloudType).nextFrame();
-		p.image(img2, 0, 300);
+		//p.image(img2, 0, 300);
 		// img.resize(17, 12);
 
 		if (change == false && cloudType != index) {
 			change = true;
 			smoothIndex = 0;
-			System.out.println("Change1");
+			//System.out.println("Change1");
 		}
 
 		if (change && smoothIndex <= 50) {
-			System.out.println("Change2");
+			//System.out.println("Change2");
 			// PImage img2 = imgArrayList.get(1).nextFrame();
-			p.image(img2, 0, 300);
+			//p.image(img2, 0, 300);
 			// img2.resize(17, 12);
 			PGraphics pg = p.createGraphics(img.width, img.height, PConstants.P2D);
 			pg.beginDraw();
@@ -84,12 +84,12 @@ public class Cloud {
 				}
 			}
 			pg.endDraw();
-			p.image(pg, 0, 400);
+			//p.image(pg, 0, 400);
 			img = pg;
 			smoothIndex++;
 
 		} else if (change) {
-			System.out.println("Change3");
+			//System.out.println("Change3");
 			smoothIndex = 0;
 			change = false;
 			index = cloudType;
@@ -110,17 +110,19 @@ public class Cloud {
 
 		sky_copy.resize(17, 12);
 		// image(sky, 200, 0);
-		sky_copy.filter(PConstants.BLUR, 1);
+		//sky_copy.filter(PConstants.BLUR, 1);
 
-		p.image(sky_copy, 500, 50);
+		//p.image(sky_copy, 500, 50);
 
 		// p.image(downscale(sky_copy, 0), 200, 50);
 
-		PImage img = downscale(sky_copy, 0);
-		return (PGraphics) img;
+		//PImage img = downscale(sky_copy, 0);
+		//return (PGraphics) img;
+		
+		return sky_copy;
 	}
 
-	PGraphics downscale(PGraphics pg, int intensity) {
+	/*PGraphics downscale(PGraphics pg, int intensity) {
 		PImage in = pg.get();
 		in.filter(PConstants.BLUR, intensity);
 		// in.resize(17, 120);
@@ -136,5 +138,5 @@ public class Cloud {
 		// out.image(in, 0, 0);
 		out.endDraw();
 		return out;
-	}
+	}*/
 }
