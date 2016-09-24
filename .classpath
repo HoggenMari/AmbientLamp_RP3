@@ -15,6 +15,6 @@
 	<classpathentry kind="lib" path="lib/artnet4j.jar"/>
 	<classpathentry kind="lib" path="lib/udp.jar"/>
 	<classpathentry kind="lib" path="lib/serial.jar"/>
-	<classpathentry kind="lib" path="lib/jSSC-2.7.0-Release/jssc.jar"/>
+	<classpathentry kind="lib" path="lib/jssc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

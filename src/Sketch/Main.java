@@ -139,7 +139,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
     	
     	
     	
-    	SerialPort serialPort = new SerialPort("/dev/ttyACM0");
+    	SerialPort serialPort = new SerialPort("/dev/cu.usbmodem1421");
         try {
             System.out.println("Port opened: " + serialPort.openPort());
             System.out.println("Params setted: " + serialPort.setParams(9600, 8, 1, 0));
