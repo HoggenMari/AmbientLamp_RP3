@@ -390,11 +390,11 @@ Meteor.methods({
     },
     'update': function(options) {
         var ret = JSON.parse(options);
-        console.log("call from java");
+        //console.log("call from java");
         if(Settings.findOne({name: "Genius"}).geniusActive==true) {
             if (ret.collection == "visuals") {
                 if (ret.msg == "changed") {
-                    console.log(ret.fields.geniusActive);
+                    //console.log(ret.fields.geniusActive);
                     //Visuals.update(ret.id, {})
                     Visuals.update({_id: ret.id}, {$set: {"geniusActive": ret.fields.geniusActive}});
                     if(ret.fields.geniusActive) {
@@ -402,6 +402,12 @@ Meteor.methods({
                         log.info("System", message, ip);
                     }
                 }
+            }
+        }
+        if(ret.collection == "settings"){
+            if (ret.msg == "changed") {
+                //console.log("Settings changed");
+                Settings.update({_id: ret.id},{$set: {"score": ret.fields.score}});
             }
         }
     },
