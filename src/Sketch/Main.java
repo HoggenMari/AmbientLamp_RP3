@@ -1,6 +1,7 @@
 package Sketch;
 
 import java.awt.Color;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -9,6 +10,8 @@ import java.util.HashMap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.stream.MalformedJsonException;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -167,7 +170,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
     			                	receivedString = "";
     			                }
     			            }
-    			            catch (SerialPortException ex) {
+    			            catch (SerialPortException | ParseException ex) {
     			                System.out.println("Error in receiving string from COM-port: " + ex);
     			            }
     			        }    			}
@@ -193,6 +196,12 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		//System.out.println("GENIUS: "+geniusMode);
 		if(frameCount%200==0){
 			//System.out.println("active:"+active+" next:"+next+" geniusCtr:"+geniusCtr);
+			/*try {
+				serialPort.writeString("Motors on\n");
+			} catch (SerialPortException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
 		}
 		
 		// -------FADE
@@ -221,7 +230,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		}
 		cloud.changeCloud(clIndex);
 		
-		canvasFade = drawMode(4);
+		//canvasFade = drawMode(4);
 			
 		//System.out.println("test");
 		pSend.beginDraw();
@@ -643,26 +652,33 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		saturation = (int)(e.getSaturation()*255);
 	}
 	
-	public void processArduino(String message){
+	public void processArduino(String message) throws ParseException{
 		
 		//message = message.replace("\n", "");
 		System.out.println(message);
 
 		JsonObject jsonObject;
 		JsonParser jejpl = new JsonParser();
-		JsonElement el = jejpl.parse((String) message);
-		if(el.isJsonObject()){
-		jsonObject = el.getAsJsonObject();
-		//System.out.println(jsonObject);
-		if(jsonObject.has("sensor")){
-			String sensor = jsonObject.get("sensor").getAsString();
-			if(sensor.equals("brightness")){
-				System.out.println(jsonObject.get("data"));
-				String s = "{\"msg\":\"changed\", \"collection\":\"settings\", \"id\":\""+sensorData.getBrightnessID()+"\", \"fields\":{\"score\":"+jsonObject.get("data")+"}}";
-				client.call(s);
+		JsonElement el;
+		try {
+			el = jejpl.parse((String) message);
+			if(el.isJsonObject()){
+				jsonObject = el.getAsJsonObject();
+				//System.out.println(jsonObject);
+				if(jsonObject.has("sensor")){
+					String sensor = jsonObject.get("sensor").getAsString();
+					if(sensor.equals("brightness")){
+						//System.out.println(jsonObject.get("data"));
+						String s = "{\"msg\":\"changed\", \"collection\":\"settings\", \"id\":\""+sensorData.getBrightnessID()+"\", \"fields\":{\"score\":"+jsonObject.get("data")+"}}";
+						client.call(s);
+					}
+				}
 			}
+		} catch (JsonSyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		}
+		
 		
 		
 	}
