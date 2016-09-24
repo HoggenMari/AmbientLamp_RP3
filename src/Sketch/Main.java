@@ -129,7 +129,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		bargraph = new BarGraph(this, sensorData, createGraphics(170, 120, P2D));
 		bargraph_gencons = new BarGraphGenCons(this, sensorData, createGraphics(170, 120, P2D));
 		text = new Text(this, sensorData, createGraphics(17, 12, P2D));
-		cloud = new Cloud(this);
+		//cloud = new Cloud(this);
 		
 		visualList = new ArrayList<Visual>();
 		
@@ -181,9 +181,9 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		}else{
 			clIndex = 0;
 		}
-		cloud.changeCloud(clIndex);
+		//cloud.changeCloud(clIndex);
 		
-		canvasFade = drawMode(4);
+		//canvasFade = drawMode(4);
 			
 		//System.out.println("test");
 		pSend.beginDraw();
