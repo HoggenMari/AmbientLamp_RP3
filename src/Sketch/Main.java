@@ -6,6 +6,9 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -130,7 +133,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		bargraph = new BarGraph(this, sensorData, createGraphics(170, 120, P2D));
 		bargraph_gencons = new BarGraphGenCons(this, sensorData, createGraphics(170, 120, P2D));
 		text = new Text(this, sensorData, createGraphics(17, 12, P2D));
-		//cloud = new Cloud(this);
+		cloud = new Cloud(this);
 		
 		visualList = new ArrayList<Visual>();
 		
@@ -159,7 +162,8 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
     			                //System.out.println(receivedString);
     			                
     			                if(receivedString.contains("\n")){
-    			                	System.out.print("Received: "+receivedString);
+    			                	//System.out.print("Received: "+receivedString);
+    			                	processArduino(receivedString);
     			                	receivedString = "";
     			                }
     			            }
@@ -215,9 +219,9 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		}else{
 			clIndex = 0;
 		}
-		//cloud.changeCloud(clIndex);
+		cloud.changeCloud(clIndex);
 		
-		//canvasFade = drawMode(4);
+		canvasFade = drawMode(4);
 			
 		//System.out.println("test");
 		pSend.beginDraw();
@@ -637,6 +641,30 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		// TODO Auto-generated method stub
 		//System.out.println("Saturation Changed");
 		saturation = (int)(e.getSaturation()*255);
+	}
+	
+	public void processArduino(String message){
+		
+		//message = message.replace("\n", "");
+		System.out.println(message);
+
+		JsonObject jsonObject;
+		JsonParser jejpl = new JsonParser();
+		JsonElement el = jejpl.parse((String) message);
+		if(el.isJsonObject()){
+		jsonObject = el.getAsJsonObject();
+		//System.out.println(jsonObject);
+		if(jsonObject.has("sensor")){
+			String sensor = jsonObject.get("sensor").getAsString();
+			if(sensor.equals("brightness")){
+				System.out.println(jsonObject.get("data"));
+				String s = "{\"msg\":\"changed\", \"collection\":\"settings\", \"id\":\""+sensorData.getBrightnessID()+"\", \"fields\":{\"score\":"+jsonObject.get("data")+"}}";
+				client.call(s);
+			}
+		}
+		}
+		
+		
 	}
 
 	

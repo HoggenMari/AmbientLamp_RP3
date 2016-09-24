@@ -3,6 +3,7 @@ package Visualisations;
 import java.io.File;
 import java.util.ArrayList;
 
+import Sketch.os;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
@@ -27,7 +28,7 @@ public class Cloud {
 		this.p = p;
 		this.imgArrayList = new ArrayList<ImageArray>();
 
-		dir = new File("/Users/hoggenmueller/Documents/MasterArbeit/Software/Eclipse/SolarAnalytics/src/cloud");
+		dir = new File(os.cloud_path);
 		list = dir.list();
 
 		for (String s : list) {
