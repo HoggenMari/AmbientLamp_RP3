@@ -34,7 +34,8 @@ import Visualisations.Voltage;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
-import processing.serial.*;
+import jssc.SerialPort;
+import jssc.SerialPortException;
 
 public class Main extends PApplet implements SensorListener, VisualListener, GeniusListener {
 
@@ -92,10 +93,6 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	
 	int load = 0;
 	
-	// Arduino Serial
-	Serial myPort;  // Create object from Serial class
-	String val;     // Data received from the serial port
-	
 	public static void main(final String... args){
     	
 		PApplet.main(new String[] { "--present", "Sketch.Main" });
@@ -138,14 +135,24 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 
 		client = new DDPClient("localhost", 3000);
     	client.connect();
+
     	
-    	//Arduino Serial
-    	System.out.println("Serial");
-    	String portName = Serial.list()[0]; //change the 0 to a 1 or 2 etc. to match your port
-    	for(int i=0; i<Serial.list().length; i++){
-    		System.out.println("Serial: "+Serial.list()[i]);
-    	}
-    	//myPort = new Serial(this, portName, 9600);
+    	
+    	
+    	SerialPort serialPort = new SerialPort("/dev/ttyACM0");
+        try {
+            System.out.println("Port opened: " + serialPort.openPort());
+            System.out.println("Params setted: " + serialPort.setParams(9600, 8, 1, 0));
+            System.out.println("\"Hello World!!!\" successfully writen to port: " + serialPort.writeBytes("Hello World!!!".getBytes()));
+            System.out.println("Port closed: " + serialPort.closePort());
+        }
+        catch (SerialPortException ex){
+            System.out.println(ex);
+        }
+        
+        
+        
+        
     	
     	delay(2000);
 	}

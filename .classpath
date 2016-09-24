@@ -21,5 +21,7 @@
 	<classpathentry kind="lib" path="lib/rxtx-2.1-7-bins-r2/Linux/i686-unknown-linux-gnu/librxtxParallel.so"/>
 	<classpathentry kind="lib" path="lib/rxtx-2.1-7-bins-r2/Linux/i686-unknown-linux-gnu/librxtxSerial.so"/>
 	<classpathentry kind="lib" path="lib/rxtx-2.1-7-bins-r2/Linux/ia64-unkown-linux-gnu/librxtxSerial.so"/>
+	<classpathentry kind="lib" path="lib/jSSC-2.7.0-Release/src/jssc-2.7.0-src.jar"/>
+	<classpathentry kind="lib" path="lib/jSSC-2.7.0-Release/jssc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
