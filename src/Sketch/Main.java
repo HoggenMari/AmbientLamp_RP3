@@ -142,7 +142,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
     	//Arduino Serial
     	//String portName = Serial.list()[0]; //change the 0 to a 1 or 2 etc. to match your port
     	for(int i=0; i<Serial.list().length; i++){
-    		System.out.println(Serial.list()[i]);
+    		System.out.println("Serial: "+Serial.list()[i]);
     	}
     	//myPort = new Serial(this, portName, 9600);
     	
