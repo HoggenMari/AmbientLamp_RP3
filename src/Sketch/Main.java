@@ -34,8 +34,7 @@ import Visualisations.Voltage;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
-import jssc.SerialPort;
-import jssc.SerialPortException;
+import jssc.*;
 
 public class Main extends PApplet implements SensorListener, VisualListener, GeniusListener {
 
@@ -93,6 +92,11 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	
 	int load = 0;
 	
+	SerialPort serialPort;
+	StringBuilder message = new StringBuilder();
+	String receivedString = "";
+	Boolean receivingMessage = false;
+	
 	public static void main(final String... args){
     	
 		PApplet.main(new String[] { "--present", "Sketch.Main" });
@@ -139,12 +143,34 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
     	
     	
     	
-    	SerialPort serialPort = new SerialPort("/dev/cu.usbmodem1421");
+    	serialPort = new SerialPort(os.arduino);
         try {
             System.out.println("Port opened: " + serialPort.openPort());
-            System.out.println("Params setted: " + serialPort.setParams(9600, 8, 1, 0));
-            System.out.println("\"Hello World!!!\" successfully writen to port: " + serialPort.writeBytes("Hello World!!!".getBytes()));
-            System.out.println("Port closed: " + serialPort.closePort());
+            System.out.println("Params setted: " + serialPort.setParams(115200, 8, 1, 0));
+    		serialPort.addEventListener(new SerialPortEventListener()
+    		{
+    			@Override
+    			public void serialEvent(SerialPortEvent serialPortEvent)
+    			{
+    				 if(serialPortEvent.isRXCHAR() && serialPortEvent.getEventValue() > 0) {
+    			            try {
+    			                String receivedData = serialPort.readString(serialPortEvent.getEventValue());
+    			                receivedString += receivedData;
+    			                //System.out.println(receivedString);
+    			                
+    			                if(receivedString.contains("\n")){
+    			                	System.out.print("Received: "+receivedString);
+    			                	receivedString = "";
+    			                }
+    			            }
+    			            catch (SerialPortException ex) {
+    			                System.out.println("Error in receiving string from COM-port: " + ex);
+    			            }
+    			        }    			}
+    		});
+            
+            //System.out.println("\"Hello World!!!\" successfully writen to port: " + serialPort.writeBytes("Hello World!!!".getBytes()));
+            //System.out.println("Port closed: " + serialPort.closePort());
         }
         catch (SerialPortException ex){
             System.out.println(ex);
@@ -262,7 +288,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		if (frameCount % 1 == 0) {
 			screen.drawOnGui();
 		}
-		screen.send(9,8,0,0,0);
+		//screen.send(9,8,0,0,0);
 		
 		if(frameCount % 1000 == 0){	
 			
@@ -612,4 +638,6 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		//System.out.println("Saturation Changed");
 		saturation = (int)(e.getSaturation()*255);
 	}
+
+	
 }
