@@ -107,7 +107,7 @@ public class Voltage implements VisualListener, SolarListener {
 
 		timer = (int) (step * 3);
 		if (timer % 2 == 0 && !electronEmitted) {
-			//electrons.add(new Electron(applet, canvas));
+			electrons.add(new Electron(applet, canvas));
 			electronEmitted = true;
 		} else if (timer % 2 != 0 && electronEmitted) {
 			electronEmitted = false;
@@ -115,7 +115,7 @@ public class Voltage implements VisualListener, SolarListener {
 
 		if(notification){
 			if(change_consumption>0.1*max_consumption || fake){
-				if (timer % 30 == 0){
+				if (timer % 20 == 0){
 					float c1 = color[2] >> 16 & 0xFF;
 					float c2 = color[2] >> 8 & 0xFF;;
 					float c3 = color[2] & 0xFF;
