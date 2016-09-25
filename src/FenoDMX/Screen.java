@@ -321,7 +321,7 @@ public class Screen extends Thread {
 	    artnet.unicastPacket(dmx, HOST);
 	    sequenceID++;
 	    
-	    p.delay(5);
+	    p.delay(10);
 	    
 		}
 
