@@ -192,7 +192,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	
 	public void draw() {
 		
-		//frameRate(30);
+		frameRate(30);
 		//System.out.println("GENIUS: "+geniusMode);
 		if(frameCount%200==0){
 			//System.out.println("active:"+active+" next:"+next+" geniusCtr:"+geniusCtr);
