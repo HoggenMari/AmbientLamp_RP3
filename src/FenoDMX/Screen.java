@@ -294,7 +294,7 @@ public class Screen extends Thread {
 		ArtDmxPacket dmx = new ArtDmxPacket();
 	    dmx.setUniverse(0, i_universe);
 	    dmx.setSequenceID(sequenceID % 255);
-	    byte[] data = new byte[510];
+	    byte[] data = new byte[(nRow[i_universe] * 12 * 3)];
 	    
 	    int sum = 0;
 		for (int i = 0; i < i_universe; i++) {
@@ -313,9 +313,13 @@ public class Screen extends Thread {
 			}
 		}
 
-		for (int j = 0; j < 510 - (nRow[i_universe] * 12 * 3); j++) {
-			data[data_counter++] = (byte) 0;
-		}
+		//for (int j = 0; j < 510 - (nRow[i_universe] * 12 * 3); j++) {
+		//	data[data_counter++] = (byte) 0;
+		//}
+		
+		//for(int i=0; i<data.length; i++){
+		//	System.out.println(data[i]);
+		//}
 	    
 	    dmx.setDMX(data, data.length);
 	    artnet.unicastPacket(dmx, HOST);
