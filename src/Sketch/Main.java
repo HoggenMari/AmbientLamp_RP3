@@ -230,12 +230,12 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		}
 		cloud.changeCloud(clIndex);
 		
-	    canvasFade = drawMode(4);
+	    //canvasFade = drawMode(4);
 		
-		//canvasFade.beginDraw();
-		//canvasFade.fill(frameCount&255);
-		//canvasFade.rect(0, 0, 17, 12);
-		//canvasFade.endDraw();
+		canvasFade.beginDraw();
+		canvasFade.fill(frameCount&255);
+		canvasFade.rect(0, 0, 17, 12);
+		canvasFade.endDraw();
 			
 		//System.out.println("test");
 		pSend.beginDraw();
