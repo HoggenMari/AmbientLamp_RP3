@@ -408,6 +408,8 @@ Meteor.methods({
             if (ret.msg == "changed") {
                 //console.log("Settings changed");
                 Settings.update({_id: ret.id},{$set: {"score": ret.fields.score}});
+                var message = Settings.findOne(ret.id).name + " Increase "+ret.fields.score;
+                log.info("Arduino", message, ip);
             }
         }
     },
