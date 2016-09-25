@@ -269,15 +269,15 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		pSend.endDraw();*/
 		
 		if(currentBrightness<brightness){
-			currentBrightness++;
+			currentBrightness+=2;
 		}else if(currentBrightness>brightness){
-			currentBrightness--;
+			currentBrightness-=2;
 		}
 		
 		if(currentSaturation<saturation){
-			currentSaturation++;
+			currentSaturation+=2;
 		}else if(currentSaturation>saturation){
-			currentSaturation--;
+			currentSaturation-=2;
 		}
 		
 		if(!client.isAdded()){
