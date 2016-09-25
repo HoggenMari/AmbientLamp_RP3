@@ -105,7 +105,7 @@ public class Screen extends Thread {
 
 	public void run() {
 		while (true) {
-			send();
+			//send();
 			/*
 			 * try { sleep((long)(100)); } catch (Exception e) { }
 			 */
@@ -114,7 +114,7 @@ public class Screen extends Thread {
 
 	public void send(int...nRow ){
 		if(controller == 0){
-			sendFeno(nRow);
+			//sendFeno(nRow);
 		}else if(controller == 1){
 			sendArtNet(nRow);
 			//sendIpad(nRow);

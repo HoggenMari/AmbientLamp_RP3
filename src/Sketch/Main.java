@@ -192,7 +192,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	
 	public void draw() {
 		
-		frameRate(5);
+		//frameRate(5);
 		//System.out.println("GENIUS: "+geniusMode);
 		if(frameCount%200==0){
 			//System.out.println("active:"+active+" next:"+next+" geniusCtr:"+geniusCtr);
@@ -230,7 +230,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		}
 		cloud.changeCloud(clIndex);
 		
-		canvasFade = drawMode(4);
+	    canvasFade = drawMode(4);
 		
 		//canvasFade.beginDraw();
 		//canvasFade.fill(frameCount&255);
@@ -306,7 +306,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		if (frameCount % 1 == 0 && os.gui) {
 			screen.drawOnGui();
 		}
-		screen.send(9,8,0,0,0);
+		screen.send(9,8);
 		
 		if(frameCount % 1000 == 0){	
 			
