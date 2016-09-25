@@ -1,11 +1,13 @@
 package Visualisations;
 
+import SolarAPI.SolarAnalyticsAPI;
+import SolarAPI.SolarListener;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
 
-public class Lava {
+public class Lava implements SolarListener {
 
 	
 	
@@ -14,7 +16,7 @@ public class Lava {
 	static  float sizex;
 	      static  float sizey;
 	      
-	      final float FLUID_WIDTH = 32;
+	      final float FLUID_WIDTH = 16;
 	      final static int maxParticles = 50;
 	       static int w;
 	       static int h;
@@ -29,6 +31,11 @@ public class Lava {
 	      boolean untouched=true;
 	      
 	      int counter = 0;
+	      
+	       float produced, consumed, change_consumption, max_consumption;
+	       float proz;
+	       
+	       SolarAnalyticsAPI api;
 	       
 	      public void setup(PApplet p) {
 	        //size(320, 240, P2D);
@@ -46,7 +53,8 @@ public class Lava {
 	          // create image to hold fluid picture
 	          imgFluid = p.createImage(fluidSolver.getWidth(), fluidSolver.getHeight(), PConstants.ARGB);
 	              
-	 
+	          api = SolarAnalyticsAPI.getInstance();
+	          api.addLiveDataListener(this);
 	                
 	          // create particle system
 	          //particleSystem = new ParticleSystem();    
@@ -57,15 +65,16 @@ public class Lava {
 	              
 	      public PImage draw(PApplet p, PGraphics pg) {    
 	        
-	    	  if(p.frameCount%1==0){
-	          addForce(0.2f+(float)(counter/100.0), 0.2f+(float)(counter/100.0), 0.001f, 0.001f, p, pg);
-	    	  }
-	    	  
-	    	  if(counter<10){
+	    	  if(p.frameCount%(int)(50-proz*50)==0){
+	          addForce(0.4f, 0.4f, 0.01f, 0.01f, p, pg);
+	          /*if(counter<10){
 	    		  counter++;
 	    	  }else{
 	    		  counter = 0;
+	    	  }*/
 	    	  }
+	    	  
+	    	  
 	      
 	        
 	         fluidSolver.update();
@@ -1126,6 +1135,19 @@ public class Lava {
 	//  protected void DIFFUSE_RGB()      { diffuse(0, r, rOld, 0);  diffuse(0, g, gOld, 0);  diffuse(0, b, bOld, 0); }
 	//  protected void ADVECT_RGB()        { advect(0, r, rOld, u, v);  advect(0, g, gOld, u, v);  advect(0, b, bOld, u, v); }
 	//  protected void DIFFUSE_UV()        { diffuse(0, u, uOld, visc);  diffuse(0, v, vOld, visc); }
+	}
+
+
+	@Override
+	public void liveSiteDataChanged() {
+		// TODO Auto-generated method stub
+		produced = api.getCurrentGen(); //api.getLastSiteDataEntry().energy_generated;
+		consumed = api.getCurrentCons();
+		change_consumption = api.getChangeCons();
+		max_consumption = api.getMaxCons();
+		
+		proz = consumed / max_consumption;
+		System.out.println(consumed+" "+change_consumption+" "+max_consumption+" "+proz);
 	}
 	
 	
