@@ -117,7 +117,7 @@ public class Screen extends Thread {
 			sendFeno(nRow);
 		}else if(controller == 1){
 			sendArtNet(nRow);
-			sendIpad(nRow);
+			//sendIpad(nRow);
 		}
 	}
 	
