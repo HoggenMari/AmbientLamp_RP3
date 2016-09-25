@@ -298,7 +298,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 
 		
 		screen.addLayer(pSend);
-		if (frameCount % 1 == 0) {
+		if (frameCount % 1 == 0 && os.gui) {
 			screen.drawOnGui();
 		}
 		screen.send(9,8,0,0,0);
