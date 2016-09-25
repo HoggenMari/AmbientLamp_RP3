@@ -27,6 +27,8 @@ public class Lava {
 	      
 	      PImage imgFluid; 
 	      boolean untouched=true;
+	      
+	      int counter = 0;
 	       
 	      public void setup(PApplet p) {
 	        //size(320, 240, P2D);
@@ -56,14 +58,20 @@ public class Lava {
 	      public PImage draw(PApplet p, PGraphics pg) {    
 	        
 	    	  if(p.frameCount%1==0){
-	          addForce(0.2f, 0.2f, 0.001f, 0.001f, p, pg);
+	          addForce(0.2f+(float)(counter/100.0), 0.2f+(float)(counter/100.0), 0.001f, 0.001f, p, pg);
+	    	  }
+	    	  
+	    	  if(counter<10){
+	    		  counter++;
+	    	  }else{
+	    		  counter = 0;
 	    	  }
 	      
 	        
 	         fluidSolver.update();
 	              for(int i=0; i<fluidSolver.getNumCells(); i++) {
 	                  int d = 2;
-	                  imgFluid.pixels[i] = p.color(fluidSolver.r[i] * d, (float) fluidSolver.g[i] * d +0.05f, (float) fluidSolver.b[i] * d + 0.15f);
+	                  imgFluid.pixels[i] = p.color(fluidSolver.r[i] * d + 0.025f, (float) fluidSolver.g[i] * d +0.1f, (float) fluidSolver.b[i] * d + 0.35f);
 	               }           
 	 
 	         imgFluid.updatePixels();
