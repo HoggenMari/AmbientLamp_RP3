@@ -35,6 +35,7 @@ import Visualisations.BarGraph;
 import Visualisations.BarGraphGenCons;
 import Visualisations.Circle;
 import Visualisations.Cloud;
+import Visualisations.Lava;
 import Visualisations.Text;
 import Visualisations.Voltage;
 import processing.core.PApplet;
@@ -102,6 +103,9 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	StringBuilder message = new StringBuilder();
 	String receivedString = "";
 	Boolean receivingMessage = false;
+	
+	PGraphics pg = createGraphics(85,60,P2D);
+	Lava lava = new Lava();
 	
 	public static void main(final String... args){
     	
@@ -186,7 +190,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
         
         
         
-    	
+    	lava.setup(this);
     	delay(2000);
 	}
 	
@@ -231,6 +235,20 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		cloud.changeCloud(clIndex);
 		
 	    //canvasFade = drawMode(4);
+		
+		PImage lv = lava.draw(this, pg);
+		PGraphics pg1 = createGraphics(lv.width, lv.height, P2D);
+		pg1.beginDraw();
+		pg1.image(lv,0,0);
+		pg1.endDraw();
+		canvasFade = downscale(pg1, 1);
+		image(lv, 0, 0);
+		
+		//PImage lv = lava.draw(this, pg);
+		//lv.resize(17, 12);
+		//canvasFade.beginDraw();
+		//canvasFade.image(lv, 0, 0);
+		//canvasFade.endDraw();
 		
 		//canvasFade.beginDraw();
 		//canvasFade.fill(frameCount&255);
@@ -389,6 +407,8 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 			//System.out.println(s);
 		}
 		
+		//PImage lv = lava.draw(this, pg);
+		//image(lv, 0, 0);
 	}
 
 	
