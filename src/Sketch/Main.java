@@ -236,13 +236,13 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		
 	    //canvasFade = drawMode(4);
 		
-		PImage lv = lava.draw(this, pg);
+		/*PImage lv = lava.draw(this, pg);
 		PGraphics pg1 = createGraphics(lv.width, lv.height, P2D);
 		pg1.beginDraw();
 		pg1.image(lv,0,0);
 		pg1.endDraw();
 		canvasFade = downscale(pg1, 1);
-		image(lv, 0, 0);
+		image(lv, 0, 0);*/
 		
 		//PImage lv = lava.draw(this, pg);
 		//lv.resize(17, 12);

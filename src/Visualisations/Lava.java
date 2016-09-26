@@ -25,7 +25,7 @@ public class Lava implements SolarListener {
 	      float aspectRatio, aspectRatio2;
 	      
 	      MSAFluidSolver2D fluidSolver;
-	      //ParticleSystem particleSystem;
+	      ParticleSystem particleSystem;
 	      
 	      PImage imgFluid; 
 	      boolean untouched=true;
@@ -57,7 +57,7 @@ public class Lava implements SolarListener {
 	          api.addLiveDataListener(this);
 	                
 	          // create particle system
-	          //particleSystem = new ParticleSystem();    
+	          particleSystem = new ParticleSystem(p);    
 	      
 	      }
 	      
@@ -65,7 +65,7 @@ public class Lava implements SolarListener {
 	              
 	      public PImage draw(PApplet p, PGraphics pg) {    
 	        
-	    	  if(p.frameCount%(int)(50-proz*50)==0){
+	    	  if(p.frameCount%(int)(51-proz*50)==0){
 	          addForce(0.4f, 0.4f, 0.01f, 0.01f, p, pg);
 	          /*if(counter<10){
 	    		  counter++;
@@ -84,11 +84,10 @@ public class Lava implements SolarListener {
 	               }           
 	 
 	         imgFluid.updatePixels();
-	         
-	       //particleSystem.updateAndDraw();
-	  
+	         	  
 	   p.image(imgFluid, 0, 0);
-	   
+       p.image(particleSystem.updateAndDraw(imgFluid),0,50);
+
 	   return imgFluid;
 	 
 	      }
@@ -125,14 +124,14 @@ public class Lava implements SolarListener {
 	              fluidSolver.gOld[index]  += p.green(drawColor) * colorMult;
 	              fluidSolver.bOld[index]  += p.blue(drawColor) * colorMult;
 	      
-	              //particleSystem.addParticles(x * w, y * h, 10);
+	              particleSystem.addParticles(x * w, y * h, 10);
 	              fluidSolver.uOld[index] += dx * velocityMult;
 	              fluidSolver.vOld[index] += dy * velocityMult;
 	          }
 	      }
 	      
 	      
-	      /*class Particle {
+	      class Particle {
 	          final static float MOMENTUM = 0.5f;
 	          final static float FLUID_FORCE = 0.6f;
 	      
@@ -141,19 +140,21 @@ public class Lava implements SolarListener {
 	          float radius;       // particle's size
 	          float alpha;
 	          float mass;
+	          PApplet p;
 	      
-	          public void init(float x, float y) {
-	              this.x = x;
+	          public void init(PApplet p, float x, float y) {
+	              this.p = p;
+	        	  this.x = x;
 	              this.y = y;
 	              vx = 0;
 	              vy = 0;
 	              radius = 50;
-	              alpha  = random(0.3f, 1);
-	              mass = random(0.1f, 1);
+	              alpha  = p.random(0.3f, 1);
+	              mass = p.random(0.1f, 1);
 	          }
 	      
 	      
-	          public void update() {
+	          public void update(int width, int height) {
 	              // only update if particle is visible
 	              if(alpha == 0) return;
 	      
@@ -187,8 +188,8 @@ public class Lava implements SolarListener {
 	      
 	              // hackish way to make particles glitter when the slow down a lot
 	              if(vx * vx + vy * vy < 1) {
-	                  vx = random(-1, 1);
-	                  vy = random(-1, 1);
+	                  vx = p.random(-1, 1);
+	                  vy = p.random(-1, 1);
 	              }
 	      
 	              // fade out a bit (and kill if alpha == 0);
@@ -201,22 +202,32 @@ public class Lava implements SolarListener {
 	      
 	      
 	      
-	          public void drawOldSchool() {
-	              strokeWeight(alpha*1.5f);
-	   stroke(alpha, alpha, alpha,alpha);
-	              line(x-vx, y-vy,x, y);
+	          public PGraphics drawOldSchool(PImage img) {
+	        	  PGraphics pg = p.createGraphics(img.width, img.height, PConstants.P2D);
+	        	  pg.beginDraw();
+	        	  pg.colorMode(p.RGB, 1);
+	        	  pg.image(img, 0, 0);
+	              pg.strokeWeight(alpha*1.50f);
+	              pg.stroke(1, 1, 1,1);
+	              pg.line(5, 5,10, 10);
+	              pg.endDraw();
+	              p.image(pg, 0, 100);
+	              return pg;
 	          }
 	      
-	      }*/
+	      }
 	      
-	      /*class ParticleSystem {
+	      class ParticleSystem {
 	      
 	      
 	          int curIndex;
 	      
 	          Particle[] particles;
+	          PGraphics pg;
+	          PApplet p;
 	      
-	          ParticleSystem() {
+	          ParticleSystem(PApplet p) {
+	        	  this.p = p;
 	              particles = new Particle[maxParticles];
 	              for(int i=0; i<maxParticles; i++) particles[i] = new Particle();
 	              curIndex = 0;
@@ -224,33 +235,33 @@ public class Lava implements SolarListener {
 	          }
 	      
 	      
-	          public void updateAndDraw(){
+	          public PGraphics updateAndDraw(PImage img){
 	      
 	      
 	                  for(int i=0; i<maxParticles; i++) {
 	                      if(particles[i].alpha > 0) {
-	                          particles[i].update();
-	                          particles[i].drawOldSchool();    // use oldschool renderng
+	                          particles[i].update(85, 60);
+	                          return particles[i].drawOldSchool(img);    // use oldschool renderng
 	                      }
 	                  }
 	                  
-	      
+	                  return new PGraphics();
 	      
 	          }
 	      
 	      
 	          public void addParticles(float x, float y, int count ){
-	              for(int i=0; i<count; i++) addParticle(x + random(-15, 15), y + random(-15, 15));
+	              for(int i=0; i<count; i++) addParticle(x + p.random(-15, 15), y + p.random(-15, 15));
 	          }
 	      
 	      
 	          public void addParticle(float x, float y) {
-	              particles[curIndex].init(x, y);
+	              particles[curIndex].init(p, x, y);
 	              curIndex++;
 	              if(curIndex >= maxParticles) curIndex = 0;
 	          }
 	      
-	      }*/
+	      }
 	      
 	  
 	    
