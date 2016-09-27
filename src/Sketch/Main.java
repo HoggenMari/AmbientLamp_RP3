@@ -423,13 +423,13 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 			frameRate(60);
 			return downscale(voltage.draw(), 2);
 		case 1:
-			frameRate(1);
+			//frameRate(1);
 			return text.draw();
 		case 2:
-			frameRate(1);
+			//frameRate(1);
 			return downscale(bargraph.draw(), 0);
 		case 3:
-			frameRate(1);
+			//frameRate(1);
 			return downscale(bargraph_gencons.draw(), 1);
 		case 4:
 			frameRate(60);
@@ -445,7 +445,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		public PGraphics fade(PGraphics a, PGraphics b, float fade) { // 0 < fade <
 																		// 1
 			//System.out.println("Genius: "+geniusPaused+" "+geniusPausedActive);
-			if(geniusPaused || settingActive || settingPausedActive){ //|| geniusPausedActive || settingActive || settingPausedActive){
+			//if(geniusPaused || settingActive || settingPausedActive){ //|| geniusPausedActive || settingActive || settingPausedActive){
 				PGraphics c = createGraphics(17, 12, P2D);
 				c.beginDraw();
 				c.background(0);
@@ -473,7 +473,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 				//	geniusPausedActive = false;
 				//}
 				return c;
-			}else{
+			/*}else{
 				PGraphics c = createGraphics(17, 12, P2D);
 				c.beginDraw();
 				c.background(0);
@@ -486,7 +486,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 				c.rect(-17 + (int) (17 * fade),0, 17, 12);
 				c.endDraw();
 				return c;
-			}
+			}*/
 		}
 
 		// -------FADE
