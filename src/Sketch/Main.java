@@ -420,16 +420,20 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	public PGraphics drawMode(int mode) {
 		switch (mode) {
 		case 0:
+			toFront();
 			frameRate(60);
 			return downscale(voltage.draw(), 2);
 		case 1:
 			//frameRate(1);
+			toFront();
 			return text.draw();
 		case 2:
 			//frameRate(1);
+			toBack();
 			return downscale(bargraph.draw(), 0);
 		case 3:
 			//frameRate(1);
+			toBack();
 			return downscale(bargraph_gencons.draw(), 1);
 		case 4:
 			frameRate(60);
@@ -520,25 +524,33 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		
 	}
 	
+	public void toFront(){
+		try {
+			serialPort.writeString("toFront\n");
+		} catch (SerialPortException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void toBack(){
+		try {
+			serialPort.writeString("toBack\n");
+		} catch (SerialPortException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void keyPressed() {
 		if (key == '1') {
 			voltage.fake = !voltage.fake;
 		}else if(key == '2') {
 			textBol = !textBol;
 		}else if(key == '3') {
-			try {
-				serialPort.writeString("toFront\n");
-			} catch (SerialPortException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			toFront();
 		}else if(key == '4') {
-			try {
-				serialPort.writeString("toBack\n");
-			} catch (SerialPortException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			toBack();
 		}
 	}
 
