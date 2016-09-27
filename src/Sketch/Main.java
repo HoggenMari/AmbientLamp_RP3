@@ -188,8 +188,6 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
         }
         
         
-        
-        
     	lava.setup(this);
     	delay(2000);
 	}
@@ -401,6 +399,8 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 			  }
 		}
 		
+		
+		
 		//Weather API Test
 		//System.out.println("WEATHER");
 		for(String s : weather.getForecastArray()){
@@ -520,6 +520,20 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 			voltage.fake = !voltage.fake;
 		}else if(key == '2') {
 			textBol = !textBol;
+		}else if(key == '3') {
+			try {
+				serialPort.writeString("toFront\n");
+			} catch (SerialPortException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if(key == '4') {
+			try {
+				serialPort.writeString("toBack\n");
+			} catch (SerialPortException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -707,6 +721,9 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		
 		
 	}
+	
+	
+
 
 	
 }
