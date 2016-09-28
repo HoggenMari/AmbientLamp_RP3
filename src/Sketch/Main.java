@@ -409,10 +409,10 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 			//System.out.println(s);
 		}
 		
-		if(firstStepper){
+		//if(firstStepper){
 			toBack();
-			firstStepper = false;
-		}
+		//	firstStepper = false;
+		//}
 		
 		//PImage lv = lava.draw(this, pg);
 		//image(lv, 0, 0);
