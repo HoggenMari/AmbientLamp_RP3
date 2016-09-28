@@ -192,6 +192,11 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
         
     	lava.setup(this);
     	delay(2000);
+    	
+		toBack();
+		delay(10);
+		toBack();
+
 	}
 	
 	public void draw() {
@@ -410,7 +415,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		}
 		
 		//if(firstStepper){
-			toBack();
+			//toBack();
 		//	firstStepper = false;
 		//}
 		
