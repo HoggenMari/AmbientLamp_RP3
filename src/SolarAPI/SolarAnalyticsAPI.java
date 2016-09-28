@@ -56,12 +56,12 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 	private static SolarAnalyticsAPI instance;
 	
 	String webPage = "https://portal.solaranalytics.com.au/api/v2";
-	String name = "demo@solaranalytics.com.au";
-	//String name = "m.hoggenmueller@googlemail.com";
-	String password = "demo123";//"fr21muc08";
-	//String password = "fr21muc08";
-	int site_id = 8072;
-	//int site_id = 8753;
+	//String name = "demo@solaranalytics.com.au";
+	String name = "m.hoggenmueller@googlemail.com";
+	//String password = "demo123";//"fr21muc08";
+	String password = "fr21muc08";
+	//int site_id = 8072;
+	int site_id = 140;
 	String token;
 	int duration;
 	long tokenTimeStamp;
