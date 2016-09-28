@@ -721,9 +721,9 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		//message = message.replace("\n", "");
 		System.out.println(message);
 		
-		if(message.contains("Start")){
+		/*if(message.contains("Start")){
 			toFront();
-		}
+		}*/
 
 		JsonObject jsonObject;
 		JsonParser jejpl = new JsonParser();
@@ -738,7 +738,9 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 					if(sensor.equals("brightness")){
 						//System.out.println(jsonObject.get("data"));
 						String s = "{\"msg\":\"changed\", \"collection\":\"settings\", \"id\":\""+sensorData.getBrightnessID()+"\", \"fields\":{\"score\":"+jsonObject.get("data")+"}}";
-						client.call(s);
+						if(client.isAdded()){
+							client.call(s);
+						}
 					}
 				}
 			}
