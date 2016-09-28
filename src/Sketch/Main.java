@@ -75,6 +75,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 
 	//GENIUS
 	boolean first = false;
+	boolean firstChanged = true;
 	boolean geniusMode = false;
 	boolean geniusFirst = true;
 	private boolean geniusPaused = false;
@@ -210,6 +211,27 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		}
 		
 		// -------FADE
+		
+		if(next != active && firstChanged) {
+			System.out.println("changed");
+			switch (next) {
+			case 0:
+				toFront();
+			case 1:
+				toFront();
+			case 2:
+				toBack();
+			case 3:
+				toBack();
+			/*case 4:
+				//frameRate(60);
+				return cloud.draw();*/
+			default:
+				toFront();
+			}
+			firstChanged = false;
+		}
+		
 		if (fade < 1 && next != active) {
 			fade += 0.02f;
 			canvasFade = fade(drawMode(active), drawMode(next), fade);
@@ -217,6 +239,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		} else {
 			active = next;
 			canvasFade = drawMode(active);
+			firstChanged = true;
 			//System.out.println("NoFade: " + fade);
 
 		}
