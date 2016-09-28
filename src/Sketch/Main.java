@@ -196,6 +196,13 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		toFront();
 		delay(10);
 		toFront();
+		delay(10);
+		toFront();
+		toFront();
+		delay(10);
+		toFront();
+		delay(10);
+		toFront();
 
 	}
 	
