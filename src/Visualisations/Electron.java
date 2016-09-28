@@ -41,18 +41,21 @@ public class Electron {
 		PVector direction = new PVector(canvas.width / 2, canvas.height / 2);
 		direction.sub(position);
 		direction.normalize();
-		direction.mult(0.5f);
+		direction.mult(0.3f);
 		position.add(direction);
 		//((Object) direction).random2D();
-		direction.mult(0.5f);
+		direction.mult(0.3f);
 		position.add(direction);
 	}
 
 	void display() {
 		move();
 		canvas.beginDraw();
-		canvas.fill(255, 255, 200, 211);
-		canvas.ellipse(position.x, position.y, 17, 17);
+		//System.out.println(PVector.dist(position, new PVector(canvas.width / 2, canvas.height / 2)));
+		canvas.fill(255, 255, 255, (PVector.dist(position, new PVector(canvas.width / 2,
+				canvas.height / 2)) / PVector.dist(new PVector(0, 0), new PVector(canvas.width / 2,
+						canvas.height / 2)))*255);
+		canvas.ellipse(position.x, position.y, 12, 12);
 		canvas.endDraw();
 	}
 

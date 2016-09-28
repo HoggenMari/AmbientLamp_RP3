@@ -106,12 +106,21 @@ public class Voltage implements VisualListener, SolarListener {
 		step += 0.02f;
 
 		timer = (int) (step * 3);
-		if (timer % 2 == 0 && !electronEmitted) {
+		/*if (timer % 2 == 0 && !electronEmitted) {
 			electrons.add(new Electron(applet, canvas));
 			electronEmitted = true;
 		} else if (timer % 2 != 0 && electronEmitted) {
 			electronEmitted = false;
-		}
+		}*/
+		
+		if (timer % 2 == 0 && !electronEmitted) {
+			if(electrons.size()<5){
+				electrons.add(new Electron(applet, canvas));
+			}
+			electronEmitted = true;
+		} else if (timer % 2 != 0 && electronEmitted) {
+			electronEmitted = false;
+		}	
 
 		if(notification){
 			if(change_consumption>0.1*max_consumption || fake){

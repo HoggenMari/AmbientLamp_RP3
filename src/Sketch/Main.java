@@ -447,7 +447,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		case 0:
 			//toFront();
 			//frameRate(60);
-			return downscale(voltage.draw(), 2);
+			return downscale(voltage.draw(), 3);
 		case 1:
 			//frameRate(1);
 			//toFront();
