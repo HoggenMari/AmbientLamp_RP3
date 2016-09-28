@@ -107,6 +107,8 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	PGraphics pg = createGraphics(85,60,P2D);
 	Lava lava = new Lava();
 	
+	boolean firstStepper = true;
+	
 	public static void main(final String... args){
     	
 		PApplet.main(new String[] { "--present", "Sketch.Main" });
@@ -405,6 +407,11 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		//System.out.println("WEATHER");
 		for(String s : weather.getForecastArray()){
 			//System.out.println(s);
+		}
+		
+		if(firstStepper){
+			toBack();
+			firstStepper = false;
 		}
 		
 		//PImage lv = lava.draw(this, pg);

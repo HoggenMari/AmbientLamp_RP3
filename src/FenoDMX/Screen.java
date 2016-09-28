@@ -317,15 +317,15 @@ public class Screen extends Thread {
 		//	data[data_counter++] = (byte) 0;
 		//}
 		
-		//for(int i=0; i<data.length; i++){
-		//	System.out.println(data[i]);
-		//}
+		for(int i=0; i<data.length; i++){
+			System.out.println(data[i]);
+		}
 	    
 	    dmx.setDMX(data, data.length);
 	    artnet.unicastPacket(dmx, HOST);
 	    sequenceID++;
 	    
-	    p.delay(7);
+	    p.delay(0);
 	    
 		}
 
