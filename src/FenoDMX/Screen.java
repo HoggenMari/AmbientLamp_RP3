@@ -289,10 +289,10 @@ public class Screen extends Thread {
 	
 	public void sendArtNet(int... nRow) {
 		
-		for (int i_universe = 2; i_universe < 2+nRow.length; i_universe++) {
+		for (int i_universe = 0; i_universe < nRow.length; i_universe++) {
 
 		ArtDmxPacket dmx = new ArtDmxPacket();
-	    dmx.setUniverse(0, i_universe);
+	    dmx.setUniverse(0, i_universe+2);
 	    dmx.setSequenceID(sequenceID % 255);
 	    byte[] data = new byte[(nRow[i_universe] * 12 * 3)];
 	    
