@@ -214,20 +214,14 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		
 		if(next != active && firstChanged) {
 			System.out.println("changed");
-			switch (next) {
-			case 0:
+			if (next == 0) {
 				toFront();
-			case 1:
+			} else if(next == 1) {
 				toFront();
-			case 2:
+			} else if(next == 2) {
 				toBack();
-			case 3:
+			} else if(next == 3) {
 				toBack();
-			/*case 4:
-				//frameRate(60);
-				return cloud.draw();*/
-			default:
-				toFront();
 			}
 			firstChanged = false;
 		}
