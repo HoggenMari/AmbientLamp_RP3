@@ -192,17 +192,6 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
         
     	lava.setup(this);
     	delay(2000);
-    	
-		toFront();
-		delay(10);
-		toFront();
-		delay(10);
-		toFront();
-		toFront();
-		delay(10);
-		toFront();
-		delay(10);
-		toFront();
 
 	}
 	
@@ -387,7 +376,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 			client.call(s);
 		}*/
 		
-		if(frameCount%200==0){
+		if(frameCount%1000==0){
 			System.out.println(frameRate);
 			//System.out.println(saturation);
 		}
@@ -731,6 +720,10 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		
 		//message = message.replace("\n", "");
 		System.out.println(message);
+		
+		if(message.contains("Start")){
+			toFront();
+		}
 
 		JsonObject jsonObject;
 		JsonParser jejpl = new JsonParser();
