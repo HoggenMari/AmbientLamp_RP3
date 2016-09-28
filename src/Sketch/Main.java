@@ -193,9 +193,9 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
     	lava.setup(this);
     	delay(2000);
     	
-		toBack();
+		toFront();
 		delay(10);
-		toBack();
+		toFront();
 
 	}
 	
