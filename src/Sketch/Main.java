@@ -36,6 +36,7 @@ import Visualisations.BarGraphGenCons;
 import Visualisations.Circle;
 import Visualisations.Cloud;
 import Visualisations.Lava;
+import Visualisations.Moving;
 import Visualisations.Text;
 import Visualisations.Voltage;
 import processing.core.PApplet;
@@ -58,6 +59,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	WeatherAPI weather;
 	
 	private Voltage voltage;
+	private Moving moving;
 	private Circle circle;
 	private SensorData sensorData;
 	private BarGraph bargraph;
@@ -138,6 +140,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
     	weather = WeatherAPI.getInstance();
     	
 		voltage = new Voltage(this, sensorData, createGraphics(85, 60, P2D));
+		moving = new Moving(this, sensorData, createGraphics(85, 60, P2D));
 		//circle = new Circle(this, sensorData, api, createGraphics(85, 60, P2D));
 
 		bargraph = new BarGraph(this, sensorData, createGraphics(170, 120, P2D));
@@ -244,13 +247,13 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 
 		//pSend = downscale(canvasFade, 0);
 		
-		if(frameCount%1000==0)
+		/*if(frameCount%1000==0)
 		if (clIndex <= 8) {
 			clIndex++;
 		}else{
 			clIndex = 0;
 		}
-		cloud.changeCloud(clIndex);
+		cloud.changeCloud(clIndex);*/
 		
 	    //canvasFade = drawMode(4);
 		
@@ -344,7 +347,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		}
 		screen.send(9,8);
 		
-		if(frameCount % 1000 == 0){	
+		if(frameCount % 500 == 0){	
 			
 			//System.out.println("FRAMECOUNT: "+geniusCtr);
 			//{"msg":"changed","collection":"visuals","id":"RH8TD6zpG3p4ZgdcQ","fields":{"active":true}}
@@ -353,11 +356,13 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 			
 			if(geniusMode && !geniusPaused && !settingActive){
 				
-				if(geniusCtr<3){
+				if(geniusCtr<4){
 					geniusCtr++;
 				}else{
 					geniusCtr = 0;
 				}
+				
+				geniusCtr = 4;
 				
 				activeVisual = geniusCtr;
 				next = geniusCtr;
@@ -462,7 +467,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 			return downscale(bargraph_gencons.draw(), 1);
 		case 4:
 			//frameRate(60);
-			return cloud.draw();
+			return downscale(moving.draw(), 3);
 		default:
 			return voltage.draw();
 		}

@@ -17,10 +17,10 @@ import SolarAPI.SolarAnalyticsAPI.GRAN;
 import SolarAPI.SolarAnalyticsAPI.MONITORS;
 import SolarAPI.SolarListener;
 
-public class Voltage implements VisualListener, SolarListener {
+public class Moving implements VisualListener, SolarListener {
 	PGraphics canvas;
 	PApplet applet;
-	String visual_name = "Visual 1";
+	String visual_name = "Visual 5";
 	int[] color;
 	boolean notification = true;
 	
@@ -43,9 +43,10 @@ public class Voltage implements VisualListener, SolarListener {
 	float produced, consumed;
 	private float change_consumption;
 	private float max_consumption;
+	private float MAX_CONSUMPTION = 4000;
 
 
-	public Voltage(PApplet a, SensorData sensorData, PGraphics c) {
+	public Moving(PApplet a, SensorData sensorData, PGraphics c) {
 		applet = a;
 		this.sensorData = sensorData;
 		this.api = SolarAnalyticsAPI.getInstance();
@@ -106,11 +107,20 @@ public class Voltage implements VisualListener, SolarListener {
 		step += 0.02f;
 
 		timer = (int) (step * 3);
-		if (timer % 2 == 0 && !electronEmitted) {
-			//electrons.add(new Electron(applet, canvas));
-			//electronEmitted = true;
+		/*if (timer % 2 == 0 && !electronEmitted) {
+			electrons.add(new Electron(applet, canvas));
+			electronEmitted = true;
 		} else if (timer % 2 != 0 && electronEmitted) {
-			//electronEmitted = false;
+			electronEmitted = false;
+		}*/
+		
+		if (timer % 2 == 0 && !electronEmitted) {
+			if(electrons.size()<5){
+				electrons.add(new Electron(applet, canvas, 1));
+			}
+			electronEmitted = true;
+		} else if (timer % 2 != 0 && electronEmitted) {
+			electronEmitted = false;
 		}	
 
 		if(notification){
