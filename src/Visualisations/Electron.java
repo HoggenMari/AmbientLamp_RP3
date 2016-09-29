@@ -9,6 +9,9 @@ public class Electron {
 	PVector position;
 	PApplet applet;
 	PGraphics canvas;
+	float speed;
+	int color;
+	float c1, c2, c3;
 
 	public Electron(PApplet a, PGraphics c) {
 		applet = a;
@@ -35,9 +38,10 @@ public class Electron {
 			break;
 		}
 		position = new PVector(x, y);
+		this.speed = 0.5f;
 	}
 	
-	public Electron(PApplet a, PGraphics c, double speed) {
+	public Electron(PApplet a, PGraphics c, float speed, int color) {
 		applet = a;
 		canvas = c;
 		float x, y;
@@ -62,13 +66,18 @@ public class Electron {
 			break;
 		}
 		position = new PVector(x, y);
+		this.speed = speed;
+		this.color = color;
+		c1 = color >> 16 & 0xFF;
+		c2 = color >> 8 & 0xFF;;
+		c3 = color & 0xFF;
 	}
 
 	void move() {
 		PVector direction = new PVector(canvas.width / 2, canvas.height / 2);
 		direction.sub(position);
 		direction.normalize();
-		direction.mult(0.5f);
+		direction.mult(speed+0.1f);
 		position.add(direction);
 		//((Object) direction).random2D();
 		//direction.mult(0.3f);
@@ -79,12 +88,14 @@ public class Electron {
 		move();
 		canvas.beginDraw();
 		//System.out.println(PVector.dist(position, new PVector(canvas.width / 2, canvas.height / 2)));
-		canvas.fill(255, 255, 255, (PVector.dist(position, new PVector(canvas.width / 2,
+		
+		canvas.fill(c1, c2, c3, (PVector.dist(position, new PVector(canvas.width / 2,
 				canvas.height / 2)) / PVector.dist(new PVector(0, 0), new PVector(canvas.width / 2,
 						canvas.height / 2)))*255);
-		canvas.ellipse(position.x, position.y, PVector.dist(position, new PVector(canvas.width / 2,
-				canvas.height / 2))*0.5f, PVector.dist(position, new PVector(canvas.width / 2,
-						canvas.height / 2))*0.5f);
+		
+		
+			canvas.ellipse(position.x, position.y, 10, 10);
+		
 		canvas.endDraw();
 	}
 

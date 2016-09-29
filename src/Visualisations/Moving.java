@@ -43,8 +43,10 @@ public class Moving implements VisualListener, SolarListener {
 	float produced, consumed;
 	private float change_consumption;
 	private float max_consumption;
-	private float MAX_CONSUMPTION = 4000;
+	private float MAX_CONSUMPTION = 2000;
 
+	private float consumedSpeed;
+	private float producesSpeed;
 
 	public Moving(PApplet a, SensorData sensorData, PGraphics c) {
 		applet = a;
@@ -65,6 +67,8 @@ public class Moving implements VisualListener, SolarListener {
 		
 		produced = api.getCurrentGen(); //api.getLastSiteDataEntry().energy_generated;
 		consumed = api.getCurrentCons();
+		consumedSpeed = consumed/MAX_CONSUMPTION;
+		
 		change_consumption = api.getChangeCons();
 		max_consumption = api.getMaxCons();
 		
@@ -115,8 +119,8 @@ public class Moving implements VisualListener, SolarListener {
 		}*/
 		
 		if (timer % 2 == 0 && !electronEmitted) {
-			if(electrons.size()<5){
-				electrons.add(new Electron(applet, canvas, 1));
+			if(electrons.size()<applet.map(consumedSpeed, 0, 1, 0, 10)){
+				electrons.add(new Electron(applet, canvas, consumedSpeed, applet.color(0,0,0)));
 			}
 			electronEmitted = true;
 		} else if (timer % 2 != 0 && electronEmitted) {
@@ -159,11 +163,11 @@ public class Moving implements VisualListener, SolarListener {
 		float mapConsumed2 = applet.map(consumed, 0, produced, 0, canvas.width/2);		
 		
 		if(produced>consumed){
-			smoothCircle(canvas.width/2);
-			smoothCircleConsumed(mapConsumed2);
+			//smoothCircle(canvas.width/2);
+			//smoothCircleConsumed(mapConsumed2);
 		}else{
 			smoothCircleConsumed(canvas.width/2);
-			smoothCircle(mapProduce2);
+			//smoothCircle(mapProduce2);
 		}
 		
 		for (int e = 0; e < electrons.size(); e++) {
@@ -311,6 +315,9 @@ public class Moving implements VisualListener, SolarListener {
 		
 		produced = api.getCurrentGen(); //api.getLastSiteDataEntry().energy_generated;
 		consumed = api.getCurrentCons();
+		consumedSpeed = consumed/MAX_CONSUMPTION;
+		System.out.println("ConsumedSpeed: "+consumedSpeed);
+		
 		change_consumption = api.getChangeCons();
 		max_consumption = api.getMaxCons();
 	}
