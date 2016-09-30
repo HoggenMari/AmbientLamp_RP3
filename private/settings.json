@@ -76,6 +76,27 @@
       "pausedActive" : false,
       "pausedActive" : false,
       "settingActive" : false
+    },
+    {
+      "_id" : "Zb8FDDLizNFNzBtaT",
+      "name" : "Visual 5",
+      "pseudo" : "Electrons",
+      "description" : "Shows the energy consumption and solar production of the last half an hour in a bargraph visualisation. Newest values are displayed on the right-hand side.",
+      "img" : "/lamp14.png",
+      "index" : 4,
+      "colors" : [
+        { "color" : "#ffca6b", "index" : 0, "annotation" : "Solar Consumption", "description" : "Solar Consumption", "colorlabel" : "Fill Color" },
+        { "color" : "#8f6cb6", "index" : 1, "annotation" : "Import from Grid", "description" : "Grid Consumption", "colorlabel" : "Particle Color" },
+        { "color" : "#040725", "index" : 2, "annotation" : "Export to Grid", "description" : "Export to Grid", "colorlabel" : "Particle Color" },
+        { "color" : "#040725", "index" : 2, "annotation" : "", "description" : "Background", "colorlabel" : "Color" }
+
+      ],
+      "checked" : false,
+      "active" : false,
+      "geniusActive" : false, 
+      "pausedActive" : false,
+      "pausedActive" : false,
+      "settingActive" : false
     }
 
   ]
