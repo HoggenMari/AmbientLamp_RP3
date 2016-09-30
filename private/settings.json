@@ -74,7 +74,6 @@
       "active" : false,
       "geniusActive" : false,
       "pausedActive" : false,
-      "pausedActive" : false,
       "settingActive" : false
     },
     {
@@ -93,8 +92,7 @@
       ],
       "checked" : false,
       "active" : false,
-      "geniusActive" : false, 
-      "pausedActive" : false,
+      "geniusActive" : false,
       "pausedActive" : false,
       "settingActive" : false
     }
