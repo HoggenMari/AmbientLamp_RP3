@@ -362,7 +362,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 					geniusCtr = 0;
 				}
 				
-				geniusCtr = 4;
+				//geniusCtr = 4;
 				
 				activeVisual = geniusCtr;
 				next = geniusCtr;

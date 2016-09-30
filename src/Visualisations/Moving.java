@@ -24,7 +24,9 @@ public class Moving implements VisualListener, SolarListener {
 	int[] color;
 	boolean notification = true;
 	
-	ArrayList<Electron> electrons;
+	ArrayList<Electron> electronsGrid;
+	ArrayList<Electron> electronsSun;
+
 	ArrayList<Powerfield> fields;
 	float charge, step;
 	int chargeStep, lastChargeStep;
@@ -44,9 +46,12 @@ public class Moving implements VisualListener, SolarListener {
 	private float change_consumption;
 	private float max_consumption;
 	private float MAX_CONSUMPTION = 2000;
+	private float MAX_PRODUCTION = 2000;
 
 	private float consumedSpeed;
-	private float producesSpeed;
+	private float producedSpeed;
+	
+	private float imp, exp;
 
 	public Moving(PApplet a, SensorData sensorData, PGraphics c) {
 		applet = a;
@@ -55,7 +60,9 @@ public class Moving implements VisualListener, SolarListener {
 		api.addLiveDataListener(this);
 		
 		canvas = c;
-		electrons = new ArrayList<Electron>();
+		electronsGrid = new ArrayList<Electron>();
+		electronsSun = new ArrayList<Electron>();
+
 		fields = new ArrayList<Powerfield>();
 		charge = 0;
 		chargeStep = 0;
@@ -67,6 +74,9 @@ public class Moving implements VisualListener, SolarListener {
 		
 		produced = api.getCurrentGen(); //api.getLastSiteDataEntry().energy_generated;
 		consumed = api.getCurrentCons();
+		
+		imp = consumed - produced;
+		
 		consumedSpeed = consumed/MAX_CONSUMPTION;
 		
 		change_consumption = api.getChangeCons();
@@ -118,15 +128,23 @@ public class Moving implements VisualListener, SolarListener {
 			electronEmitted = false;
 		}*/
 		
-		if (timer % 2 == 0 && !electronEmitted) {
-			if(electrons.size()<applet.map(consumedSpeed, 0, 1, 0, 10)){
-				electrons.add(new Electron(applet, canvas, consumedSpeed, applet.color(0,0,0)));
+		/*if (timer % 2 == 0 && !electronEmitted) {
+			if(electronsGrid.size()<applet.map(consumedSpeed, 0, 1, 0, 10)){
+				electronsGrid.add(new Electron(applet, canvas, consumedSpeed, applet.color(0,0,0)));
 			}
 			electronEmitted = true;
 		} else if (timer % 2 != 0 && electronEmitted) {
 			electronEmitted = false;
-		}	
+		}*/
+		
+		if(electronsGrid.size()<applet.map(consumedSpeed, 0, 1, 0, 5)){
+			electronsGrid.add(new Electron(applet, canvas, consumedSpeed, color[1]));
+		}
 
+		if(electronsSun.size()<applet.map(producedSpeed, 0, 1, 0, 5)){
+			electronsSun.add(new Electron(applet, canvas, consumedSpeed, color[2]));
+		}
+		
 		if(notification){
 			if(change_consumption>0.1*max_consumption || fake){
 				if (timer % 20 == 0){
@@ -170,14 +188,24 @@ public class Moving implements VisualListener, SolarListener {
 			//smoothCircle(mapProduce2);
 		}
 		
-		for (int e = 0; e < electrons.size(); e++) {
-			if (electrons.get(e).dead()) {
-				electrons.remove(e);
+		for (int e = 0; e < electronsGrid.size(); e++) {
+			if (electronsGrid.get(e).dead()) {
+				electronsGrid.remove(e);
 			}
 		}
 
-		for (int e = 0; e < electrons.size(); e++) {
-			electrons.get(e).display();
+		for (int e = 0; e < electronsGrid.size(); e++) {
+			electronsGrid.get(e).display();
+		}
+		
+		for (int e = 0; e < electronsSun.size(); e++) {
+			if (electronsSun.get(e).dead()) {
+				electronsSun.remove(e);
+			}
+		}
+
+		for (int e = 0; e < electronsSun.size(); e++) {
+			electronsSun.get(e).display();
 		}
 
 		for (int f = 0; f < fields.size(); f++) {
@@ -228,9 +256,9 @@ public class Moving implements VisualListener, SolarListener {
 			rad = ((applet.sin(step) + 1f) / 2f) * rad * 0.3f + rad * 0.8f;
 		}
 		
-		float c1 = color[1] >> 16 & 0xFF;
-		float c2 = color[1] >> 8 & 0xFF;;
-		float c3 = color[1] & 0xFF;
+		float c1 = color[0] >> 16 & 0xFF;
+		float c2 = color[0] >> 8 & 0xFF;;
+		float c3 = color[0] & 0xFF;
 		
 		canvas.fill(calcColor(100, applet.color(c1, c2, c3, 88), applet.color(c1, c2, c3, 88), applet.color(c1, c2, c3, 88)));
 
@@ -313,10 +341,20 @@ public class Moving implements VisualListener, SolarListener {
 		// TODO Auto-generated method stub
 		//System.out.println("DataChanged");
 		
-		produced = api.getCurrentGen(); //api.getLastSiteDataEntry().energy_generated;
-		consumed = api.getCurrentCons();
+		produced = api.getCurrentGen() - api.getCurrentCons(); //api.getLastSiteDataEntry().energy_generated;
+		if(produced < 0){
+			produced = 0;
+		}
+		producedSpeed = produced/MAX_PRODUCTION;
+		
+		//imp = consumed - produced;
+
+		consumed = api.getCurrentCons() - api.getCurrentGen();
+		if(consumed < 0){
+			consumed = 0;
+		}
 		consumedSpeed = consumed/MAX_CONSUMPTION;
-		System.out.println("ConsumedSpeed: "+consumedSpeed);
+		System.out.println("Consumed: "+consumed+" Produced: "+produced);
 		
 		change_consumption = api.getChangeCons();
 		max_consumption = api.getMaxCons();

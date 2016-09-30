@@ -77,7 +77,7 @@ public class Electron {
 		PVector direction = new PVector(canvas.width / 2, canvas.height / 2);
 		direction.sub(position);
 		direction.normalize();
-		direction.mult(speed+0.1f);
+		direction.mult(speed*0.5f+0.1f);
 		position.add(direction);
 		//((Object) direction).random2D();
 		//direction.mult(0.3f);
@@ -94,7 +94,7 @@ public class Electron {
 						canvas.height / 2)))*255);
 		
 		
-			canvas.ellipse(position.x, position.y, 10, 10);
+			canvas.ellipse(position.x, position.y, 12, 12);
 		
 		canvas.endDraw();
 	}
@@ -102,7 +102,7 @@ public class Electron {
 	boolean dead() {
 		float d = PVector.dist(position, new PVector(canvas.width / 2,
 				canvas.height / 2));
-		if (d < 5) {
+		if (d < 1) {
 			return true;
 		} else
 			return false;
