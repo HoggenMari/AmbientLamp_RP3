@@ -76,33 +76,6 @@ public class Voltage implements VisualListener, SolarListener {
 		// if (charge + 0.03f < 100.0f)
 		// setCharge(charge += 0.03f);
 				
-		int[] c = { applet.color(24, 34, 43),
-			    applet.color(41, 46, 49),
-			    applet.color(68, 58, 46),
-			    applet.color(91, 71, 60),
-			    applet.color(135, 93, 62),
-			    applet.color(142, 105, 53),
-			    applet.color(120, 111, 94),
-			    applet.color(116, 122, 136),
-			    applet.color(123, 140, 162),
-			    applet.color(167, 199, 222),
-			    applet.color(165, 198, 221),
-			    applet.color(168, 203, 226),
-			    applet.color(172, 204, 226),
-			    applet.color(158, 192, 217),
-			    applet.color(130, 168, 196),
-			    applet.color(123, 140, 163),
-			    applet.color(119, 123, 135),
-			    applet.color(127, 114, 94),
-			    applet.color(145, 108, 56),
-			    applet.color(141, 98, 63),
-			    applet.color(100, 76, 58),
-			    applet.color(76, 61, 46),
-			    applet.color(45, 47, 48),
-			    applet.color(25, 36, 42)
-
-			    };
-
 		step += 0.02f;
 
 		timer = (int) (step * 3);

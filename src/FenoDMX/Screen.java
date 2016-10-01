@@ -48,7 +48,8 @@ public class Screen extends Thread {
 	private int resY;
 	private PApplet p;
 	private PGraphics pgMain;
-
+	int oldPixels[] = new int[204];
+	
 	public Screen(PApplet p, int resX, int resY, int controller) {
 		this.p = p;
 		this.resX = resX;
@@ -79,10 +80,11 @@ public class Screen extends Thread {
 
 	public void addLayer(PGraphics pg) {
 		//pgMain.clear();
-		PImage img = pg.get(0, 0, pg.width, pg.height);
+		PImage imgNew = pg.get(0, 0, pg.width, pg.height);
 		pgMain.beginDraw();
-		pgMain.image(img, 0, 0);
+		pgMain.image(imgNew, 0, 0);
 		pgMain.endDraw();
+		
 		// p.image(pgMain, 0, 100);
 	}
 
@@ -289,46 +291,60 @@ public class Screen extends Thread {
 	
 	public void sendArtNet(int... nRow) {
 		
-		for (int i_universe = 0; i_universe < nRow.length; i_universe++) {
-
-		ArtDmxPacket dmx = new ArtDmxPacket();
-	    dmx.setUniverse(0, i_universe+2);
-	    dmx.setSequenceID(sequenceID % 255);
-	    byte[] data = new byte[(nRow[i_universe] * 12 * 3)];
-	    
-	    int sum = 0;
-		for (int i = 0; i < i_universe; i++) {
-			sum += nRow[i];
-		}
+		/*int newPixels[] = pgMain.pixels;
 		
-		int data_counter = 0;
-	    for (int ix = sum; ix < sum + nRow[i_universe]; ix++) {
-			for (int iy = 0; iy < 12; iy++) {
-				int rgb = pgMain.get(ix, iy);
-				data[data_counter + 2] = (byte) (rgb & 0xff);
-				data[data_counter + 1] = (byte) (rgb >> 8 & 0xff);
-				data[data_counter] = (byte) (rgb >> 16 & 0xff);
-				data_counter += 3;
-				// System.out.println("DATACOUNT: "+data_counter);
+		boolean send = false;
+		
+		int rgbt = pgMain.get(0, 0);
+		System.out.println("R:"+(byte) (rgbt & 0xff)+" G:"+(byte) (rgbt >> 8 & 0xff)+" B:"+(byte) (rgbt >> 16 & 0xff));
+		
+		System.out.println(oldPixels[0]);
+		
+		for(int i=0; i<newPixels.length; i++){	
+			if(newPixels[i]!=oldPixels[i]){
+				send = true;
 			}
-		}
-
-		//for (int j = 0; j < 510 - (nRow[i_universe] * 12 * 3); j++) {
-		//	data[data_counter++] = (byte) 0;
-		//}
+		}*/
 		
-		//for(int i=0; i<data.length; i++){
-		//	System.out.println(data[i]);
-		//}
-	    
-	    dmx.setDMX(data, data.length);
-	    artnet.unicastPacket(dmx, HOST);
-	    sequenceID++;
-	    
-	    p.delay(0);
-	    
-		}
+		
+		//if(send){
+		
+			//System.out.println("Send");
+			
+			for (int i_universe = 0; i_universe < nRow.length; i_universe++) {
 
+				ArtDmxPacket dmx = new ArtDmxPacket();
+				dmx.setUniverse(0, i_universe+2);
+				dmx.setSequenceID(sequenceID % 255);
+				byte[] data = new byte[(nRow[i_universe] * 12 * 3)];
+	    
+				int sum = 0;
+				for (int i = 0; i < i_universe; i++) {
+					sum += nRow[i];
+				}		
+		
+				int data_counter = 0;
+				for (int ix = sum; ix < sum + nRow[i_universe]; ix++) {
+					for (int iy = 0; iy < 12; iy++) {
+						int rgb = pgMain.get(ix, iy);
+						data[data_counter + 2] = (byte) (rgb & 0xff);
+						data[data_counter + 1] = (byte) (rgb >> 8 & 0xff);
+						data[data_counter] = (byte) (rgb >> 16 & 0xff);
+						data_counter += 3;
+						// System.out.println("DATACOUNT: "+data_counter);
+					}
+				}
+	    
+				dmx.setDMX(data, data.length);
+				artnet.unicastPacket(dmx, HOST);
+				sequenceID++;
+	    
+				p.delay(0);
+				
+				//oldPixels = newPixels;
+			}
+
+		//}
 	}
 	
 }

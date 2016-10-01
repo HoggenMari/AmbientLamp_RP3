@@ -34,7 +34,6 @@ import SolarAPI.WeatherAPI;
 import Visualisations.BarGraph;
 import Visualisations.BarGraphGenCons;
 import Visualisations.Circle;
-import Visualisations.Cloud;
 import Visualisations.Lava;
 import Visualisations.Moving;
 import Visualisations.Text;
@@ -56,7 +55,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	int brightness, saturation;
 	int currentBrightness, currentSaturation;
 	SolarAnalyticsAPI api;
-	WeatherAPI weather;
+	//WeatherAPI weather;
 	
 	private Voltage voltage;
 	private Moving moving;
@@ -72,8 +71,8 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	int activeVisual = 0;
 	
 	//Cloud
-	private Cloud cloud;
-	private int clIndex;
+	//private Cloud cloud;
+	//private int clIndex;
 
 	//GENIUS
 	boolean first = false;
@@ -137,7 +136,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
     	api = SolarAnalyticsAPI.getInstance();
     	api.start();
     	
-    	weather = WeatherAPI.getInstance();
+    	//weather = WeatherAPI.getInstance();
     	
 		voltage = new Voltage(this, sensorData, createGraphics(85, 60, P2D));
 		moving = new Moving(this, sensorData, createGraphics(85, 60, P2D));
@@ -146,7 +145,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		bargraph = new BarGraph(this, sensorData, createGraphics(170, 120, P2D));
 		bargraph_gencons = new BarGraphGenCons(this, sensorData, createGraphics(170, 120, P2D));
 		text = new Text(this, sensorData, createGraphics(17, 12, P2D));
-		cloud = new Cloud(this);
+		//cloud = new Cloud(this);
 		
 		visualList = new ArrayList<Visual>();
 		
@@ -232,7 +231,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		if (fade < 1 && next != active) {
 			fade += 0.02f;
 			canvasFade = fade(drawMode(active), drawMode(next), fade);
-			// System.out.println("Fade: " + fade);
+			//System.out.println("Fade: " + fade);
 		} else {
 			active = next;
 			canvasFade = drawMode(active);
@@ -241,7 +240,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 
 		}
 		
-		if(fade>0.97){
+		if(fade>1){
 			settingPausedActive = false;
 		}
 
@@ -279,7 +278,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		//System.out.println("test");
 		pSend.beginDraw();
 		pSend.noStroke();
-	    pSend.image(downscale(canvasFade, 0),0,0);
+	    pSend.image(canvasFade,0,0);
 		pSend.fill(0,currentBrightness);
 		pSend.rect(0,0,pSend.width,pSend.height);
 		
@@ -291,12 +290,15 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 				int g = c >> 8 & 0xFF;
 				int b = c & 0xFF;
 				Color.RGBtoHSB(r,g,b,hsv);
-					//pSend.fill(saturation(c));
+					pSend.fill(saturation(c));
 					if(ix==5 && iy==5){
 						//System.out.println("Color: "+hsv[0]+" "+hsv[1]+" "+hsv[2]);
 					}
 					pSend.colorMode(HSB,255,255,255);
 					pSend.fill(hsv[0]*255, (hsv[1]*(float)(currentSaturation/255.0))*255, hsv[2]*255);
+					//if(ix==0 && iy==0){
+					//	System.out.println("HSV: "+(hsv[1]*(float)(currentSaturation/255.0))*255.0+" "+currentSaturation+" "+currentBrightness);
+					//}
 					pSend.rect(ix, iy, 1, 1);
 			}
 		}
@@ -313,15 +315,15 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		pSend.endDraw();*/
 		
 		if(currentBrightness<brightness){
-			currentBrightness+=2;
+			currentBrightness++;
 		}else if(currentBrightness>brightness){
-			currentBrightness-=2;
+			currentBrightness--;
 		}
 		
 		if(currentSaturation<saturation){
-			currentSaturation+=2;
+			currentSaturation++;
 		}else if(currentSaturation>saturation){
-			currentSaturation-=2;
+			currentSaturation--;
 		}
 		
 		if(!client.isAdded()){
@@ -339,6 +341,8 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 				}
 			}	
 		}
+		
+		//pSend = voltage.draw();
 
 		
 		screen.addLayer(pSend);
@@ -428,9 +432,9 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		
 		//Weather API Test
 		//System.out.println("WEATHER");
-		for(String s : weather.getForecastArray()){
+		//for(String s : weather.getForecastArray()){
 			//System.out.println(s);
-		}
+		//}
 		
 		//if(firstStepper){
 			//toBack();
@@ -460,7 +464,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		case 2:
 			//frameRate(1);
 			//toBack();
-			return downscale(bargraph.draw(), 0);
+			return bargraph.draw();
 		case 3:
 			//frameRate(1);
 			//toBack();
