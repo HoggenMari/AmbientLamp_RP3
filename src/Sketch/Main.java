@@ -3,19 +3,12 @@ package Sketch;
 import java.awt.Color;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.stream.MalformedJsonException;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 
 import DDPClient.DDPClient;
 import Event.GeniusEvent;
@@ -28,9 +21,6 @@ import Event.VisualEvent;
 import Event.VisualListener;
 import FenoDMX.Screen;
 import SolarAPI.SolarAnalyticsAPI;
-import SolarAPI.SolarAnalyticsAPI.GRAN;
-import SolarAPI.SolarAnalyticsAPI.MONITORS;
-import SolarAPI.WeatherAPI;
 import Visualisations.BarGraph;
 import Visualisations.BarGraphGenCons;
 import Visualisations.Circle;
@@ -202,7 +192,9 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		
 		//frameRate(5);
 		//System.out.println("GENIUS: "+geniusMode);
-		if(frameCount%200==0){
+		if(frameCount%2000==0){
+			
+			getPosition();
 			//System.out.println("active:"+active+" next:"+next+" geniusCtr:"+geniusCtr);
 			/*try {
 				serialPort.writeString("Motors on\n");
@@ -558,6 +550,15 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		
 	}
 	
+	public void getPosition(){
+		try {
+			serialPort.writeString("getPosition\n");
+		} catch (SerialPortException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void toFront(){
 		try {
 			serialPort.writeString("toFront\n");
@@ -772,7 +773,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 			}
 		} catch (JsonSyntaxException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		
 		
