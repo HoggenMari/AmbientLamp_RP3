@@ -25,7 +25,7 @@ public class Moving implements VisualListener, SolarListener {
 	boolean notification = true;
 	
 	ArrayList<Electron> electronsGrid;
-	ArrayList<Electron> electronsSun;
+	ArrayList<SunParticle> electronsSun;
 
 	ArrayList<Powerfield> fields;
 	float charge, step;
@@ -61,7 +61,7 @@ public class Moving implements VisualListener, SolarListener {
 		
 		canvas = c;
 		electronsGrid = new ArrayList<Electron>();
-		electronsSun = new ArrayList<Electron>();
+		electronsSun = new ArrayList<SunParticle>();
 
 		fields = new ArrayList<Powerfield>();
 		charge = 0;
@@ -141,8 +141,13 @@ public class Moving implements VisualListener, SolarListener {
 			electronsGrid.add(new Electron(applet, canvas, consumedSpeed, color[1]));
 		}
 
+		if(electronsSun.size()<5)
+		electronsSun.add(new SunParticle(applet, canvas, consumedSpeed, color[2]));
+
+		//System.out.println(electronsSun.size());
+		
 		if(electronsSun.size()<applet.map(producedSpeed, 0, 1, 0, 5)){
-			electronsSun.add(new Electron(applet, canvas, consumedSpeed, color[2]));
+			electronsSun.add(new SunParticle(applet, canvas, consumedSpeed, color[2]));
 		}
 		
 		if(notification){
