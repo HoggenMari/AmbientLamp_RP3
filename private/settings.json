@@ -49,8 +49,8 @@
       "img" : "/lamp13.png",
       "index" : 2,
       "colors" : [
-        { "color" : "#843820", "index" : 0, "annotation" : "Energy Consumption", "description" : "Energy Consumption", "colorlabel" : "Fill Color" },
-        { "color" : "#71889b", "index" : 1, "annotation" : "", "description" : "Background", "colorlabel" : "Color"  }
+        { "color" : "#af4cca", "index" : 0, "annotation" : "Energy Consumption", "description" : "Energy Consumption", "colorlabel" : "Fill Color" },
+        { "color" : "#dddbd7", "index" : 1, "annotation" : "", "description" : "Background", "colorlabel" : "Color"  }
       ],
       "checked" : false,
       "active" : false,
@@ -66,8 +66,8 @@
       "img" : "/lamp14.png",
       "index" : 3,
       "colors" : [
-        { "color" : "#8f6cb6", "index" : 0, "annotation" : "Energy Consumption", "description" : "Energy Consumption", "colorlabel" : "Fill Color" },
-        { "color" : "#040725", "index" : 1, "annotation" : "", "description" : "Background", "colorlabel" : "Color" }
+        { "color" : "#a653f1", "index" : 0, "annotation" : "Energy Consumption", "description" : "Energy Consumption", "colorlabel" : "Fill Color" },
+        { "color" : "#b76c31", "index" : 1, "annotation" : "", "description" : "Background", "colorlabel" : "Color" }
       ],
       "checked" : false,
       "active" : false,
@@ -80,13 +80,13 @@
       "name" : "Visual 5",
       "pseudo" : "Particles",
       "description" : "Shows the energy consumption on site, export from the grid and import from the grid through the movement of particles. The faster and more particles, the higher the value.",
-      "img" : "/lamp14.png",
+      "img" : "/lamp15.png",
       "index" : 4,
       "colors" : [
-        { "color" : "#ffca6b", "index" : 0, "annotation" : "OnSite Consumption", "description" : "OnSite Consumption", "colorlabel" : "Particle Color" },
-        { "color" : "#8f6cb6", "index" : 1, "annotation" : "Import from Grid", "description" : "Import from Grid", "colorlabel" : "Particle Color" },
-        { "color" : "#040725", "index" : 2, "annotation" : "Export to Grid", "description" : "Export to Grid", "colorlabel" : "Particle Color" },
-        { "color" : "#040725", "index" : 3, "annotation" : "", "description" : "Background", "colorlabel" : "Color" }
+        { "color" : "#ffc256", "index" : 0, "annotation" : "OnSite Consumption", "description" : "OnSite Consumption", "colorlabel" : "Particle Color" },
+        { "color" : "#823cad", "index" : 1, "annotation" : "Import from Grid", "description" : "Import from Grid", "colorlabel" : "Particle Color" },
+        { "color" : "#fe6f21", "index" : 2, "annotation" : "Export to Grid", "description" : "Export to Grid", "colorlabel" : "Particle Color" },
+        { "color" : "#6c8788", "index" : 3, "annotation" : "", "description" : "Background", "colorlabel" : "Color" }
 
       ],
       "checked" : false,
