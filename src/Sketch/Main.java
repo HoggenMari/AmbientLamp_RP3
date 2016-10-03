@@ -104,6 +104,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	boolean firstStepper = true;
 	private int oldTimer;
 	int GENIUS_CHANGE = 600000;
+	boolean display;
 	
 	public static void main(final String... args){
     	
@@ -194,10 +195,12 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		
 		int hours = (d.getHours()-11) % 23;
 		
-		if(hours > 9 && hours < 19) {
+		if(hours > 9 && hours < 17) {
 			geniusCtr = 0;
+			display = true;
 		}else{
 			geniusCtr = 2;
+			display = false;
 		}
 		
     	delay(2000);
@@ -786,7 +789,11 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		System.out.println(message);
 		
 		if(message.contains("Start")){
+			if(display){
 			toFront();
+			}else{
+			toBack();	
+			}
 		}
 
 		JsonObject jsonObject;
