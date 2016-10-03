@@ -3,6 +3,7 @@ package Sketch;
 import java.awt.Color;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import com.google.gson.JsonElement;
@@ -216,6 +217,8 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 				toBack();
 			} else if(next == 3) {
 				toBack();
+			} else if(next == 4) {
+				toBack();
 			}
 			firstChanged = false;
 		}
@@ -351,6 +354,9 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 			//System.out.println("Genius: "+geniusPaused+" "+geniusPausedActive+" "+settingActive);
 			
 			if(geniusMode && !geniusPaused && !settingActive){
+				
+				Date d = new Date();
+				System.out.println("Hours: "+d.getHours());
 				
 				if(geniusCtr<4){
 					geniusCtr++;
