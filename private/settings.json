@@ -19,12 +19,12 @@
       "geniusActive" : false,
       "pausedActive" : false,
       "settingActive" : false,
-      "notification" : false
+      "notification" : true
     },
     {
       "_id" : "RH8TD6zpG3p4ZgdcQ",
       "name" : "Visual 2",
-      "pseudo" : "Prod & Cons in Numbers",
+      "pseudo" : "Numeric",
       "description" : "Current energy consumption (upper number) and current solar production (lower number) in kW.",
       "img" : "/lamp12.png",
       "index" : 1,
@@ -44,7 +44,7 @@
     {
       "_id" : "hDPiBv93PtjtMRGyQ",
       "name" : "Visual 3",
-      "pseudo" : "Cons Bargraph",
+      "pseudo" : "Consumption Bar",
       "description" : "Shows the energy consumption of the last half an hour in a bargraph visualisation. Newest values are displayed on the right-hand side.",
       "img" : "/lamp13.png",
       "index" : 2,
@@ -61,14 +61,13 @@
     {
       "_id" : "Zb8FDDLizNFNzBtaL",
       "name" : "Visual 4",
-      "pseudo" : "Prod & Cons Bargraph",
-      "description" : "Shows the energy consumption and solar production of the last half an hour in a bargraph visualisation. Newest values are displayed on the right-hand side.",
+      "pseudo" : "3 Days",
+      "description" : "Shows the energy consumption of the last three days in relation. Current day is displayed on the right-hand side.",
       "img" : "/lamp14.png",
       "index" : 3,
       "colors" : [
-        { "color" : "#ffca6b", "index" : 0, "annotation" : "Solar Production", "description" : "Solar Production", "colorlabel" : "Fill Color" },
-        { "color" : "#8f6cb6", "index" : 1, "annotation" : "Energy Consumption", "description" : "Energy Consumption", "colorlabel" : "Fill Color" },
-        { "color" : "#040725", "index" : 2, "annotation" : "", "description" : "Background", "colorlabel" : "Color" }
+        { "color" : "#8f6cb6", "index" : 0, "annotation" : "Energy Consumption", "description" : "Energy Consumption", "colorlabel" : "Fill Color" },
+        { "color" : "#040725", "index" : 1, "annotation" : "", "description" : "Background", "colorlabel" : "Color" }
       ],
       "checked" : false,
       "active" : false,
@@ -79,8 +78,8 @@
     {
       "_id" : "Zb8FDDLizNFNzBtaT",
       "name" : "Visual 5",
-      "pseudo" : "Electrons",
-      "description" : "Shows the energy consumption and solar production of the last half an hour in a bargraph visualisation. Newest values are displayed on the right-hand side.",
+      "pseudo" : "Particles",
+      "description" : "Shows the energy consumption on site, export from the grid and import from the grid through the movement of particles. The faster and more particles, the higher the value.",
       "img" : "/lamp14.png",
       "index" : 4,
       "colors" : [
