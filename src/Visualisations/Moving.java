@@ -141,9 +141,9 @@ public class Moving implements VisualListener, SolarListener {
 		}*/
 		
 		
-		System.out.println("CON: "+consumed+" "+applet.map(consumedSpeed, 0, 1, 0, 5));
-		System.out.println("COS: "+consumedOnSite+" "+applet.map(consumedOnSiteSpeed, 0, 1, 0, 5));
-		System.out.println("PRO: "+produced+" "+applet.map(producedSpeed, 0, 1, 0, 5));
+		//System.out.println("CON: "+consumed+" "+applet.map(consumedSpeed, 0, 1, 0, 5));
+		//System.out.println("COS: "+consumedOnSite+" "+applet.map(consumedOnSiteSpeed, 0, 1, 0, 5));
+		//System.out.println("PRO: "+produced+" "+applet.map(producedSpeed, 0, 1, 0, 5));
 
 		
 		
