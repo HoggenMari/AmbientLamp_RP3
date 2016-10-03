@@ -25,6 +25,7 @@ import SolarAPI.SolarAnalyticsAPI;
 import Visualisations.BarGraph;
 import Visualisations.BarGraphGenCons;
 import Visualisations.Circle;
+import Visualisations.Lastdays;
 import Visualisations.Lava;
 import Visualisations.Moving;
 import Visualisations.Text;
@@ -53,7 +54,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	private Circle circle;
 	private SensorData sensorData;
 	private BarGraph bargraph;
-	private BarGraphGenCons bargraph_gencons;
+	private Lastdays lastdays;
 
 	private Text text;
 	boolean textBol = true;
@@ -101,6 +102,8 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	Lava lava = new Lava();
 	
 	boolean firstStepper = true;
+	private int oldTimer;
+	int GENIUS_CHANGE = 600000;
 	
 	public static void main(final String... args){
     	
@@ -134,7 +137,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		//circle = new Circle(this, sensorData, api, createGraphics(85, 60, P2D));
 
 		bargraph = new BarGraph(this, sensorData, createGraphics(170, 120, P2D));
-		bargraph_gencons = new BarGraphGenCons(this, sensorData, createGraphics(170, 120, P2D));
+		lastdays = new Lastdays(this, sensorData, createGraphics(170, 120, P2D));
 		text = new Text(this, sensorData, createGraphics(17, 12, P2D));
 		//cloud = new Cloud(this);
 		
@@ -184,13 +187,25 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
         }
         
         
-    	lava.setup(this);
+    	//lava.setup(this);
+    	
+    	Date d = new Date();
+		System.out.println("Hours: "+d.getHours());
+		
+		int hours = (d.getHours()-11) % 23;
+		
+		if(hours > 9 && hours < 19) {
+			geniusCtr = 0;
+		}else{
+			geniusCtr = 2;
+		}
+		
     	delay(2000);
 
 	}
 	
 	public void draw() {
-		
+				
 		//frameRate(5);
 		//System.out.println("GENIUS: "+geniusMode);
 		if(frameCount%2000==0){
@@ -346,7 +361,11 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		}
 		screen.send(9,8);
 		
-		if(frameCount % 500 == 0){	
+		//if(frameCount % 500 == 0){	
+			
+		if(millis() - oldTimer > GENIUS_CHANGE){
+				
+				oldTimer = millis();
 			
 			//System.out.println("FRAMECOUNT: "+geniusCtr);
 			//{"msg":"changed","collection":"visuals","id":"RH8TD6zpG3p4ZgdcQ","fields":{"active":true}}
@@ -358,11 +377,23 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 				Date d = new Date();
 				System.out.println("Hours: "+d.getHours());
 				
-				if(geniusCtr<4){
-					geniusCtr++;
+				int hours = (d.getHours()-11) % 23;
+				
+				if(hours > 9 && hours < 19) {
+					if(geniusCtr<1){
+						geniusCtr++;
+					}else{
+						geniusCtr = 0;
+					}
 				}else{
-					geniusCtr = 0;
+					if(geniusCtr<4){
+						geniusCtr++;
+					}else{
+						geniusCtr = 2;
+					}
 				}
+				
+				
 				
 				//geniusCtr = 4;
 				
@@ -462,11 +493,11 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		case 2:
 			//frameRate(1);
 			//toBack();
-			return bargraph.draw();
+			return downscale(bargraph.draw(), 1);
 		case 3:
 			//frameRate(1);
 			//toBack();
-			return downscale(bargraph_gencons.draw(), 1);
+			return downscale(lastdays.draw(), 1);
 		case 4:
 			//frameRate(60);
 			return downscale(moving.draw(), 3);
