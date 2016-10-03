@@ -25,6 +25,7 @@ public class Moving implements VisualListener, SolarListener {
 	boolean notification = true;
 	
 	ArrayList<Electron> electronsGrid;
+	ArrayList<Electron> electronsOnSite;
 	ArrayList<SunParticle> electronsSun;
 
 	ArrayList<Powerfield> fields;
@@ -42,13 +43,14 @@ public class Moving implements VisualListener, SolarListener {
 	public boolean valueChanged = false;
 	public boolean fake = false;
 
-	float produced, consumed;
+	float produced, consumed, consumedOnSite;
 	private float change_consumption;
 	private float max_consumption;
 	private float MAX_CONSUMPTION = 2000;
 	private float MAX_PRODUCTION = 2000;
 
 	private float consumedSpeed;
+	private float consumedOnSiteSpeed;
 	private float producedSpeed;
 	
 	private float imp, exp;
@@ -61,6 +63,7 @@ public class Moving implements VisualListener, SolarListener {
 		
 		canvas = c;
 		electronsGrid = new ArrayList<Electron>();
+		electronsOnSite = new ArrayList<Electron>();
 		electronsSun = new ArrayList<SunParticle>();
 
 		fields = new ArrayList<Powerfield>();
@@ -137,17 +140,29 @@ public class Moving implements VisualListener, SolarListener {
 			electronEmitted = false;
 		}*/
 		
+		
+		//System.out.println("CON: "+consumed+" "+applet.map(consumedSpeed, 0, 1, 0, 5));
+		//System.out.println("COS: "+consumedOnSite+" "+applet.map(consumedOnSiteSpeed, 0, 1, 0, 5));
+		//System.out.println("PRO: "+produced+" "+applet.map(producedSpeed, 0, 1, 0, 5));
+
+		
+		
 		if(electronsGrid.size()<applet.map(consumedSpeed, 0, 1, 0, 5)){
 			electronsGrid.add(new Electron(applet, canvas, consumedSpeed, color[1]));
 		}
+		
+		if(electronsOnSite.size()<applet.map(consumedOnSiteSpeed, 0, 1, 0, 5)){
+			electronsOnSite.add(new Electron(applet, canvas, consumedOnSiteSpeed, color[0]));
+		}
 
-		if(electronsSun.size()<5)
-		electronsSun.add(new SunParticle(applet, canvas, consumedSpeed, color[2]));
+		//if(electronsSun.size()<5)
+		//electronsSun.add(new SunParticle(applet, canvas, consumedSpeed, color[2]));
 
-		//System.out.println(electronsSun.size());
+		//System.out.println(electronsSun.size()+" "+applet.map(producedSpeed, 0, 1, 0, 5));
 		
 		if(electronsSun.size()<applet.map(producedSpeed, 0, 1, 0, 5)){
-			electronsSun.add(new SunParticle(applet, canvas, consumedSpeed, color[2]));
+			//System.out.println("new");
+			electronsSun.add(new SunParticle(applet, canvas, producedSpeed, color[2]));
 		}
 		
 		if(notification){
@@ -185,13 +200,13 @@ public class Moving implements VisualListener, SolarListener {
 		float mapProduce2 = applet.map(produced, 0, consumed, 0, canvas.width/2);
 		float mapConsumed2 = applet.map(consumed, 0, produced, 0, canvas.width/2);		
 		
-		if(produced>consumed){
+		//if(produced>consumed){
 			//smoothCircle(canvas.width/2);
 			//smoothCircleConsumed(mapConsumed2);
-		}else{
+		//}else{
 			smoothCircleConsumed(canvas.width/2);
 			//smoothCircle(mapProduce2);
-		}
+		//}
 		
 		for (int e = 0; e < electronsGrid.size(); e++) {
 			if (electronsGrid.get(e).dead()) {
@@ -201,6 +216,16 @@ public class Moving implements VisualListener, SolarListener {
 
 		for (int e = 0; e < electronsGrid.size(); e++) {
 			electronsGrid.get(e).display();
+		}
+		
+		for (int e = 0; e < electronsOnSite.size(); e++) {
+			if (electronsOnSite.get(e).dead()) {
+				electronsOnSite.remove(e);
+			}
+		}
+
+		for (int e = 0; e < electronsOnSite.size(); e++) {
+			electronsOnSite.get(e).display();
 		}
 		
 		for (int e = 0; e < electronsSun.size(); e++) {
@@ -239,9 +264,9 @@ public class Moving implements VisualListener, SolarListener {
 		rad = ((applet.sin(0) + 1f) / 2f) * rad * 0.25f + rad * 0.75f;
 
 		
-		float c1 = color[0] >> 16 & 0xFF;
-		float c2 = color[0] >> 8 & 0xFF;;
-		float c3 = color[0] & 0xFF;
+		float c1 = color[3] >> 16 & 0xFF;
+		float c2 = color[3] >> 8 & 0xFF;;
+		float c3 = color[3] & 0xFF;
 		
 		canvas.fill(calcColor(60, applet.color(c1, c2, c3, 88), applet.color(c1, c2, c3, 150), applet.color(c1, c2, c3, 200)));
 		//canvas.fill(calcColor(r, applet.color(244, 99, 97, 88), applet.color(222, 212, 111, 88), applet.color(200, 31, 255, 150)));
@@ -261,11 +286,11 @@ public class Moving implements VisualListener, SolarListener {
 			rad = ((applet.sin(step) + 1f) / 2f) * rad * 0.3f + rad * 0.8f;
 		}
 		
-		float c1 = color[0] >> 16 & 0xFF;
-		float c2 = color[0] >> 8 & 0xFF;;
-		float c3 = color[0] & 0xFF;
+		float c1 = color[3] >> 16 & 0xFF;
+		float c2 = color[3] >> 8 & 0xFF;;
+		float c3 = color[3] & 0xFF;
 		
-		canvas.fill(calcColor(100, applet.color(c1, c2, c3, 88), applet.color(c1, c2, c3, 88), applet.color(c1, c2, c3, 88)));
+		canvas.fill(calcColor(100, applet.color(c1-50, c2-50, c3-50, 88), applet.color(c1-100, c2-100, c3-100, 88), applet.color(c1-100, c2-100, c3-100, 88)));
 
 		for (int n = 0; n < 5; n++) {
 			canvas.ellipse(x, y, rad * applet.pow(0.9f, n),
@@ -350,16 +375,19 @@ public class Moving implements VisualListener, SolarListener {
 		if(produced < 0){
 			produced = 0;
 		}
-		producedSpeed = produced/MAX_PRODUCTION;
+		producedSpeed = produced/MAX_CONSUMPTION;
 		
 		//imp = consumed - produced;
 
+		consumedOnSite = api.getCurrentGen();
+		consumedOnSiteSpeed = consumedOnSite/MAX_CONSUMPTION;
+		
 		consumed = api.getCurrentCons() - api.getCurrentGen();
 		if(consumed < 0){
 			consumed = 0;
 		}
 		consumedSpeed = consumed/MAX_CONSUMPTION;
-		System.out.println("Consumed: "+consumed+" Produced: "+produced);
+		//System.out.println("Consumed: "+consumed+" Produced: "+produced);
 		
 		change_consumption = api.getChangeCons();
 		max_consumption = api.getMaxCons();

@@ -215,6 +215,6 @@ public class Text implements VisualListener, SolarListener {
 		
 		produced = Math.abs(api.getCurrentGen()/10); 
 		consumed = Math.abs(api.getCurrentCons()/10);
-		//System.out.println("Changed: "+api.getChangeGen());
+		System.out.println("Produced: "+produced+" Consumed: "+consumed);
 	}
 }
