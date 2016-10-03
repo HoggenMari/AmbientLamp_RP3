@@ -113,7 +113,7 @@ public class SunParticle {
 	boolean dead() {
 		float d = PVector.dist(position, new PVector(canvas.width / 2,
 				canvas.height / 2));
-		if (position.x < applet.random(-10f, 0f) || position.x > applet.random(canvas.width, canvas.width+10f) || position.y < applet.random(-10f, 0f) || position.y > applet.random(canvas.height, canvas.height+10f)) {
+		if (position.x < applet.random(-2f, 0f) || position.x > applet.random(canvas.width, canvas.width+2f) || position.y < applet.random(-2f, 0f) || position.y > applet.random(canvas.height, canvas.height+2f)) {
 			return true;
 		} else
 			return false;

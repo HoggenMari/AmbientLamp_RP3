@@ -141,9 +141,9 @@ public class Moving implements VisualListener, SolarListener {
 		}*/
 		
 		
-		//System.out.println("CON: "+consumed+" "+applet.map(consumedSpeed, 0, 1, 0, 5));
-		//System.out.println("COS: "+consumedOnSite+" "+applet.map(consumedOnSiteSpeed, 0, 1, 0, 5));
-		//System.out.println("PRO: "+produced+" "+applet.map(producedSpeed, 0, 1, 0, 5));
+		System.out.println("CON: "+consumed+" "+applet.map(consumedSpeed, 0, 1, 0, 5));
+		System.out.println("COS: "+consumedOnSite+" "+applet.map(consumedOnSiteSpeed, 0, 1, 0, 5));
+		System.out.println("PRO: "+produced+" "+applet.map(producedSpeed, 0, 1, 0, 5));
 
 		
 		
@@ -380,6 +380,11 @@ public class Moving implements VisualListener, SolarListener {
 		//imp = consumed - produced;
 
 		consumedOnSite = api.getCurrentGen();
+		if(consumedOnSite > api.getCurrentCons()){
+			consumedOnSite = api.getCurrentCons();
+		}else{
+			consumedOnSite = api.getCurrentGen();
+		}
 		consumedOnSiteSpeed = consumedOnSite/MAX_CONSUMPTION;
 		
 		consumed = api.getCurrentCons() - api.getCurrentGen();
