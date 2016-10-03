@@ -84,10 +84,10 @@
       "img" : "/lamp14.png",
       "index" : 4,
       "colors" : [
-        { "color" : "#ffca6b", "index" : 0, "annotation" : "Solar Consumption", "description" : "Solar Consumption", "colorlabel" : "Fill Color" },
-        { "color" : "#8f6cb6", "index" : 1, "annotation" : "Import from Grid", "description" : "Grid Consumption", "colorlabel" : "Particle Color" },
+        { "color" : "#ffca6b", "index" : 0, "annotation" : "OnSite Consumption", "description" : "OnSite Consumption", "colorlabel" : "Particle Color" },
+        { "color" : "#8f6cb6", "index" : 1, "annotation" : "Import from Grid", "description" : "Import from Grid", "colorlabel" : "Particle Color" },
         { "color" : "#040725", "index" : 2, "annotation" : "Export to Grid", "description" : "Export to Grid", "colorlabel" : "Particle Color" },
-        { "color" : "#040725", "index" : 2, "annotation" : "", "description" : "Background", "colorlabel" : "Color" }
+        { "color" : "#040725", "index" : 3, "annotation" : "", "description" : "Background", "colorlabel" : "Color" }
 
       ],
       "checked" : false,
