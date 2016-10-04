@@ -92,7 +92,7 @@ public class BarGraph implements VisualListener, SolarListener {
 		for(int i=start; i<live_site_data.size(); i++){
 			float power = live_site_data.get(i).getCons();
 			float val = applet.map(power, 0, highestValue, 0, 120);
-			System.out.println(val);
+			//System.out.println(val);
 			//System.out.println(17-(data.size()-i)+" "+val);
 			//canvas.rect((17-(data.size()-i))*10,0,(17-(data.size()-i+1))*10,val);
 			canvas.rect((17-(live_site_data.size()-i))*10, 120-val, 10, 120);
