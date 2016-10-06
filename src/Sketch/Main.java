@@ -787,10 +787,12 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		System.out.println(message);
 		
 		if(message.contains("Start")){
-			if(display){
-			toFront();
-			}else{
-			toBack();	
+			if(geniusMode){
+				if(display){
+					toFront();
+				}else{
+					toBack();	
+				}
 			}
 		}
 
