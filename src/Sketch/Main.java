@@ -150,7 +150,18 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		client = new DDPClient("localhost", 3000);
     	client.connect();
 
-    	
+    	Date d = new Date();
+		System.out.println("Hours: "+d.getHours());
+		
+		int hours = (d.getHours()-11) % 23;
+		
+		if(hours > 9 && hours < 17) {
+			geniusCtr = 0;
+			display = true;
+		}else{
+			geniusCtr = 2;
+			display = false;
+		}
     	
     	
     	serialPort = new SerialPort(os.arduino);
@@ -189,19 +200,6 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
         
         
     	//lava.setup(this);
-    	
-    	Date d = new Date();
-		System.out.println("Hours: "+d.getHours());
-		
-		int hours = (d.getHours()-11) % 23;
-		
-		if(hours > 9 && hours < 17) {
-			geniusCtr = 0;
-			display = true;
-		}else{
-			geniusCtr = 2;
-			display = false;
-		}
 		
     	delay(2000);
 
@@ -209,7 +207,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	
 	public void draw() {
 				
-		//frameRate(5);
+		//frameRate(40);
 		//System.out.println("GENIUS: "+geniusMode);
 		if(frameCount%2000==0){
 			
@@ -382,7 +380,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 				
 				int hours = (d.getHours()-11) % 23;
 				
-				if(hours > 9 && hours < 19) {
+				if(hours > 9 && hours < 17) {
 					if(geniusCtr<1){
 						geniusCtr++;
 					}else{
