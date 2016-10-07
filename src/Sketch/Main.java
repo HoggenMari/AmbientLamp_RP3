@@ -60,7 +60,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	boolean textBol = true;
 	
 	ArrayList<Visual> visualList;
-	int activeVisual = 0;
+	int activeVisual = -1;
 	
 	//Cloud
 	//private Cloud cloud;
@@ -87,7 +87,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	// -------FADE
 	float fade = 1;
 	int next = 0;
-	int active = 0;
+	int active = -1;
 	private int activeManual;
 	// -------FADE
 	
@@ -149,11 +149,14 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 
 		client = new DDPClient("localhost", 3000);
     	client.connect();
+    	
+    	delay(1000);
 
     	Date d = new Date();
-		System.out.println("Hours: "+d.getHours());
 		
 		int hours = (d.getHours()-11) % 23;
+		System.out.println("Hours: "+hours);
+
 		
 		if(hours > 9 && hours < 17) {
 			geniusCtr = 0;
@@ -226,14 +229,19 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		if(next != active && firstChanged) {
 			System.out.println("changed");
 			if (next == 0) {
+				System.out.println("sendToFront in Change Method");
 				toFront();
 			} else if(next == 1) {
+				System.out.println("sendToFront in Change Method");
 				toFront();
 			} else if(next == 2) {
+				System.out.println("sendToBack in Change Method");
 				toBack();
 			} else if(next == 3) {
+				System.out.println("sendToBack in Change Method");
 				toBack();
 			} else if(next == 4) {
+				System.out.println("sendToBack in Change Method");
 				toBack();
 			}
 			firstChanged = false;
@@ -376,10 +384,10 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 			if(geniusMode && !geniusPaused && !settingActive){
 				
 				Date d = new Date();
-				System.out.println("Hours: "+d.getHours());
 				
 				int hours = (d.getHours()-11) % 23;
-				
+				System.out.println("Hours: "+hours);
+
 				if(hours > 9 && hours < 17) {
 					if(geniusCtr<1){
 						geniusCtr++;
@@ -598,6 +606,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	}
 	
 	public void toFront(){
+		System.out.println("sendToFront");
 		try {
 			serialPort.writeString("toFront\n");
 		} catch (SerialPortException e) {
@@ -607,6 +616,7 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 	}
 	
 	public void toBack(){
+		System.out.println("sendToBack");
 		try {
 			serialPort.writeString("toBack\n");
 		} catch (SerialPortException e) {
@@ -710,6 +720,8 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 		// TODO Auto-generated method stub
 		geniusMode = e.getGenius();
 		geniusPaused = e.getGeniusPaused();
+		
+		System.out.println("geniusMode: "+geniusMode);
 		if(e.getID()==GeniusEvent.GENIUS_MODE_CHANGED){
 			if(geniusMode){
 				geniusPausedActive = true;
