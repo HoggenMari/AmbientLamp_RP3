@@ -820,7 +820,8 @@ public class Main extends PApplet implements SensorListener, VisualListener, Gen
 					String sensor = jsonObject.get("sensor").getAsString();
 					if(sensor.equals("brightness")){
 						int br = 100-jsonObject.get("data").getAsInt();
-						String s = "{\"msg\":\"changed\", \"collection\":\"settings\", \"id\":\""+sensorData.getBrightnessID()+"\", \"fields\":{\"score\":"+br+"}}";
+						System.out.println(br);
+						String s = "{\"msg\":\"changed\", \"collection\":\"settings\", \"id\":\""+sensorData.getBrightnessID()+"\", \"fields\":{\"score\":"+jsonObject.get("data")+"}}";
 						if(client.isAdded()){
 							client.call(s);
 						}
