@@ -61,7 +61,7 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 	//String password = "demo123";//"fr21muc08";
 	String password = "fr21muc08";
 	//int site_id = 8072;
-	int site_id = 8753;
+	int site_id = 6011;
 	String token;
 	int duration;
 	long tokenTimeStamp;
@@ -1111,7 +1111,7 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 				return new ArrayList<LiveSiteDataEntry>();
 			}
 			
-		}else if(lastUpdateLiveSiteData < timeStamp-(timeStamp%30000)) {
+		}else if(lastUpdateLiveSiteData < timeStamp-(timeStamp%5000)) {
 			
 			if(live_site_data_map != null){
 				System.out.println("LiveSiteDataSize: "+live_site_data_map.size());
