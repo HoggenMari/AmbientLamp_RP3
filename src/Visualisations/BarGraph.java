@@ -1,6 +1,8 @@
 package Visualisations;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,7 @@ import Event.Visual;
 import Event.VisualEvent;
 import Event.VisualListener;
 import SolarAPI.*;
+import SolarAPI.SolarAnalyticsAPI.GRAN;
 import SolarAPI.SolarAnalyticsAPI.MONITORS;
 import processing.core.PApplet;
 import processing.core.PGraphics;
@@ -44,6 +47,26 @@ public class BarGraph implements VisualListener, SolarListener {
 	
 	public PGraphics draw() {
 				
+		GregorianCalendar today = (GregorianCalendar) GregorianCalendar.getInstance();
+		int time = (today.get(Calendar.HOUR_OF_DAY)*60+today.get(Calendar.MINUTE))/5;
+		//System.out.println(today.get(Calendar.HOUR_OF_DAY));
+		//System.out.println(api.getDay(GRAN.minute).get(time));
+		
+		float max_cons = 0;
+		/*if(time>24){
+			for(int i=time-20; i<time; i++){
+				if(api.getDay(GRAN.minute).get(i).energy_consumed>max_cons){
+					max_cons = api.getDay(GRAN.minute).get(i).energy_consumed;
+				}
+			}
+		}else{*/
+			for(int i=0; i<api.getDay(GRAN.minute).size(); i++){
+				if(api.getDay(GRAN.minute).get(i).energy_consumed>max_cons){
+					max_cons = api.getDay(GRAN.minute).get(i).energy_consumed;
+				}
+			}
+		//}
+		
 		int[] c = { applet.color(24, 34, 43),
 				    applet.color(41, 46, 49),
 				    applet.color(68, 58, 46),
@@ -86,16 +109,18 @@ public class BarGraph implements VisualListener, SolarListener {
 		canvas.rect(0, 0, canvas.width, canvas.height);
 		canvas.fill(color[0]);
 		int start = 0;
-		if(live_site_data.size()>17){
-			start = live_site_data.size()-17;
+		if(api.getDay(GRAN.minute).size()>17){
+			start = time-17;
 		}
-		for(int i=start; i<live_site_data.size(); i++){
-			float power = live_site_data.get(i).getCons();
-			float val = applet.map(power, 0, highestValue, 0, 120);
-			//System.out.println(val);
+		int j=0;
+		for(int i=start; i<start+17; i++){
+			float power = api.getDay(GRAN.minute).get(i).energy_consumed;
+			float val = applet.map(power, 0, max_cons, 0, 120);
+			//System.out.println(i+" "+power);
 			//System.out.println(17-(data.size()-i)+" "+val);
 			//canvas.rect((17-(data.size()-i))*10,0,(17-(data.size()-i+1))*10,val);
-			canvas.rect((17-(live_site_data.size()-i))*10, 120-val, 10, 120);
+			canvas.rect(j*10, 120-val, 10, 120);
+			j++;
 		}
 		canvas.endDraw();
 		
