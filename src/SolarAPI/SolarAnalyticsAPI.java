@@ -61,8 +61,8 @@ public class SolarAnalyticsAPI extends Thread implements SiteDataDao{
 	//String password = "demo123";//"fr21muc08";
 	String password = "fr21muc08";
 	//int site_id = 8072;
-	int site_id = 8753;
-	//int site_id = 140;
+	//int site_id = 8753;
+	int site_id = 140;
 	String token;
 	int duration;
 	long tokenTimeStamp;
