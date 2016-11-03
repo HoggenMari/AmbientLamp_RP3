@@ -3,6 +3,8 @@ package Visualisations;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.print.attribute.standard.PrinterLocation;
+
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import Event.CarEvent;
@@ -147,11 +149,13 @@ public class Moving implements VisualListener, SolarListener {
 
 		
 		
-		if(electronsGrid.size()<applet.map(consumedSpeed, 0, 1, 0, 5)){
+		if(electronsGrid.size()<(applet.map(consumedSpeed, 0, 1, 0, 5)-0.01)){
 			electronsGrid.add(new Electron(applet, canvas, consumedSpeed, color[1]));
 		}
 		
-		if(electronsOnSite.size()<applet.map(consumedOnSiteSpeed, 0, 1, 0, 5)){
+		//System.out.println(applet.map(consumedOnSiteSpeed, 0, 1, 0, 5));
+		
+		if(electronsOnSite.size()<(applet.map(consumedOnSiteSpeed, 0, 1, 0, 5)-0.01)){
 			electronsOnSite.add(new Electron(applet, canvas, consumedOnSiteSpeed, color[0]));
 		}
 
