@@ -51,11 +51,11 @@ public class Lastdays implements VisualListener, SolarListener {
 		System.out.println(today.get(Calendar.DAY_OF_MONTH));
 		
 		System.out.println(api.getDay().energy_consumed);
-		System.out.println(api.getDay(today.get(Calendar.DAY_OF_MONTH)-1, 10, 2016));
+		System.out.println(api.getDay(today.get(Calendar.DAY_OF_MONTH)-1, 11, 2016));
 		
 		highest = 0;
 		for(int i=0; i<energy.length; i++){
-			energy[i] = api.getDay(today.get(Calendar.DAY_OF_MONTH)-i, 10, 2016).energy_consumed;
+			energy[i] = api.getDay(today.get(Calendar.DAY_OF_MONTH)-i, 11, 2016).energy_consumed;
 			if(energy[i]>highest){
 				highest = (int) energy[i];
 			}
@@ -76,7 +76,7 @@ public class Lastdays implements VisualListener, SolarListener {
 		//System.out.println(api.getDay(today.get(Calendar.DAY_OF_MONTH)-1, 10, 2016));
 		int highest = 0;
 		for(int i=0; i<energy.length; i++){
-			energy[i] = api.getDay(today.get(Calendar.DAY_OF_MONTH)-i, 10, 2016).energy_consumed;
+			energy[i] = api.getDay(today.get(Calendar.DAY_OF_MONTH)-i, 11, 2016).energy_consumed;
 			System.out.println(energy[i]);
 			if(energy[i]>highest){
 				highest = (int) energy[i];
