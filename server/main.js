@@ -273,7 +273,7 @@ Meteor.startup(function () {
             index++;
         });*/
     }
-  });
+});
 
 /*countdown.start(function() {
 
