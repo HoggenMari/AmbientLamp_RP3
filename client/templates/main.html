@@ -21,11 +21,11 @@
 
 <template name="header">
     <div class="header">
-        <h1 class="title">Ambient Lamp</h1>
+        <h1 class="title">Light Shifting Display</h1>
     </div>
     <div style="display:none;">
         <img id="source" src="/text-color4.png"
-             width="150" height="150">
+             width="200" height="200">
     </div>
     {{#unless connected}}
         <div class="notifications">
@@ -42,7 +42,7 @@
 <template name="settingsList">
   <ol class="settings">
     <li class="snap">
-        <span class="swipe"><img class="arrow" src="/swipe-arrow.png"></span>
+        <span class="swipe"><img class="arrowSnap" src="/swipe-arrow.png"></span>
     </li>
     {{#each settings}}
         {{#if display}}{{> setting}}{{/if}}
@@ -57,17 +57,13 @@
     <img class="icon" src="/{{name}}.png">
     <span class="name">{{name}}: </span>
     <span class="name">{{score}}</span>
-    <span><button class="dec">-</button></span>
-    <span><button class="inc">+</button></span>
+    <span><button style="font-size: 28px;" class="dec">-</button></span>
+    <span><button style="font-size: 28px;" class="inc">+</button></span>
   </li>
 </template>
 
 
 <template name="leaderboard">
-    <!--<div class="table_header">
-        <img class="icon" src="/power-button.png">
-        Visualisation
-    </div>-->
     <ol style="margin-top: 0px;">
         <li class="genius_tab {{#if isGeniusPaused}}geniusPaused{{/if}}">
             <span style="vertical-align: middle; font-size: 18px; float: left;">Autoplay</span>
@@ -80,20 +76,16 @@
 </template>
 
 <template name="visual">
-    <!--{{#if isGeniusActive}}<li style="width: 15%; text-align: center; background-color: #FBFCFD;" class="vList">
-        <div class="checkbox_wrapper {{#unless isGeniusActive}}checkboxOpacity{{/unless}}">
-            <input class="toggle-checked" type="checkbox" checked="{{checked}}"/>
-            <label></label>
-        </div>
-    </li>{{/if}}-->
     <li class="vActive vList {{#if isGeniusActive}}vListNameActive{{else}}vListName{{/if}} {{#if geniusActive}}geniusActive{{/if}} {{#if pausedActive}}active{{/if}}  {{#if active}}active{{/if}} visualName" style="text-align: left; border-right: #eee solid 1px;;">
-        <img style="height: 2.6em; margin: -15px 0px -10px 0px; border-radius: 27px; opacity: 1.0; margin-left: 10px;" src="{{img}}">
+        <img src="{{img}}">
         {{#if geniusActive}}<i class="fa fa-play" style="color: #8545e2;" aria-hidden="true"></i>{{/if}}
         <span class="visualNameText">{{pseudo}}</span>
+        <a href="{{pathFor route='listPage'}}">
+        <div style="float: right;height: 99px;background-color: #676767;width: 70px;">
+                <img src="/right-arrow.png" class="arrow"/>
+        </div>
+        </a>
     </li>
-    <a href="{{pathFor route='listPage'}}"><li class="tab vActive vList" style="width: 15%; text-align: center;">
-        <img src="/right-arrow.png" class="arrow"/>
-    </li></a>
 </template>
 
 <template name="mainPage">
@@ -109,12 +101,14 @@
         <ol style="margin-top: 0px;">
             <li class="genius_tab">
                 <a class="backlink" href="{{pathFor route='leaderboard'}}"><span style="float: left;"><img class="back" src="/back2.png"></span></a>
-                <a class="backlink" href="{{pathFor route='leaderboard'}}"><span style="vertical-align: middle; font-size: 18px; font-weight: 400; float: left;">Back</span></a>
-                <span style="font-size: 18px; font-weight: 600; margin-left: -25px;">{{pseudo}}</span>
-                <span style="float: right;"><img class="info" src="/info.png"></span>
+                <a class="backlink" href="{{pathFor route='leaderboard'}}"><span style="color: #7d7d7d; vertical-align: middle; font-size: 18px; font-weight: 400; float: left;">Back</span></a>
+                <span style="font-size: 24px; font-weight: 600; margin-left: -25px;">{{pseudo}}</span>
+                <span class="info" style="float: right;">
+                    <i style="font-size: 32px;" class="fa fa-info-circle" aria-hidden="true"></i>
+                </span>
             </li>
-            <li class="colors_tab">
-                <div style="font-size: 1.2em; font-weight: 400; float: left">Colors</div>
+            <li class="colors_tab vList">
+                <div class="visualNameText" style="font-weight: 100; float: left">Colors</div>
                 <div id="colors">
                     {{#each colors}}
                         {{> color}}
@@ -123,27 +117,27 @@
             </li>
             {{#each colors}}
                 <div class="colorChoserOverlay">
-                    <span style="font-size: 18px; font-weight: 300; float: left; padding-left: 10px; padding-top: 10px; color: white;"><strong>{{description}}</strong> {{colorlabel}}</span>
+                    <span style="font-size: 24px; font-weight: 300; float: left; padding-left: 10px; padding-top: 10px; color: white;"><strong>{{description}}</strong> {{colorlabel}}</span>
                 </div>
             {{/each}}
             {{#if checkIfNotificationExists}}
                 {{> notification}}
             {{/if}}
-            <li class="reset_tab">
-                <div style="font-size: 1.2em; font-weight: 400; float: left; color: rgba(75, 151, 195, 0.77);">Reset to default</div>
+            <li class="reset_tab vList">
+                <div class="visualNameText" style="font-weight: 100; float: left; color: rgba(75, 151, 195, 0.77);">Reset to default</div>
             </li>
 
         </ol>
         <div class="infoOverlay">
-            <span style="font-size: 20px; font-weight: 300; float: left; padding-left: 10px; padding-top: 10px;">{{pseudo}}</span>
+            <span style="font-size: 24px; font-weight: 300; float: left; padding-left: 10px; padding-top: 10px;">{{pseudo}}</span>
             <img class="close" src="/close.png">
-            <span style="font-size: 16px; font-weight: 300; float: left; padding-left: 10px; padding-right: 10px; padding-top: 10px; text-align: left;"><img style="height: 4em; float: left; opacity: 1.0; padding-right: 5px; filter: grayscale(0.5)" src="{{img}}">{{description}}</span>
+            <span style="font-size: 24px; font-weight: 300; float: left; padding-left: 10px; padding-right: 10px; padding-top: 10px; text-align: left;"><img style="height: 4em; float: left; opacity: 1.0; padding-right: 5px; filter: grayscale(0.5)" src="{{img}}">{{description}}</span>
             <ol class="colorNotation" style="padding-left: 5px; float: left; margin-bottom: 20px;">
                 {{#each colors}}
                     {{#unless annotationIsEmpty annotation}}
-                    <li style="border-bottom: none; padding: 0px 0px 2px 5px;">
+                    <li style="border-bottom: none; padding: 0px 0px 20px 5px;">
                         <div style="margin: 0px; width: 18px; height: 18px; -webkit-border-radius: 27px; -moz-border-radius: 27px; float: left; border-radius: 27px; box-shadow: 0px 0px 0px 1px #ccc;"></div>
-                        <span style="font-size: 14px; font-weight: 400; float: left; padding-left: 10px; text-align: left;">{{annotation}}</span>
+                        <span style="font-size: 18px; font-weight: 400; float: left; padding-left: 10px; text-align: left;">{{annotation}}</span>
                         <br>
                     </li>
                     {{/unless}}
@@ -172,8 +166,8 @@
 </template>
 
 <template name="notification">
-    <li class="notification_tab">
-        <div style="font-size: 1.2em; font-weight: 400; float: left">Notification</div>
+    <li class="notification_tab vList">
+        <div class="visualNameText" style="font-weight: 100; float: left">Notification</div>
         <input type="checkbox" checked="{{notification}}" class="js-switch notification" />
     </li>
 </template>

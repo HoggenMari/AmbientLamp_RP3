@@ -65,6 +65,9 @@
         var currentIP;
         var currentCounter;
 
+        var width = 200;
+        var height = 200;
+
         changeEvent.initEvent("change", true, true);
 
         /**
@@ -147,14 +150,14 @@
             console.log(colorPicker);
 
             var image = document.getElementById("source");
-            context.clearRect(0,0,150,150);
-            context.drawImage(image, 0, 0, 150, 150);
+            context.clearRect(0,0,200,200);
+            context.drawImage(image, 0, 0, 200, 200);
 
             var sliderValue = $($slider).find(".sliders")[0].noUiSlider.get();
 
             context.beginPath();
             context.fillStyle = "rgba(0, 0, 0, "+sliderValue/255.0+")";
-            context.arc(75, 75, 75, 0, 2 * Math.PI, false);
+            context.arc(100, 100, 100, 0, 2 * Math.PI, false);
             context.fill();
 
 
@@ -184,10 +187,10 @@
             console.log(colorPicker);
 
             colorPicker.onload = function() {
-                $canvas.width = this.width;
-                $canvas.height = this.height;
+                $canvas.width = width;//this.width;
+                $canvas.height = height;//this.height;
 
-                context.drawImage(colorPicker, 0, 0, this.width, this.height);
+                context.drawImage(colorPicker, 0, 0, width, height);
             };
 
             colorPicker.src = self.options.backgroundUrl || backgroundUrl;

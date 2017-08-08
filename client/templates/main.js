@@ -190,12 +190,12 @@ var timeout;
       settingsUp = !settingsUp;
       if(settingsUp) {
           $(".settings").animate({
-              'marginBottom': '+=60px'
+              'marginBottom': '+=95px'
           }, 250);
       }else{
           //myElement.style.marginBottom = "-60px";
           $(".settings").animate({
-              'marginBottom': '-=60px'
+              'marginBottom': '-=95px'
           }, 250);
       }
   }
